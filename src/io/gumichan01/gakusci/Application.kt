@@ -1,4 +1,4 @@
-package io.gumichan01
+package io.gumichan01.io.gumichan01.gakusci
 
 import io.ktor.application.*
 import io.ktor.response.*

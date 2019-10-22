@@ -1,9 +1,5 @@
-package io.gumichan01
+package io.gumichan01.io.gumichan01.gakusci
 
-import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.request.*
-import io.ktor.routing.*
 import io.ktor.http.*
 import kotlin.test.*
 import io.ktor.server.testing.*
