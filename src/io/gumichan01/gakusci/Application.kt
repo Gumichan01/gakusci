@@ -6,16 +6,23 @@ import io.ktor.http.ContentType
 import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.jetty.Jetty
 
-fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
+fun main() {
+    val server = embeddedServer(
+        Jetty,
+        port = 8080,
+        watchPaths = listOf("gakusci"),
+        module = Application::module
+    )
+    server.start(wait = true)
+}
 
-@Suppress("unused") // Referenced in application.conf
-@kotlin.jvm.JvmOverloads
-fun Application.module(testing: Boolean = false) {
+fun Application.module() {
     routing {
         get("/") {
             call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
         }
     }
 }
-
