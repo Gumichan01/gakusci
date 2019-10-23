@@ -34,7 +34,6 @@ fun Application.module() {
 
     routing {
         staticPage()
-        search()
     }
 }
 
@@ -44,8 +43,4 @@ fun Routing.staticPage() {
         files("js")
         default("index.html")
     }
-}
-
-fun Routing.search() {
-
 }
