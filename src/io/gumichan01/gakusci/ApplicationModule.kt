@@ -16,7 +16,6 @@ import io.ktor.thymeleaf.Thymeleaf
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import java.io.File
 
-
 fun Application.gakusciModule() {
     install(Thymeleaf) {
         setTemplateResolver(ClassLoaderTemplateResolver().apply {
