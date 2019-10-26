@@ -9,7 +9,7 @@ import kotlin.test.assertEquals
 
 class ApplicationTest {
     @Test
-    fun testRoot() {
+    fun `test static homepage`() {
         withTestApplication({ gakusciModule() }) {
             handleRequest(HttpMethod.Get, "/").apply {
                 assertEquals(HttpStatusCode.OK, response.status())
