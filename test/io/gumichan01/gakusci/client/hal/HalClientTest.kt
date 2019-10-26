@@ -2,7 +2,7 @@ package io.gumichan01.gakusci.client.hal
 
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import kotlin.test.Test
 
 class HalClientTest {
 

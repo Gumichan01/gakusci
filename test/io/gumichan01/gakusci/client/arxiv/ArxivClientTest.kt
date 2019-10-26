@@ -2,7 +2,7 @@ package io.gumichan01.gakusci.client.arxiv
 
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions
-import org.junit.Test
+import kotlin.test.Test
 
 class ArxivClientTest {
 
