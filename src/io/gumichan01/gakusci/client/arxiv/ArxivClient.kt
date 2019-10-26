@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.URL
 
+// TODO Add a rate limiter https://arxiv.org/help/api/tou#rate-limits
 class ArxivClient {
     private val arxivUrl = "https://export.arxiv.org/api/query?search_query=%s"
 
