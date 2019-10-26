@@ -44,6 +44,8 @@ dependencies {
     compile "ch.qos.logback:logback-classic:$logback_version"
     compile "io.ktor:ktor-server-core:$ktor_version"
     compile "io.ktor:ktor-thymeleaf:$ktor_version"
+    compile "io.ktor:ktor-client-apache:$ktor_version"
+    compile "io.ktor:ktor-client-jackson:$ktor_version"
     testCompile "org.assertj:assertj-core:$assertj_version"
     testCompile "io.ktor:ktor-server-tests:$ktor_version"
 }
