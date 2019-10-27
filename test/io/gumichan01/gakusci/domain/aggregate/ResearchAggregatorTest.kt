@@ -6,12 +6,14 @@ import io.gumichan01.gakusci.domain.service.HalService
 import io.mockk.coEvery
 import io.mockk.mockkClass
 import io.mockk.unmockkAll
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
+@ExperimentalCoroutinesApi
 class ResearchAggregatorTest {
 
     private val halServiceMock = mockkClass(HalService::class)
