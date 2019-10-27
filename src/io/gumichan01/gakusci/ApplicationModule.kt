@@ -1,22 +1,38 @@
 package io.gumichan01.gakusci
 
+import com.fasterxml.jackson.databind.SerializationFeature
+import io.gumichan01.gakusci.client.arxiv.ArxivClient
+import io.gumichan01.gakusci.client.hal.HalClient
+import io.gumichan01.gakusci.controller.RestController
+import io.gumichan01.gakusci.domain.aggregate.ResearchAggregator
+import io.gumichan01.gakusci.domain.service.ArxivService
+import io.gumichan01.gakusci.domain.service.HalService
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
-import io.ktor.http.HttpStatusCode
+import io.ktor.features.ContentNegotiation
 import io.ktor.http.content.default
 import io.ktor.http.content.files
 import io.ktor.http.content.static
 import io.ktor.http.content.staticRootFolder
-import io.ktor.response.respond
+import io.ktor.jackson.jackson
 import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.thymeleaf.Thymeleaf
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import java.io.File
 
+@ExperimentalCoroutinesApi
 fun Application.gakusciModule() {
+
+    install(ContentNegotiation) {
+        jackson {
+            enable(SerializationFeature.INDENT_OUTPUT)
+        }
+    }
+
     install(Thymeleaf) {
         setTemplateResolver(ClassLoaderTemplateResolver().apply {
             prefix = "template"
@@ -39,8 +55,11 @@ fun Routing.staticPage() {
     }
 }
 
+@ExperimentalCoroutinesApi
 fun Routing.restApiSearch() {
     get("/api/v1/researches") {
-        call.respond(HttpStatusCode.OK, "")
+        RestController(ResearchAggregator(setOf(HalService(HalClient()), ArxivService(ArxivClient())))).handleRequest(
+            call
+        )
     }
 }

@@ -43,6 +43,7 @@ dependencies {
     compile "io.ktor:ktor-server-jetty:$ktor_version"
     compile "ch.qos.logback:logback-classic:$logback_version"
     compile "io.ktor:ktor-server-core:$ktor_version"
+    compile "io.ktor:ktor-jackson:$ktor_version"
     compile "io.ktor:ktor-thymeleaf:$ktor_version"
     compile "io.ktor:ktor-client-apache:$ktor_version"
     compile "io.ktor:ktor-client-jackson:$ktor_version"
