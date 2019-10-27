@@ -4,9 +4,11 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import kotlin.test.Test
 
+@ExperimentalCoroutinesApi
 class ApplicationTest {
     @Test
     fun `test static homepage`() {
@@ -18,10 +20,20 @@ class ApplicationTest {
     }
 
     @Test
-    fun `test REST Web-service API v1 search - return OK`() {
+    fun `test REST Web-service API v1 search, normal case - return OK and non empty content`() {
         withTestApplication({ gakusciModule() }) {
             handleRequest(HttpMethod.Get, "/api/v1/researches/?q=lorem").apply {
                 assertThat(response.status()).isEqualTo(HttpStatusCode.OK)
+                assertThat(response.content).isNotBlank()
+            }
+        }
+    }
+
+    @Test
+    fun `test REST Web-service API v1 search, no query - return Bad request`() {
+        withTestApplication({ gakusciModule() }) {
+            handleRequest(HttpMethod.Get, "/api/v1/researches/").apply {
+                assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
             }
         }
     }
