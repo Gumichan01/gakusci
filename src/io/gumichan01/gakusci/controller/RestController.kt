@@ -11,7 +11,7 @@ class RestController(private val researchAggregator: ResearchAggregator) {
     suspend fun handleRequest(call: ApplicationCall) {
         val queryValue: String? = call.request.queryParameters["q"]
         if (queryValue == null || queryValue.isBlank()) {
-            call.respond(HttpStatusCode.BadRequest, "BAd request: no query parameter 'q' provided")
+            call.respond(HttpStatusCode.BadRequest, "Bad request: no query parameter 'q' provided")
         } else {
             call.respond(HttpStatusCode.OK, researchAggregator.search(queryValue))
         }
