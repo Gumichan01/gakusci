@@ -15,6 +15,10 @@ import kotlinx.coroutines.launch
 class ResearchAggregator(private val services: Set<IService>) {
 
     suspend fun search(query: String): List<ResultEntry> {
+        if (services.isEmpty()) {
+            return emptyList()
+        }
+
         val runningCoroutinesCounter: AtomicInt = atomic(services.size)
         val channel = Channel<ResultEntry>(capacity = 64)
         services.map { service ->
@@ -33,6 +37,5 @@ class ResearchAggregator(private val services: Set<IService>) {
             resultEntry?.let { entry -> results += entry }
         }
         return results
-        //return consumeResults(processRequest(query))
     }
 }
