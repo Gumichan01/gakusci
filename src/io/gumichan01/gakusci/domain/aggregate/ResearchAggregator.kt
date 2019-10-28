@@ -8,7 +8,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.receiveOrNull
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
@@ -24,13 +23,19 @@ class ResearchAggregator(private val services: Set<IService>) {
         return consumeResults(channel)
     }
 
-    private suspend fun consumeResults(channel: Channel<ResultEntry>): MutableList<ResultEntry> {
-        val results: MutableList<ResultEntry> = mutableListOf()
-        while (!channel.isClosedForReceive) {
-            val resultEntry: ResultEntry? = channel.receiveOrNull()
-            resultEntry?.let { entry -> results += entry }
+    private suspend fun consumeResults(channel: Channel<ResultEntry>): List<ResultEntry> {
+        return consumeResultsAux(channel, emptyList())
+    }
+
+    private tailrec suspend fun consumeResultsAux(
+        chan: Channel<ResultEntry>,
+        acc: List<ResultEntry>
+    ): List<ResultEntry> {
+        if (chan.isClosedForReceive) {
+            return acc
         }
-        return results
+        val resultEntry: ResultEntry = chan.receive()
+        return consumeResultsAux(chan, acc + resultEntry)
     }
 
     private fun launchRequest(query: String, channel: Channel<ResultEntry>) {
