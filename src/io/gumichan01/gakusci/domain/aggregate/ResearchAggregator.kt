@@ -17,12 +17,16 @@ class ResearchAggregator(private val services: Set<IService>) {
     }
 
     private suspend fun consumeResults(channels: List<ReceiveChannel<ResultEntry>>): MutableList<ResultEntry> {
+        var tmpChannels = channels
         val results: MutableList<ResultEntry> = mutableListOf()
-        while (channels.any { channel -> !channel.isClosedForReceive }) {
-            channels.forEach { channel ->
-                val resultEntry: ResultEntry? = channel.receiveOrNull()
-                resultEntry?.let { entry -> results += entry }
+        while (tmpChannels.isNotEmpty()) {
+            tmpChannels.forEach { channel ->
+                if (!channel.isEmpty) {
+                    val resultEntry: ResultEntry? = channel.receiveOrNull()
+                    resultEntry?.let { entry -> results += entry }
+                }
             }
+            tmpChannels = tmpChannels.filter { channel -> !channel.isClosedForReceive }
         }
         return results
     }
