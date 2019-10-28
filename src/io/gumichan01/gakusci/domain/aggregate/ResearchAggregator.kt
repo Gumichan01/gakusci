@@ -4,11 +4,9 @@ import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.gumichan01.gakusci.domain.service.IService
 import kotlinx.atomicfu.AtomicInt
 import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.channels.receiveOrNull
 
 @ExperimentalCoroutinesApi
 class ResearchAggregator(private val services: Set<IService>) {
@@ -34,17 +32,24 @@ class ResearchAggregator(private val services: Set<IService>) {
         if (chan.isClosedForReceive) {
             return acc
         }
-        val resultEntry: ResultEntry = chan.receive()
-        return consumeResultsAux(chan, acc + resultEntry)
+        val resultEntry: ResultEntry? = chan.receiveOrNull()
+        val nacc = if (resultEntry != null) acc + resultEntry else acc
+        return consumeResultsAux(chan, nacc)
     }
 
     private fun launchRequest(query: String, channel: Channel<ResultEntry>) {
+        val serviceCallTimeout = 15000L
         val runningCoroutinesCounter: AtomicInt = atomic(services.size)
         services.forEach { service ->
             CoroutineScope(Dispatchers.Default).launch {
-                service.search(query).forEach { result -> channel.send(result) }
-                if (runningCoroutinesCounter.decrementAndGet() == 0) {
-                    channel.close()
+                try {
+                    withTimeoutOrNull(serviceCallTimeout) {
+                        service.search(query).forEach { result -> channel.send(result) }
+                    }
+                } finally {
+                    if (runningCoroutinesCounter.decrementAndGet() == 0) {
+                        channel.close()
+                    }
                 }
             }
         }
