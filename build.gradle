@@ -13,12 +13,12 @@ apply plugin: 'application'
 
 group 'io.gumichan01'
 version '0.0.1-SNAPSHOT'
-mainClassName = "io.ktor.server.jetty.EngineMain"
+mainClassName = "$gakusci_main"
 
 // This task will generate the fat JAR and put it in the ./build/libs/ directory
 jar {
     manifest {
-        attributes 'Main-Class': 'io.ktor.server.jetty.EngineMain'
+        attributes 'Main-Class': "$gakusci_main"
     }
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
