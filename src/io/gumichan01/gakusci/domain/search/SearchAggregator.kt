@@ -1,23 +1,15 @@
 package io.gumichan01.gakusci.domain.search
 
 import io.gumichan01.gakusci.domain.model.ResultEntry
-import io.gumichan01.gakusci.domain.service.IService
-import kotlinx.atomicfu.AtomicInt
-import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.receiveOrNull
 
 @ExperimentalCoroutinesApi
-class SearchAggregator(private val services: Set<IService>) {
+class SearchAggregator(private val searchLauncher: SearchLauncher) {
 
-    suspend fun search(query: String): List<ResultEntry> {
-        if (services.isEmpty()) {
-            return emptyList()
-        }
-
-        val channel = Channel<ResultEntry>(capacity = 64)
-        launchRequest(query, channel)
+    suspend fun retrieveResultsFromQuery(query: String): List<ResultEntry> {
+        val channel = searchLauncher.launch(query)
         return consumeResults(channel)
     }
 
@@ -35,23 +27,5 @@ class SearchAggregator(private val services: Set<IService>) {
         val resultEntry: ResultEntry? = chan.receiveOrNull()
         val nacc = if (resultEntry != null) acc + resultEntry else acc
         return consumeResultsAux(chan, nacc)
-    }
-
-    private fun launchRequest(query: String, channel: Channel<ResultEntry>) {
-        val serviceCallTimeout = 15000L
-        val runningCoroutinesCounter: AtomicInt = atomic(services.size)
-        services.forEach { service ->
-            CoroutineScope(Dispatchers.Default).launch {
-                try {
-                    withTimeoutOrNull(serviceCallTimeout) {
-                        service.search(query).forEach { result -> channel.send(result) }
-                    }
-                } finally {
-                    if (runningCoroutinesCounter.decrementAndGet() == 0) {
-                        channel.close()
-                    }
-                }
-            }
-        }
     }
 }

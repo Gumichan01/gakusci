@@ -5,6 +5,7 @@ import io.gumichan01.gakusci.client.arxiv.ArxivClient
 import io.gumichan01.gakusci.client.hal.HalClient
 import io.gumichan01.gakusci.controller.RestController
 import io.gumichan01.gakusci.domain.search.SearchAggregator
+import io.gumichan01.gakusci.domain.search.SearchLauncher
 import io.gumichan01.gakusci.domain.service.ArxivService
 import io.gumichan01.gakusci.domain.service.HalService
 import io.ktor.application.Application
@@ -58,7 +59,16 @@ fun Routing.staticPage() {
 @ExperimentalCoroutinesApi
 fun Routing.restApiSearch() {
     get("/api/v1/researches") {
-        RestController(SearchAggregator(setOf(HalService(HalClient()), ArxivService(ArxivClient())))).handleRequest(
+        RestController(
+            SearchAggregator(
+                SearchLauncher(
+                    setOf(
+                        HalService(HalClient()),
+                        ArxivService(ArxivClient())
+                    )
+                )
+            )
+        ).handleRequest(
             call
         )
     }
