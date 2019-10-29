@@ -1,4 +1,4 @@
-package io.gumichan01.gakusci.domain.aggregate
+package io.gumichan01.gakusci.domain.search
 
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.gumichan01.gakusci.domain.service.ArxivService
@@ -14,7 +14,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 @ExperimentalCoroutinesApi
-class ResearchAggregatorTest {
+class SearchAggregatorTest {
 
     private val halServiceMock = mockkClass(HalService::class)
     private val arxivServiceMock = mockkClass(ArxivService::class)
@@ -27,25 +27,25 @@ class ResearchAggregatorTest {
 
     @Test
     fun `test research aggregation, no service - produce nothing`() {
-        val aggregator = ResearchAggregator(emptySet())
+        val aggregator = SearchAggregator(emptySet())
         assertThat(runBlocking { aggregator.search("lorem") }).isEmpty()
     }
 
     @Test
     fun `test research aggregation, HAL service - produce results`() {
-        val aggregator = ResearchAggregator(setOf(halServiceMock))
+        val aggregator = SearchAggregator(setOf(halServiceMock))
         assertThat(runBlocking { aggregator.search("lorem") }).isNotEmpty
     }
 
     @Test
     fun `test research aggregation, Arxiv service - produce results`() {
-        val aggregator = ResearchAggregator(setOf(arxivServiceMock))
+        val aggregator = SearchAggregator(setOf(arxivServiceMock))
         assertThat(runBlocking { aggregator.search("lorem") }).isNotEmpty
     }
 
     @Test
     fun `test research aggregation, several services - produce results`() {
-        val aggregator = ResearchAggregator(setOf(arxivServiceMock, halServiceMock))
+        val aggregator = SearchAggregator(setOf(arxivServiceMock, halServiceMock))
         assertThat(runBlocking { aggregator.search("lorem") }).isNotEmpty
     }
 

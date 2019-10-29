@@ -1,4 +1,4 @@
-package io.gumichan01.gakusci.domain.aggregate
+package io.gumichan01.gakusci.domain.search
 
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.gumichan01.gakusci.domain.service.IService
@@ -9,7 +9,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.receiveOrNull
 
 @ExperimentalCoroutinesApi
-class ResearchAggregator(private val services: Set<IService>) {
+class SearchAggregator(private val services: Set<IService>) {
 
     suspend fun search(query: String): List<ResultEntry> {
         if (services.isEmpty()) {
