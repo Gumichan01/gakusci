@@ -3,29 +3,26 @@ package io.gumichan01.gakusci.domain.search
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.gumichan01.gakusci.domain.service.IService
 import io.mockk.coEvery
-import io.mockk.mockkClass
-import io.mockk.unmockkAll
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 @ExperimentalCoroutinesApi
 class SearchLauncherTest {
 
-    private val fakeService: IService = mockkClass(IService::class)
-    private val fakeService2: IService = mockkClass(IService::class)
-    private val fakeObjectService: IService = mockkClass(IService::class)
-
-    @BeforeTest
-    fun mock() {
-        coEvery { fakeService.search("lorem") } returns listOf(ResultEntry("", ""))
-        coEvery { fakeService2.search("lorem") } returns listOf(ResultEntry("", ""))
-        coEvery { fakeObjectService.search("lorem") } returns listOf(ResultEntry("lorem", "ipsum"))
+    private val fakeService: IService = mockk {
+        coEvery { search("lorem") } returns listOf(ResultEntry("", ""))
     }
+    private val fakeService2: IService = mockk {
+        coEvery { search("lorem") } returns listOf(ResultEntry("", ""))
+    }
+    private val fakeObjectService: IService = mockk {
+        coEvery { search("lorem") } returns listOf(ResultEntry("lorem", "ipsum"))
+    }
+
 
     @Test
     fun `launch request with no service - return closed channel`() {
@@ -61,10 +58,5 @@ class SearchLauncherTest {
         }
         val actualResults = tmpResults.toSet()
         assertThat(expectedResults).isEqualTo(actualResults)
-    }
-
-    @AfterTest
-    fun unmock() {
-        unmockkAll()
     }
 }

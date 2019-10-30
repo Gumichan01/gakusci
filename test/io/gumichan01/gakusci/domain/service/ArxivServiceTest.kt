@@ -4,23 +4,17 @@ import io.gumichan01.gakusci.client.arxiv.ArxivClient
 import io.gumichan01.gakusci.client.arxiv.ArxivResultEntry
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.mockk.coEvery
-import io.mockk.mockkClass
-import io.mockk.unmockkAll
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions
 import java.util.*
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 
 class ArxivServiceTest {
 
-    private val ArxivClientMock = mockkClass(ArxivClient::class)
-
-    @BeforeTest
-    fun initMock() {
-        coEvery { ArxivClientMock.retrieveResults("lorem") } returns listOf(
+    private val ArxivClientMock: ArxivClient = mockk {
+        coEvery { retrieveResults("lorem") } returns listOf(
             ArxivResultEntry(
                 emptyList(),
                 "",
@@ -28,7 +22,8 @@ class ArxivServiceTest {
                 ""
             )
         )
-        coEvery { ArxivClientMock.retrieveResults("dfnkusfk") } returns emptyList()
+
+        coEvery { retrieveResults("dfnkusfk") } returns emptyList()
     }
 
     @Test
@@ -43,10 +38,5 @@ class ArxivServiceTest {
         val service = ArxivService(ArxivClientMock)
         val results: List<ResultEntry> = runBlocking { service.search("dfnkusfk") }
         Assertions.assertThat(results).isEmpty()
-    }
-
-    @AfterTest
-    fun unmock() {
-        unmockkAll()
     }
 }

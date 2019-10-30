@@ -2,24 +2,18 @@ package io.gumichan01.gakusci.domain.search
 
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.mockk.every
-import io.mockk.mockkClass
-import io.mockk.unmockkAll
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 @ExperimentalCoroutinesApi
 class SearchAggregatorTest {
 
-    private val fakeLauncher: SearchLauncher = mockkClass(SearchLauncher::class)
-
-    @BeforeTest
-    fun initMocks() {
-        every { fakeLauncher.launch("lorem") } returns Channel<ResultEntry>(4).run {
+    private val fakeLauncher: SearchLauncher = mockk {
+        every { launch("lorem") } returns Channel<ResultEntry>(4).run {
             runBlocking { send(ResultEntry("lorem", "ipsum")); close() }; this
         }
     }
@@ -30,10 +24,5 @@ class SearchAggregatorTest {
         val results: List<ResultEntry> = runBlocking { aggregator.retrieveResultsFromQuery("lorem") }
         assertThat(results.isEmpty()).isFalse()
         assertThat(results).containsAnyOf(ResultEntry("lorem", "ipsum"))
-    }
-
-    @AfterTest
-    fun unmock() {
-        unmockkAll()
     }
 }
