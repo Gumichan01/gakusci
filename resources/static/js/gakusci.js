@@ -17,7 +17,7 @@ function GakuSearchSubmit() {
 function GakuForm() {
   return React.createElement(
     'form',
-    {action: "/search"},
+    {action: "/researches"},
     GakuQuery(),
     GakuSearchSubmit()
   );
