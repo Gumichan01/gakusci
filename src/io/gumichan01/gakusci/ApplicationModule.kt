@@ -28,6 +28,10 @@ import java.io.File
 @ExperimentalCoroutinesApi
 fun Application.gakusciModule() {
 
+    val restController = RestController(
+        SearchAggregator(SearchLauncher(setOf(HalService(HalClient()), ArxivService(ArxivClient()))))
+    )
+
     install(ContentNegotiation) {
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)
@@ -44,7 +48,7 @@ fun Application.gakusciModule() {
 
     routing {
         staticPage()
-        restApiSearch()
+        restApiSearch(restController)
     }
 }
 
@@ -57,19 +61,8 @@ fun Routing.staticPage() {
 }
 
 @ExperimentalCoroutinesApi
-fun Routing.restApiSearch() {
+fun Routing.restApiSearch(restController: RestController) {
     get("/api/v1/researches") {
-        RestController(
-            SearchAggregator(
-                SearchLauncher(
-                    setOf(
-                        HalService(HalClient()),
-                        ArxivService(ArxivClient())
-                    )
-                )
-            )
-        ).handleRequest(
-            call
-        )
+        restController.handleRequest(call)
     }
 }
