@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import io.gumichan01.gakusci.client.arxiv.ArxivClient
 import io.gumichan01.gakusci.client.hal.HalClient
 import io.gumichan01.gakusci.controller.RestController
+import io.gumichan01.gakusci.controller.WebController
 import io.gumichan01.gakusci.domain.search.SearchAggregator
 import io.gumichan01.gakusci.domain.search.SearchLauncher
 import io.gumichan01.gakusci.domain.service.ArxivService
@@ -28,9 +29,9 @@ import java.io.File
 @ExperimentalCoroutinesApi
 fun Application.gakusciModule() {
 
-    val restController = RestController(
-        SearchAggregator(SearchLauncher(setOf(HalService(HalClient()), ArxivService(ArxivClient()))))
-    )
+    val searchAggregator = SearchAggregator(SearchLauncher(setOf(HalService(HalClient()), ArxivService(ArxivClient()))))
+    val restController = RestController(searchAggregator)
+    val webController = WebController(searchAggregator)
 
     install(ContentNegotiation) {
         jackson {
@@ -40,8 +41,8 @@ fun Application.gakusciModule() {
 
     install(Thymeleaf) {
         setTemplateResolver(ClassLoaderTemplateResolver().apply {
-            prefix = "template"
-            suffix = "html"
+            prefix = "templates/"
+            suffix = ".html"
             characterEncoding = "utf-8"
         })
     }
@@ -49,13 +50,14 @@ fun Application.gakusciModule() {
     routing {
         staticPage()
         restApiSearch(restController)
+        webSearch(webController)
     }
 }
 
 fun Routing.staticPage() {
     static("/") {
         staticRootFolder = File("resources/static")
-        files("js")
+        files(".")
         default("index.html")
     }
 }
@@ -64,5 +66,12 @@ fun Routing.staticPage() {
 fun Routing.restApiSearch(restController: RestController) {
     get("/api/v1/researches") {
         restController.handleRequest(call)
+    }
+}
+
+@ExperimentalCoroutinesApi
+fun Routing.webSearch(webController: WebController) {
+    get("/researches") {
+        webController.handleRequest(call)
     }
 }

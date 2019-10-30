@@ -37,5 +37,27 @@ class ApplicationTest {
             }
         }
     }
+
+    @Test
+    fun `test web application, normal case - return OK and HTML content`() {
+        withTestApplication({ gakusciModule() }) {
+            handleRequest(HttpMethod.Get, "/researches/?q=lorem").apply {
+                with(response) {
+                    assertThat(status()).isEqualTo(HttpStatusCode.OK)
+                    assertThat(content).isNotBlank()
+                    assertThat(content).contains(
+                        listOf(
+                            "<html>",
+                            "<div>",
+                            "</div>",
+                            "<script src=",
+                            "</script>",
+                            "</html>"
+                            )
+                    )
+                }
+            }
+        }
+    }
 }
 
