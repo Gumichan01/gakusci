@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>GakuSci search results - POC</title>
+</head>
+<body>
+<div>
+    <h1>Gakusci POC results</h1>
+    <div id="search_form"></div>
+
+    <div th:each="entry : ${entries}">
+        <p class="entry_label" th:text="${entry.label}"></p>
+        <a th:href="${entry.url}" th:text="${entry.url}"></a>
+    </div>
+
+    <!-- React -->
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+    <!-- Custom script that contains components -->
+    <script src="js/gakusci.js"></script>
+    <script src="js/search.js"></script>
+</div>
+</body>
+</html>
