@@ -8,5 +8,5 @@ data class ArxivResultEntry(
     val publishedDate: Date,
     val link: String
 ) {
-    fun label(): String = "$authors. $title. publishedDate"
+    fun label(): String = "$authors. $title. $publishedDate"
 }
