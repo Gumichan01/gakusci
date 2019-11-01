@@ -4,13 +4,15 @@ import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.gumichan01.gakusci.domain.service.IService
 import kotlinx.atomicfu.AtomicInt
 import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeoutOrNull
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class SearchLauncher(private val services: Set<IService>) {
+
+    private val logger: Logger = LoggerFactory.getLogger(SearchLauncher::class.java)
+
     fun launch(query: String): Channel<ResultEntry> {
         if (services.isEmpty()) {
             return Channel<ResultEntry>(0).run { close(); this }
@@ -25,6 +27,9 @@ class SearchLauncher(private val services: Set<IService>) {
                     withTimeoutOrNull(serviceCallTimeout) {
                         service.search(query).forEach { result -> channel.send(result) }
                     }
+                } catch (e: Exception) {
+                    logger.warn(e.message)
+                    e.message?.let { message -> cancel(message, e) }
                 } finally {
                     if (runningCoroutinesCounter.decrementAndGet() == 0) {
                         channel.close()

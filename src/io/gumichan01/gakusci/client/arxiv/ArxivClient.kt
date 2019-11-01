@@ -5,13 +5,10 @@ import com.rometools.rome.io.XmlReader
 import io.gumichan01.gakusci.RateLimitViolationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import java.net.URL
 
 class ArxivClient {
 
-    private val logger: Logger = LoggerFactory.getLogger(ArxivClient::class.java)
     private val arxivUrl = "https://export.arxiv.org/api/query?search_query=%s"
 
     /**
@@ -40,25 +37,19 @@ class ArxivClient {
         }
 
         val url = arxivUrl.format(query)
-        try {
-            val reader: XmlReader = withContext(Dispatchers.IO) {
-                XmlReader(URL(url))
-            }
-
-            val results: List<ArxivResultEntry> = SyndFeedInput().build(reader).entries.map { e ->
-                ArxivResultEntry(
-                    e.authors.map { a -> ArxivAuthor(a.name) },
-                    e.title,
-                    e.publishedDate,
-                    e.link
-                )
-            }
-            rateLimiter.reset()
-            return results
-        } catch (e: Exception) {
-
-            logger.warn(e.message)
-            return emptyList()
+        val reader: XmlReader = withContext(Dispatchers.IO) {
+            XmlReader(URL(url))
         }
+
+        val results: List<ArxivResultEntry> = SyndFeedInput().build(reader).entries.map { e ->
+            ArxivResultEntry(
+                e.authors.map { a -> ArxivAuthor(a.name) },
+                e.title,
+                e.publishedDate,
+                e.link
+            )
+        }
+        rateLimiter.reset()
+        return results
     }
 }
