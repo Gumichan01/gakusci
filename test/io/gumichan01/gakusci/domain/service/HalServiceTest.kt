@@ -2,6 +2,7 @@ package io.gumichan01.gakusci.domain.service
 
 import io.gumichan01.gakusci.client.hal.HalClient
 import io.gumichan01.gakusci.client.hal.HalResultEntry
+import io.gumichan01.gakusci.domain.model.DataSource
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -21,6 +22,7 @@ class HalServiceTest {
         val service = HalService(halClientMock)
         val results: List<ResultEntry> = runBlocking { service.search("lorem") }
         assertThat(results).isNotEmpty
+        assertThat(results).allMatch { r -> r.source == DataSource.HAL }
     }
 
     @Test

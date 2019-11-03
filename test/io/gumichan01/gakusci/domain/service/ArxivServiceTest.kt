@@ -2,14 +2,14 @@ package io.gumichan01.gakusci.domain.service
 
 import io.gumichan01.gakusci.client.arxiv.ArxivClient
 import io.gumichan01.gakusci.client.arxiv.ArxivResultEntry
+import io.gumichan01.gakusci.domain.model.DataSource
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import java.util.*
 import kotlin.test.Test
-
 
 class ArxivServiceTest {
 
@@ -27,16 +27,17 @@ class ArxivServiceTest {
     }
 
     @Test
-    fun `HAL services, valid search on fake client - return results`() {
+    fun `arXiv services, valid search on fake client - return results`() {
         val service = ArxivService(ArxivClientMock)
         val results: List<ResultEntry> = runBlocking { service.search("lorem") }
-        Assertions.assertThat(results).isNotEmpty
+        assertThat(results).isNotEmpty
+        assertThat(results).allMatch { r -> r.source == DataSource.ARXIV }
     }
 
     @Test
-    fun `HAL services, invalid search on real client - return nothing`() {
+    fun `arXiv services, invalid search on real client - return nothing`() {
         val service = ArxivService(ArxivClientMock)
         val results: List<ResultEntry> = runBlocking { service.search("dfnkusfk") }
-        Assertions.assertThat(results).isEmpty()
+        assertThat(results).isEmpty()
     }
 }

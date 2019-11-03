@@ -1,5 +1,5 @@
 package io.gumichan01.gakusci.domain.model
 
-sealed class DataSource
-object Hal : DataSource()
-object Arxiv : DataSource()
+enum class DataSource(val sourceName: String) {
+    HAL("HAL"), ARXIV("arXiv")
+}

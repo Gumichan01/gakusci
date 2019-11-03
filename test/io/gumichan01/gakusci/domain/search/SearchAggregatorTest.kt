@@ -1,5 +1,6 @@
 package io.gumichan01.gakusci.domain.search
 
+import io.gumichan01.gakusci.domain.model.DataSource
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.mockk.every
 import io.mockk.mockk
@@ -12,9 +13,11 @@ import kotlin.test.Test
 @ExperimentalCoroutinesApi
 class SearchAggregatorTest {
 
+    private val source: DataSource = mockk()
+
     private val fakeLauncher: SearchLauncher = mockk {
         every { launch("lorem") } returns Channel<ResultEntry>(4).run {
-            runBlocking { send(ResultEntry("lorem", "ipsum")); close() }; this
+            runBlocking { send(ResultEntry("lorem", "ipsum", source)); close() }; this
         }
     }
 
@@ -23,6 +26,6 @@ class SearchAggregatorTest {
         val aggregator = SearchAggregator(fakeLauncher)
         val results: List<ResultEntry> = runBlocking { aggregator.retrieveResultsFromQuery("lorem") }
         assertThat(results.isEmpty()).isFalse()
-        assertThat(results).containsAnyOf(ResultEntry("lorem", "ipsum"))
+        assertThat(results).containsAnyOf(ResultEntry("lorem", "ipsum", source))
     }
 }
