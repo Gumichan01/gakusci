@@ -13,7 +13,6 @@ class RestController(private val searchAggregator: SearchAggregator) {
         if (queryValue == null || queryValue.isBlank()) {
             call.respond(HttpStatusCode.BadRequest, "Bad request: no query parameter 'q' provided")
         } else {
-            // TODO NOTE Should I set 204 if not data is retrieved?
             call.respond(HttpStatusCode.OK, searchAggregator.retrieveResultsFromQuery(queryValue))
         }
     }

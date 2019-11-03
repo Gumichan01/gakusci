@@ -8,6 +8,7 @@ import kotlinx.coroutines.channels.receiveOrNull
 @ExperimentalCoroutinesApi
 class SearchAggregator(private val searchLauncher: SearchLauncher) {
 
+    // TODO Don't display results by source
     suspend fun retrieveResultsFromQuery(query: String): List<ResultEntry> {
         val channel = searchLauncher.launch(query)
         return consumeResults(channel)
