@@ -2,7 +2,7 @@ package io.gumichan01.gakusci.client.arxiv
 
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.XmlReader
-import io.gumichan01.gakusci.RateLimitViolationException
+import io.gumichan01.gakusci.client.exception.RateLimitViolationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.URL

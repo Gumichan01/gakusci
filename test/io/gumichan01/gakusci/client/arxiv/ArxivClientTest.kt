@@ -1,6 +1,6 @@
 package io.gumichan01.gakusci.client.arxiv
 
-import io.gumichan01.gakusci.RateLimitViolationException
+import io.gumichan01.gakusci.client.exception.RateLimitViolationException
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
