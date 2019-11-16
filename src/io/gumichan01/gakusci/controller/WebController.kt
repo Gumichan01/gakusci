@@ -15,8 +15,8 @@ class WebController(private val searchAggregator: SearchAggregator) {
         if (queryValue == null || queryValue.isBlank()) {
             call.respond(HttpStatusCode.BadRequest, "Bad request: no query parameter 'q' provided")
         } else {
-            val entries: List<ResultEntry> = searchAggregator.retrieveResultsFromQuery(queryValue)
-            call.respond(ThymeleafContent("search", mapOf("entries" to entries)))
+            val (totalResults: Int, _, entries: List<ResultEntry>) = searchAggregator.retrieveResults(queryValue)
+            call.respond(ThymeleafContent("search", mapOf("numFound" to totalResults, "entries" to entries)))
         }
     }
 }

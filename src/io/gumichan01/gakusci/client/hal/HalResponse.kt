@@ -1,3 +1,5 @@
 package io.gumichan01.gakusci.client.hal
 
-data class HalResponse(val response: HalResponseBody)
+import com.fasterxml.jackson.annotation.JsonProperty
+
+data class HalResponse(@JsonProperty("response") val body: HalResponseBody)

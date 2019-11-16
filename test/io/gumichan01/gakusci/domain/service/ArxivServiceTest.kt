@@ -1,9 +1,11 @@
 package io.gumichan01.gakusci.domain.service
 
 import io.gumichan01.gakusci.client.arxiv.ArxivClient
+import io.gumichan01.gakusci.client.arxiv.ArxivResponse
 import io.gumichan01.gakusci.client.arxiv.ArxivResultEntry
-import io.gumichan01.gakusci.domain.model.DataSource
-import io.gumichan01.gakusci.domain.model.ResultEntry
+import io.gumichan01.gakusci.domain.model.ServiceResponse
+import io.gumichan01.gakusci.utils.None
+import io.gumichan01.gakusci.utils.Option
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
@@ -13,31 +15,32 @@ import kotlin.test.Test
 
 class ArxivServiceTest {
 
-    private val ArxivClientMock: ArxivClient = mockk {
-        coEvery { retrieveResults("lorem") } returns listOf(
-            ArxivResultEntry(
-                emptyList(),
-                "",
-                Date(0L),
-                ""
+    private val arxivClientMock: ArxivClient = mockk {
+        coEvery { retrieveResults("lorem") } returns ArxivResponse(
+            1, 0, listOf(
+                ArxivResultEntry(
+                    emptyList(),
+                    "",
+                    Date(0L),
+                    ""
+                )
             )
         )
 
-        coEvery { retrieveResults("dfnkusfk") } returns emptyList()
+        coEvery { retrieveResults("dfnkusfk") } throws Exception()
     }
 
     @Test
     fun `arXiv services, valid search on fake client - return results`() {
-        val service = ArxivService(ArxivClientMock)
-        val results: List<ResultEntry> = runBlocking { service.search("lorem") }
-        assertThat(results).isNotEmpty
-        assertThat(results).allMatch { r -> r.source == DataSource.ARXIV }
+        val service = ArxivService(arxivClientMock)
+        val response: Option<ServiceResponse> = runBlocking { service.search("lorem") }
+        assertThat(response).isNotEqualTo(None)
     }
 
     @Test
     fun `arXiv services, invalid search on real client - return nothing`() {
-        val service = ArxivService(ArxivClientMock)
-        val results: List<ResultEntry> = runBlocking { service.search("dfnkusfk") }
-        assertThat(results).isEmpty()
+        val service = ArxivService(arxivClientMock)
+        val response: Option<ServiceResponse> = runBlocking { service.search("dfnkusfk") }
+        assertThat(response).isEqualTo(None)
     }
 }

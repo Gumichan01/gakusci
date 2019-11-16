@@ -29,8 +29,7 @@ class ArxivClient {
         }
     }
 
-
-    suspend fun retrieveResults(query: String): List<ArxivResultEntry> {
+    suspend fun retrieveResults(query: String): ArxivResponse {
 
         if (!rateLimiter.isRequestAllowed()) {
             throw RateLimitViolationException("Arxiv: Rate limit reached")
@@ -49,7 +48,9 @@ class ArxivClient {
                 e.link
             )
         }
+        // TODO Find a library that handles rate limiting properly
         rateLimiter.reset()
-        return results
+        // TODO retrieve number of results and start properly
+        return ArxivResponse(results.size, 0, results)
     }
 }

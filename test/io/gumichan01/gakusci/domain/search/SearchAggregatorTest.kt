@@ -2,6 +2,9 @@ package io.gumichan01.gakusci.domain.search
 
 import io.gumichan01.gakusci.domain.model.DataSource
 import io.gumichan01.gakusci.domain.model.ResultEntry
+import io.gumichan01.gakusci.domain.model.ServiceResponse
+import io.gumichan01.gakusci.utils.Option
+import io.gumichan01.gakusci.utils.Some
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,16 +19,17 @@ class SearchAggregatorTest {
     private val source: DataSource = mockk()
 
     private val fakeLauncher: SearchLauncher = mockk {
-        every { launch("lorem") } returns Channel<ResultEntry>(4).run {
-            runBlocking { send(ResultEntry("lorem", "ipsum", source)); close() }; this
+        every { launch("lorem") } returns Channel<Option<ServiceResponse>>(4).run {
+            runBlocking { send(Some(ServiceResponse(1,0, listOf(ResultEntry("lorem", "ipsum", source))))); close() }; this
         }
     }
 
     @Test
     fun `aggregate result entries - return results`() {
         val aggregator = SearchAggregator(fakeLauncher)
-        val results: List<ResultEntry> = runBlocking { aggregator.retrieveResultsFromQuery("lorem") }
-        assertThat(results.isEmpty()).isFalse()
-        assertThat(results).containsAnyOf(ResultEntry("lorem", "ipsum", source))
+        val results: ServiceResponse = runBlocking { aggregator.retrieveResults("lorem") }
+        assertThat(results.totalResults).isEqualTo(1)
+        assertThat(results.start).isEqualTo(0)
+        assertThat(results.entries).containsAnyOf(ResultEntry("lorem", "ipsum", source))
     }
 }
