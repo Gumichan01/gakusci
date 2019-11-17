@@ -9,6 +9,8 @@
     <h1>Gakusci POC results</h1>
     <div id="search_form"></div>
 
+    <p th:text="${numFound + ' results'}"></p>
+
     <div th:each="entry : ${entries}">
         <p class="entry_label" th:text="${entry.label}"></p>
         <p th:text="${'Source: ' + entry.source.sourceName}"></p>
