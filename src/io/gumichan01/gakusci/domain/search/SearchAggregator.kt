@@ -10,8 +10,7 @@ import kotlinx.coroutines.channels.receiveOrNull
 
 @ExperimentalCoroutinesApi
 class SearchAggregator(private val searchLauncher: SearchLauncher) {
-
-    // TODO Display results by source
+    
     // TODO Select n first results
     // TODO Set pagination
     suspend fun retrieveResults(query: String): ServiceResponse {

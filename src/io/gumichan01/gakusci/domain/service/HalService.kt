@@ -1,7 +1,6 @@
 package io.gumichan01.gakusci.domain.service
 
 import io.gumichan01.gakusci.client.hal.HalClient
-import io.gumichan01.gakusci.domain.model.DataSource
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.utils.None
@@ -16,7 +15,7 @@ class HalService(private val halClient: HalClient) : IService {
         return try {
             val (totalResults, startIndex, results) = halClient.retrieveResults(query).body
             val entries: List<ResultEntry> =
-                results?.map { e -> ResultEntry(e.label, e.uri, DataSource.HAL) } ?: emptyList()
+                results?.map { e -> ResultEntry(e.label, e.uri) } ?: emptyList()
             Some(ServiceResponse(totalResults, startIndex, entries))
         } catch (e: Exception) {
             logger.trace(e.message)
