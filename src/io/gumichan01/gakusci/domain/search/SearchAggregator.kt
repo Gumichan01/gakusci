@@ -10,7 +10,7 @@ import kotlinx.coroutines.channels.receiveOrNull
 
 @ExperimentalCoroutinesApi
 class SearchAggregator(private val searchLauncher: SearchLauncher) {
-    
+
     // TODO Select n first results
     // TODO Set pagination
     suspend fun retrieveResults(query: String): ServiceResponse {
@@ -18,7 +18,6 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
         return consumeResults(channel)
     }
 
-    // TODO Check if this implementation is memory-consuming
     private suspend fun consumeResults(channel: Channel<Option<ServiceResponse>>): ServiceResponse {
         return consumeResultsAux(channel, ServiceResponse(0, 0, emptyList()))
     }
