@@ -13,7 +13,6 @@
 
     <div th:each="entry : ${entries}">
         <p class="entry_label" th:text="${entry.label}"></p>
-        <p th:text="${'Source: ' + entry.source.sourceName}"></p>
         <a th:href="${entry.url}" th:text="${entry.url}"></a>
     </div>
 
