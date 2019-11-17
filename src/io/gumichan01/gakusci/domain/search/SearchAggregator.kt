@@ -13,6 +13,7 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
 
     // TODO Select n first results
     // TODO Set pagination
+    // TODO Set cache system
     suspend fun retrieveResults(query: String): ServiceResponse {
         val channel = searchLauncher.launch(query)
         return consumeResults(channel)
