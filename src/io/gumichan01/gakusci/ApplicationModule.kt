@@ -9,7 +9,11 @@ import io.gumichan01.gakusci.domain.search.SearchAggregator
 import io.gumichan01.gakusci.domain.search.SearchLauncher
 import io.gumichan01.gakusci.domain.service.ArxivService
 import io.gumichan01.gakusci.domain.service.HalService
-import io.ktor.application.*
+import io.ktor.application.Application
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.application.log
+import io.ktor.config.ApplicationConfigurationException
 import io.ktor.features.ContentNegotiation
 import io.ktor.http.content.default
 import io.ktor.http.content.files
@@ -32,9 +36,10 @@ fun Application.gakusciModule() {
     val searchAggregator = SearchAggregator(SearchLauncher(setOf(HalService(HalClient()), ArxivService(ArxivClient()))))
     val restController = RestController(searchAggregator)
     val webController = WebController(searchAggregator)
+    val envKind: EnvironmentKind = environmentKind()
 
-    val env = environment.config.property("ktor.deployment.environment").getString()
-    log.info("Application deployed in # $env #")
+    // TODO Display banner
+    log.info("Application deployed in # ${envKind.kind} #")
 
     install(ContentNegotiation) {
         jackson {
@@ -51,29 +56,50 @@ fun Application.gakusciModule() {
     }
 
     routing {
-        staticPage()
+        staticPage(environmentKind())
         restApiSearch(restController)
         webSearch(webController)
     }
 }
 
-fun Routing.staticPage() {
+@KtorExperimentalAPI
+private fun Application.environmentKind(): EnvironmentKind {
+    val envKind = environment.config.property("ktor.deployment.environment").getString()
+    return when (envKind) {
+        "dev", "development" -> EnvironmentKind.DEV
+        "prod", "production" -> EnvironmentKind.PRODUCTION
+        else -> throw ApplicationConfigurationException("Unknown environment: $envKind")
+    }
+}
+
+private enum class EnvironmentKind(val kind: String) {
+    DEV("dev"), PRODUCTION("production")
+}
+
+
+// Routing
+private fun Routing.staticPage(env: EnvironmentKind) {
     static("/") {
-        staticRootFolder = File("resources/static")
+        staticRootFolder =
+            if (env == EnvironmentKind.PRODUCTION) {
+                File("/app/resources/static")
+            } else {
+                File("resources/static")
+            }
         files(".")
         default("index.html")
     }
 }
 
 @ExperimentalCoroutinesApi
-fun Routing.restApiSearch(restController: RestController) {
+private fun Routing.restApiSearch(restController: RestController) {
     get("/api/v1/researches") {
         restController.handleRequest(call)
     }
 }
 
 @ExperimentalCoroutinesApi
-fun Routing.webSearch(webController: WebController) {
+private fun Routing.webSearch(webController: WebController) {
     get("/researches") {
         webController.handleRequest(call)
     }
