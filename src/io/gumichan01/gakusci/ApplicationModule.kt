@@ -9,9 +9,7 @@ import io.gumichan01.gakusci.domain.search.SearchAggregator
 import io.gumichan01.gakusci.domain.search.SearchLauncher
 import io.gumichan01.gakusci.domain.service.ArxivService
 import io.gumichan01.gakusci.domain.service.HalService
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
+import io.ktor.application.*
 import io.ktor.features.ContentNegotiation
 import io.ktor.http.content.default
 import io.ktor.http.content.files
@@ -22,16 +20,21 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.thymeleaf.Thymeleaf
+import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import java.io.File
 
+@KtorExperimentalAPI
 @ExperimentalCoroutinesApi
 fun Application.gakusciModule() {
 
     val searchAggregator = SearchAggregator(SearchLauncher(setOf(HalService(HalClient()), ArxivService(ArxivClient()))))
     val restController = RestController(searchAggregator)
     val webController = WebController(searchAggregator)
+
+    val env = environment.config.property("ktor.deployment.environment").getString()
+    log.info("Application deployed in # $env #")
 
     install(ContentNegotiation) {
         jackson {
