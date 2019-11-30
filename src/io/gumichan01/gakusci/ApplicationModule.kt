@@ -39,6 +39,7 @@ fun Application.gakusciModule() {
     val envKind: EnvironmentKind = environmentKind()
 
     // TODO Display banner
+    log.info("\n ${getBanner(envKind)}")
     log.info("Application deployed in # ${envKind.kind} #")
 
     install(ContentNegotiation) {
@@ -76,6 +77,14 @@ private enum class EnvironmentKind(val kind: String) {
     DEV("dev"), PRODUCTION("production")
 }
 
+private fun Application.getBanner(env: EnvironmentKind): String {
+    val pathname = if (env == EnvironmentKind.PRODUCTION) {
+        "/app/resources/banner/gakusci.txt"
+    } else {
+        "resources/banner/gakusci.txt"
+    }
+    return File(pathname).readText()
+}
 
 // Routing
 private fun Routing.staticPage(env: EnvironmentKind) {
