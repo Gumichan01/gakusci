@@ -38,7 +38,6 @@ fun Application.gakusciModule() {
     val webController = WebController(searchAggregator)
     val envKind: EnvironmentKind = environmentKind()
 
-    // TODO Display banner
     log.info("\n ${getBanner(envKind)}")
     log.info("Application deployed in # ${envKind.kind} #")
 
