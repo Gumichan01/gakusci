@@ -68,12 +68,13 @@ private fun Application.environmentKind(): EnvironmentKind {
     return when (envKind) {
         "dev", "development" -> EnvironmentKind.DEV
         "prod", "production" -> EnvironmentKind.PRODUCTION
+        "test" -> EnvironmentKind.TEST
         else -> throw ApplicationConfigurationException("Unknown environment: $envKind")
     }
 }
 
 private enum class EnvironmentKind(val kind: String) {
-    DEV("dev"), PRODUCTION("production")
+    DEV("dev"), PRODUCTION("production"), TEST("test")
 }
 
 private fun Application.getBanner(env: EnvironmentKind): String {
