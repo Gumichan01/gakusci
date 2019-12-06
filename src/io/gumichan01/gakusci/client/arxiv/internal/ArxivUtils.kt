@@ -1,11 +1,14 @@
 package io.gumichan01.gakusci.client.arxiv.internal
 
 import io.gumichan01.gakusci.client.arxiv.internal.model.Link
-import java.time.LocalDate
+import java.text.SimpleDateFormat
+import java.util.*
 
 object ArxivUtils {
-    fun toDate(date: String): LocalDate {
-        return LocalDate.parse(date.substringBefore('T'))
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+
+    fun toDate(date: String): Date {
+        return dateFormat.parse(date)
     }
 
     fun getWebsiteLink(links: List<Link>): Link {

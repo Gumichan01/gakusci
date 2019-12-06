@@ -18,6 +18,9 @@ class ArxivService(private val arxivClient: ArxivClient) : IService {
             Some(ServiceResponse(totalResults, start, entries))
         } catch (e: Exception) {
             logger.trace(e.message)
+            if (logger.isTraceEnabled) {
+                e.printStackTrace()
+            }
             None
         }
     }
