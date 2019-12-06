@@ -1,11 +1,10 @@
 package io.gumichan01.gakusci.client.arxiv
 
-import com.rometools.rome.io.SyndFeedInput
-import com.rometools.rome.io.XmlReader
+import com.ouattararomuald.syndication.Syndication
+import io.gumichan01.gakusci.client.arxiv.internal.ArxivAtomReader
+import io.gumichan01.gakusci.client.arxiv.internal.ArxivUtils
+import io.gumichan01.gakusci.client.arxiv.internal.model.ArxivFeed
 import io.gumichan01.gakusci.client.exception.RateLimitViolationException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.net.URL
 
 class ArxivClient {
 
@@ -29,28 +28,26 @@ class ArxivClient {
         }
     }
 
-    suspend fun retrieveResults(query: String): ArxivResponse {
-
+    fun retrieveResults(query: String): ArxivResponse {
         if (!rateLimiter.isRequestAllowed()) {
             throw RateLimitViolationException("Arxiv: Rate limit reached")
         }
 
         val url = arxivUrl.format(query)
-        val reader: XmlReader = withContext(Dispatchers.IO) {
-            XmlReader(URL(url))
-        }
+        // TODO Find a library that handles rate limiting properly
+        val arxivFeed: ArxivFeed = Syndication(url).create(ArxivAtomReader::class.java).readAtom()
+        rateLimiter.reset()
+        return ArxivResponse(arxivFeed.totalResults, arxivFeed.startIndex, arxivFeed.results())
+    }
 
-        val results: List<ArxivResultEntry> = SyndFeedInput().build(reader).entries.map { e ->
+    fun ArxivFeed.results(): List<ArxivResultEntry> {
+        return entries.map { e ->
             ArxivResultEntry(
                 e.authors.map { a -> ArxivAuthor(a.name) },
                 e.title,
-                e.publishedDate,
-                e.link
+                ArxivUtils.toDate(e.published),
+                ArxivUtils.getWebsiteLink(e.links).href
             )
         }
-        // TODO Find a library that handles rate limiting properly
-        rateLimiter.reset()
-        // TODO retrieve number of results and start properly
-        return ArxivResponse(results.size, 0, results)
     }
 }
