@@ -4,7 +4,7 @@ import io.gumichan01.gakusci.client.arxiv.internal.model.Link
 import java.time.LocalDate
 
 object ArxivUtils {
-    fun toDate(date: String): LocalDate? {
+    fun toDate(date: String): LocalDate {
         return LocalDate.parse(date.substringBefore('T'))
     }
 
