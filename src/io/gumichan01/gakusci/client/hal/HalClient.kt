@@ -21,7 +21,6 @@ class HalClient {
                 serializer = JacksonSerializer()
             }
         }
-
         return client.use { it.get(url) }
     }
 }

@@ -1,8 +1,7 @@
 package io.gumichan01.gakusci.client.arxiv
 
-import io.gumichan01.gakusci.client.exception.RateLimitViolationException
 import kotlinx.coroutines.runBlocking
-import org.assertj.core.api.Assertions.assertThatExceptionOfType
+import org.assertj.core.api.Assertions
 import kotlin.test.Test
 
 class ArxivClientTest {
@@ -13,14 +12,14 @@ class ArxivClientTest {
     }
 
     @Test
-    fun `Call the Arxiv service violating the rate limit - must fail`() {
-        assertThatExceptionOfType(RateLimitViolationException::class.java).isThrownBy {
-            runBlocking {
-                val client = ArxivClient()
-                client.retrieveResults("coroutine")
-                client.retrieveResults("coroutine")
-            }
-        }.withMessageContaining("Arxiv")
+    fun `Call the Arxiv service violating the rate limit - must return null`() {
+        var result: ArxivResponse? = ArxivResponse(0, 0, emptyList())
+        val client = ArxivClient()
+        runBlocking {
+            client.retrieveResults("coroutine")
+            result = client.retrieveResults("coroutine")
+        }
+        Assertions.assertThat(result).isNull()
     }
 }
 

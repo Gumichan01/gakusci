@@ -8,7 +8,6 @@ import io.github.bucket4j.local.LocalBucket
 import io.gumichan01.gakusci.client.arxiv.internal.ArxivAtomReader
 import io.gumichan01.gakusci.client.arxiv.internal.ArxivUtils
 import io.gumichan01.gakusci.client.arxiv.internal.model.ArxivFeed
-import io.gumichan01.gakusci.client.exception.RateLimitViolationException
 import java.time.Duration
 
 class ArxivClient {
@@ -22,12 +21,12 @@ class ArxivClient {
             .build()
     }
 
-    fun retrieveResults(query: String): ArxivResponse {
+    fun retrieveResults(query: String): ArxivResponse? {
         return if (rateLimiter.tryConsume(1L)) {
             val url: String = arxivUrl.format(query)
             val arxivFeed: ArxivFeed = Syndication(url).create(ArxivAtomReader::class.java).readAtom()
             ArxivResponse(arxivFeed.totalResults, arxivFeed.startIndex, arxivFeed.results())
-        } else throw RateLimitViolationException("Arxiv: Rate limit reached")
+        } else null
     }
 
     fun ArxivFeed.results(): List<ArxivResultEntry> {
