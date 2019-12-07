@@ -1,43 +1,33 @@
 package io.gumichan01.gakusci.client.arxiv
 
 import com.ouattararomuald.syndication.Syndication
+import io.github.bucket4j.Bandwidth
+import io.github.bucket4j.Bucket4j
+import io.github.bucket4j.Refill
+import io.github.bucket4j.local.LocalBucket
 import io.gumichan01.gakusci.client.arxiv.internal.ArxivAtomReader
 import io.gumichan01.gakusci.client.arxiv.internal.ArxivUtils
 import io.gumichan01.gakusci.client.arxiv.internal.model.ArxivFeed
 import io.gumichan01.gakusci.client.exception.RateLimitViolationException
+import java.time.Duration
 
 class ArxivClient {
 
     private val arxivUrl = "https://export.arxiv.org/api/query?search_query=%s"
+    private val rateLimiter = createLimiter()
 
-    /**
-     * This quick-and-dirty implementation of the rate limiter is specific to the Arxiv client.
-     * See this link: https://arxiv.org/help/api/tou#rate-limits
-     * Some other services may need something similar, but YAGNI
-     */
-    private val rateLimiter = object {
-        private val TIME_LIMIT_BETWEEN_REQUESTS_IN_MILLISECONDS = 3000L
-        private var requestTimestamp = 0L
-
-        fun reset() {
-            requestTimestamp = System.currentTimeMillis()
-        }
-
-        fun isRequestAllowed(): Boolean {
-            return (System.currentTimeMillis() - requestTimestamp) > TIME_LIMIT_BETWEEN_REQUESTS_IN_MILLISECONDS
-        }
+    private fun createLimiter(): LocalBucket {
+        return Bucket4j.builder()
+            .addLimit(Bandwidth.classic(1, Refill.greedy(1L, Duration.ofSeconds(3))))
+            .build()
     }
 
     fun retrieveResults(query: String): ArxivResponse {
-        if (!rateLimiter.isRequestAllowed()) {
-            throw RateLimitViolationException("Arxiv: Rate limit reached")
-        }
-
-        val url = arxivUrl.format(query)
-        // TODO Find a library that handles rate limiting properly
-        val arxivFeed: ArxivFeed = Syndication(url).create(ArxivAtomReader::class.java).readAtom()
-        rateLimiter.reset()
-        return ArxivResponse(arxivFeed.totalResults, arxivFeed.startIndex, arxivFeed.results())
+        return if (rateLimiter.tryConsume(1L)) {
+            val url: String = arxivUrl.format(query)
+            val arxivFeed: ArxivFeed = Syndication(url).create(ArxivAtomReader::class.java).readAtom()
+            ArxivResponse(arxivFeed.totalResults, arxivFeed.startIndex, arxivFeed.results())
+        } else throw RateLimitViolationException("Arxiv: Rate limit reached")
     }
 
     fun ArxivFeed.results(): List<ArxivResultEntry> {
