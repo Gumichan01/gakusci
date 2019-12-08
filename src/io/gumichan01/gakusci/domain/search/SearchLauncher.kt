@@ -31,10 +31,7 @@ class SearchLauncher(private val services: Set<IService>) {
                     withTimeoutOrNull(serviceCallTimeout) {
                         channel.send(service.search(query))
                     }
-                } /*catch (e: Exception) {
-                    logger.warn(e.message)
-                    e.message?.let { message -> cancel(message, e) }
-                }*/ finally {
+                } finally {
                     if (runningCoroutinesCounter.decrementAndGet() == 0) {
                         channel.close()
                     }
