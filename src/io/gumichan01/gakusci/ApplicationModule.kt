@@ -26,9 +26,11 @@ import io.ktor.routing.routing
 import io.ktor.thymeleaf.Thymeleaf
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import java.io.File
 
+@FlowPreview
 @KtorExperimentalAPI
 @ExperimentalCoroutinesApi
 fun Application.gakusciModule() {
