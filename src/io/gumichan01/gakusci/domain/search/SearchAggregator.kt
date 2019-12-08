@@ -19,10 +19,12 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
         return consumeResults(channel)
     }
 
+    @Deprecated("Old implementation of data consuming", replaceWith = ReplaceWith("SearchResultConsumer.consume"), level = DeprecationLevel.WARNING)
     private suspend fun consumeResults(channel: Channel<Option<ServiceResponse>>): ServiceResponse {
         return consumeResultsAux(channel, ServiceResponse(0, 0, emptyList()))
     }
 
+    @Deprecated("Old implementation of data consuming")
     private tailrec suspend fun consumeResultsAux(
         chan: Channel<Option<ServiceResponse>>,
         acc: ServiceResponse
