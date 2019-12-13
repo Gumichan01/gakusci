@@ -24,7 +24,6 @@ class SearchResultConsumer {
     }
 
     private suspend fun consumeResults(channel: Channel<Option<ServiceResponse>>): ServiceResponse {
-        <<<<<<< HEAD
         val (total, results) = channel.consumeAsFlow()
             .filterIsInstance<Some<ServiceResponse>>()
             .map { s -> s.t }
