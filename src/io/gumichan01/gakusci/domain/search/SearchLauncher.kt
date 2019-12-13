@@ -10,12 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 class SearchLauncher(private val services: Set<IService>) {
-
-    private val logger: Logger = LoggerFactory.getLogger(SearchLauncher::class.java)
 
     fun launch(query: String): Channel<Option<ServiceResponse>> {
         if (services.isEmpty()) {

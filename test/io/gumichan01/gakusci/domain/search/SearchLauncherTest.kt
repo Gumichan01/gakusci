@@ -17,14 +17,14 @@ import kotlin.test.Test
 class SearchLauncherTest {
 
     private val fakeService: IService = mockk {
-        coEvery { search("lorem") } returns Some(ServiceResponse(1, 0, listOf(ResultEntry("", ""))))
+        coEvery { search("lorem") } returns Some(ServiceResponse(1, listOf(ResultEntry("", ""))))
     }
     private val fakeService2: IService = mockk {
-        coEvery { search("lorem") } returns Some(ServiceResponse(1, 0, listOf(ResultEntry("", ""))))
+        coEvery { search("lorem") } returns Some(ServiceResponse(1, listOf(ResultEntry("", ""))))
     }
     private val fakeObjectService: IService = mockk {
         coEvery { search("lorem") } returns Some(
-            ServiceResponse(1, 0, listOf(ResultEntry("lorem", "ipsum")))
+            ServiceResponse(1, listOf(ResultEntry("lorem", "ipsum")))
         )
     }
 
@@ -49,7 +49,7 @@ class SearchLauncherTest {
         val searchLauncher = SearchLauncher(setOf(fakeService, fakeService2))
         val channel: Channel<Option<ServiceResponse>> = searchLauncher.launch("lorem")
         assertThat(runBlocking { channel.receive() }).isEqualTo(
-            Some(ServiceResponse(1, 0, listOf(ResultEntry("", ""))))
+            Some(ServiceResponse(1, listOf(ResultEntry("", ""))))
         )
     }
 
@@ -59,8 +59,8 @@ class SearchLauncherTest {
         val channel: Channel<Option<ServiceResponse>> = searchLauncher.launch("lorem")
 
         val expectedResults: Set<Some<ServiceResponse>> = setOf(
-            Some(ServiceResponse(1, 0, listOf(ResultEntry("", "")))),
-            Some(ServiceResponse(1, 0, listOf(ResultEntry("lorem", "ipsum"))))
+            Some(ServiceResponse(1, listOf(ResultEntry("", "")))),
+            Some(ServiceResponse(1, listOf(ResultEntry("lorem", "ipsum"))))
         )
         val tmpResults: MutableList<Option<ServiceResponse>> = mutableListOf()
         repeat(2) {

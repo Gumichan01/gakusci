@@ -16,9 +16,9 @@ class ArxivService(private val arxivClient: ArxivClient) : IService {
         return try {
             val retrievedResults: ArxivResponse? = arxivClient.retrieveResults(query)
             if (retrievedResults != null) {
-                val (totalResults, start, results) = retrievedResults
+                val (totalResults, results) = retrievedResults
                 val entries = results.map { r -> ResultEntry(r.label(), r.link) }
-                Some(ServiceResponse(totalResults, start, entries))
+                Some(ServiceResponse(totalResults, entries))
             } else None
         } catch (e: Exception) {
             logger.trace(e.message)

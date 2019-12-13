@@ -17,23 +17,23 @@ import kotlinx.coroutines.flow.reduce
 class SearchResultConsumer {
     suspend fun consume(channel: Channel<Option<ServiceResponse>>): ServiceResponse {
         return if (channel.isClosedForReceive) {
-            ServiceResponse(0, 0, emptyList())
+            ServiceResponse(0, emptyList())
         } else {
             consumeResults(channel)
         }
     }
 
     private suspend fun consumeResults(channel: Channel<Option<ServiceResponse>>): ServiceResponse {
-        val (total, start, results) = channel.consumeAsFlow()
+        val (total, results) = channel.consumeAsFlow()
             .filterIsInstance<Some<ServiceResponse>>()
             .map { s -> s.t }
-            .map { (total, start, responseEntries) -> Triple(total, start, listOf(responseEntries)) }
-            .reduce { acc, triple -> Triple(acc.first + triple.first, triple.second, acc.third + triple.third) }
-        return produceResponse(total, start, results)
+            .map { (total, responseEntries) -> Pair(total, listOf(responseEntries)) }
+            .reduce { acc, pair -> Pair(acc.first + pair.first, acc.second + pair.second) }
+        return produceResponse(total, results)
         // NOTE I'm not sure if I need the start value
     }
 
-    private fun produceResponse(total: Int, start: Int, results: List<List<ResultEntry>>): ServiceResponse {
+    private fun produceResponse(total: Int, results: List<List<ResultEntry>>): ServiceResponse {
         val entries: MutableList<ResultEntry> = mutableListOf()
         var sequences = results
         while (sequences.isNotEmpty()) {
@@ -41,6 +41,6 @@ class SearchResultConsumer {
                 .onEach { seq -> entries.add(seq.first()) }
                 .map { seq -> seq.drop(1) }
         }
-        return ServiceResponse(total, start, entries)
+        return ServiceResponse(total, entries)
     }
 }

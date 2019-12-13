@@ -18,7 +18,7 @@ class ArxivServiceTest {
 
     private val arxivClientMock: ArxivClient = mockk {
         coEvery { retrieveResults("lorem") } returns ArxivResponse(
-            1, 0, listOf(
+            1, listOf(
                 ArxivResultEntry(
                     emptyList(),
                     "",

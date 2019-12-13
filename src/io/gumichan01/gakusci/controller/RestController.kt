@@ -5,9 +5,11 @@ import io.ktor.application.ApplicationCall
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+@FlowPreview
 @ExperimentalCoroutinesApi
 class RestController(private val searchAggregator: SearchAggregator) {
     private val logger: Logger = LoggerFactory.getLogger(RestController::class.java)

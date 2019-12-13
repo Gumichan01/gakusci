@@ -25,7 +25,7 @@ class ArxivClient {
         return if (rateLimiter.tryConsume(1L)) {
             val url: String = arxivUrl.format(query)
             val arxivFeed: ArxivFeed = Syndication(url).create(ArxivAtomReader::class.java).readAtom()
-            ArxivResponse(arxivFeed.totalResults, arxivFeed.startIndex, arxivFeed.results())
+            ArxivResponse(arxivFeed.totalResults, arxivFeed.results())
         } else null
     }
 

@@ -16,7 +16,6 @@ internal class SearchResultConsumerTest {
         val channel: Channel<Option<ServiceResponse>> = Channel<Option<ServiceResponse>>(0).run { close(); this }
         val response: ServiceResponse = runBlocking { SearchResultConsumer().consume(channel) }
         assertThat(response.totalResults).isEqualTo(0)
-        assertThat(response.start).isEqualTo(0)
         assertThat(response.entries).isEmpty()
     }
 
@@ -28,7 +27,6 @@ internal class SearchResultConsumerTest {
                     Some(
                         ServiceResponse(
                             1,
-                            0,
                             listOf(ResultEntry("hello", "http://www.example.com"))
                         )
                     )
@@ -39,7 +37,6 @@ internal class SearchResultConsumerTest {
         }
         val response: ServiceResponse = runBlocking { SearchResultConsumer().consume(channel) }
         assertThat(response.totalResults).isEqualTo(1)
-        assertThat(response.start).isEqualTo(0)
         assertThat(response.entries).isNotEmpty
         assertThat(response.entries).contains(ResultEntry("hello", "http://www.example.com"))
     }
@@ -52,7 +49,6 @@ internal class SearchResultConsumerTest {
                     Some(
                         ServiceResponse(
                             2,
-                            0,
                             listOf(
                                 ResultEntry("hello", "http://www.example.com/1"),
                                 ResultEntry("world", "http://www.example.com/2")
@@ -66,7 +62,6 @@ internal class SearchResultConsumerTest {
         }
         val response: ServiceResponse = runBlocking { SearchResultConsumer().consume(channel) }
         assertThat(response.totalResults).isEqualTo(2)
-        assertThat(response.start).isEqualTo(0)
         assertThat(response.entries).isNotEmpty
         assertThat(response.entries).contains(
             ResultEntry("hello", "http://www.example.com/1"),
@@ -82,7 +77,6 @@ internal class SearchResultConsumerTest {
                     Some(
                         ServiceResponse(
                             2,
-                            0,
                             listOf(
                                 ResultEntry("hello", "http://www.example.com/1"),
                                 ResultEntry("world", "http://www.example.com/2")
@@ -94,7 +88,6 @@ internal class SearchResultConsumerTest {
                     Some(
                         ServiceResponse(
                             1,
-                            0,
                             listOf(
                                 ResultEntry("foo", "http://www.bar.com")
                             )
@@ -107,7 +100,6 @@ internal class SearchResultConsumerTest {
         }
         val response: ServiceResponse = runBlocking { SearchResultConsumer().consume(channel) }
         assertThat(response.totalResults).isEqualTo(3)
-        assertThat(response.start).isEqualTo(0)
         assertThat(response.entries).isNotEmpty
         assertThat(response.entries).isEqualTo(
             listOf(

@@ -13,10 +13,10 @@ class HalService(private val halClient: HalClient) : IService {
 
     override suspend fun search(query: String): Option<ServiceResponse> {
         return try {
-            val (totalResults, startIndex, results) = halClient.retrieveResults(query).body
+            val (totalResults, _, results) = halClient.retrieveResults(query).body
             val entries: List<ResultEntry> =
                 results?.map { e -> ResultEntry(e.label, e.uri) } ?: emptyList()
-            Some(ServiceResponse(totalResults, startIndex, entries))
+            Some(ServiceResponse(totalResults, entries))
         } catch (e: Exception) {
             logger.trace(e.message)
             None
