@@ -102,6 +102,7 @@ private fun Routing.staticPage(env: EnvironmentKind) {
     }
 }
 
+@FlowPreview
 @ExperimentalCoroutinesApi
 private fun Routing.restApiSearch(restController: RestController) {
     get("/api/v1/researches") {
@@ -109,6 +110,7 @@ private fun Routing.restApiSearch(restController: RestController) {
     }
 }
 
+@FlowPreview
 @ExperimentalCoroutinesApi
 private fun Routing.webSearch(webController: WebController) {
     get("/researches") {
