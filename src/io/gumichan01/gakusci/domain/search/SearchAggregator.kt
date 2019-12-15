@@ -1,35 +1,40 @@
 package io.gumichan01.gakusci.domain.search
 
 
+import com.github.benmanes.caffeine.cache.Cache
+import com.github.benmanes.caffeine.cache.Caffeine
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.model.ServiceResponse
-import io.gumichan01.gakusci.domain.search.cache.ResultCache
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.future.future
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 @FlowPreview
 @ExperimentalCoroutinesApi
 class SearchAggregator(private val searchLauncher: SearchLauncher) {
 
+    private val logger: Logger = LoggerFactory.getLogger(SearchAggregator::class.java)
+
     private val searchResultConsumer = SearchResultConsumer()
-    private val cache = ResultCache()
+    private val cacheImpl: Cache<String, ServiceResponse> =
+        Caffeine.newBuilder().maximumSize(10L).build<String, ServiceResponse>()
 
     // TODO Select n first results
     // TODO Set pagination
-    // TODO Set cache system
-    suspend fun retrieveResults(query: String): SearchResponse {
-        val (total, entries) = getOrPutCachedValue(query)
+    fun retrieveResults(query: String): SearchResponse {
+        val (total, entries) = cacheImpl.getCachedValue(query) { consume(query) }
+        logger.trace("Estimated cache size: ${cacheImpl.estimatedSize()}")
         return SearchResponse(total, 0, entries)
     }
 
-    suspend fun getOrPutCachedValue(query: String): ServiceResponse {
-        val response: ServiceResponse? = cache.get(query)
-        return if (response == null) {
-            cache.put(query, searchResultConsumer.consume(searchLauncher.launch(query)))
-            cache.get(query) ?: throw IllegalStateException("Invalid state of the cache")
-        } else {
-            response
-        }
+    private fun consume(query: String): ServiceResponse =
+        CoroutineScope(Dispatchers.Default).future { searchResultConsumer.consume(searchLauncher.launch(query)) }.get()
 
+    private fun Cache<String, ServiceResponse>.getCachedValue(key: String, f: () -> ServiceResponse): ServiceResponse {
+        return get(key) { f() } ?: throw IllegalStateException("Illegal state of cache: ${cacheImpl.asMap()}")
     }
 }
