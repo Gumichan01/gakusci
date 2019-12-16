@@ -14,6 +14,7 @@ import kotlinx.coroutines.FlowPreview
 @FlowPreview
 @ExperimentalCoroutinesApi
 class WebController(private val searchAggregator: SearchAggregator) {
+
     suspend fun handleRequest(call: ApplicationCall) {
         val queryParam: QueryParam? = retrieveParam(call.request.queryParameters)
         if (queryParam == null) {
