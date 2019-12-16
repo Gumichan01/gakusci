@@ -25,7 +25,11 @@ class WebController(private val searchAggregator: SearchAggregator) {
     }
 
     private fun retrieveParam(queryParameters: Parameters): QueryParam? {
-        return queryParameters["q"]?.let { QueryParam(it) }
+        return queryParameters["q"]?.let {
+            val rows = 1000
+            val start = queryParameters["start"]?.toInt() ?: 0
+            QueryParam(it, start, rows)
+        }
     }
 
 }
