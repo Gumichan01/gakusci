@@ -24,6 +24,10 @@ class RestController(private val searchAggregator: SearchAggregator) {
     }
 
     private fun retrieveParam(queryParameters: Parameters): QueryParam? {
-        return queryParameters["q"]?.let { QueryParam(it) }
+        return queryParameters["q"]?.let {
+            val start = queryParameters["start"]?.toInt() ?: 0
+            val rows = queryParameters["max_results"]?.toInt() ?: 10
+            QueryParam(it, start, rows)
+        }
     }
 }
