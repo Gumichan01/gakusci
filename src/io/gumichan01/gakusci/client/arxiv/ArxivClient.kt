@@ -8,6 +8,7 @@ import io.github.bucket4j.local.LocalBucket
 import io.gumichan01.gakusci.client.arxiv.internal.ArxivAtomReader
 import io.gumichan01.gakusci.client.arxiv.internal.ArxivUtils
 import io.gumichan01.gakusci.client.arxiv.internal.model.ArxivFeed
+import io.gumichan01.gakusci.domain.model.QueryParam
 import java.time.Duration
 
 class ArxivClient {
@@ -21,9 +22,10 @@ class ArxivClient {
             .build()
     }
 
-    fun retrieveResults(query: String): ArxivResponse? {
+    // TODO Handle query parameters (start, resultsPerPage, maximum results)
+    fun retrieveResults(queryParam: QueryParam): ArxivResponse? {
         return if (rateLimiter.tryConsume(1L)) {
-            val url: String = arxivUrl.format(query)
+            val url: String = arxivUrl.format(queryParam.query)
             val arxivFeed: ArxivFeed = Syndication(url).create(ArxivAtomReader::class.java).readAtom()
             ArxivResponse(arxivFeed.totalResults, arxivFeed.results())
         } else null

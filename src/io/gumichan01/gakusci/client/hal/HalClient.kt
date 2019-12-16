@@ -1,5 +1,6 @@
 package io.gumichan01.gakusci.client.hal
 
+import io.gumichan01.gakusci.domain.model.QueryParam
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.json.JacksonSerializer
@@ -10,8 +11,9 @@ class HalClient {
 
     private val halUrl = "https://api.archives-ouvertes.fr/search/?q=%s&wt=json"
 
-    suspend fun retrieveResults(query: String): HalResponse {
-        val url = halUrl.format(query)
+    // TODO Handle query parameters (start, resultsPerPage, maximum results)
+    suspend fun retrieveResults(queryParam: QueryParam): HalResponse {
+        val url = halUrl.format(queryParam.query)
         return retrieveData(url)
     }
 

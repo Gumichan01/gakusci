@@ -3,6 +3,7 @@ package io.gumichan01.gakusci.domain.search
 
 import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
+import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import kotlinx.coroutines.CoroutineScope
@@ -25,14 +26,15 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
 
     // TODO Select n first results
     // TODO Set pagination
-    fun retrieveResults(query: String): SearchResponse {
-        val (total, entries) = cacheImpl.getCachedValue(query) { consume(query) }
+    fun retrieveResults(queryParam: QueryParam): SearchResponse {
+        val (total, entries) = cacheImpl.getCachedValue(queryParam.query) { consume(queryParam) }
         logger.trace("Estimated cache size: ${cacheImpl.estimatedSize()}")
+        logger.trace("Total results: $total, start: ${queryParam.start}, number of entries: ${entries.size}")
         return SearchResponse(total, 0, entries)
     }
 
-    private fun consume(query: String): ServiceResponse =
-        CoroutineScope(Dispatchers.Default).future { searchResultConsumer.consume(searchLauncher.launch(query)) }.get()
+    private fun consume(queryParam: QueryParam): ServiceResponse =
+        CoroutineScope(Dispatchers.Default).future { searchResultConsumer.consume(searchLauncher.launch(queryParam)) }.get()
 
     private fun Cache<String, ServiceResponse>.getCachedValue(key: String, f: () -> ServiceResponse): ServiceResponse {
         return get(key) { f() } ?: throw IllegalStateException("Illegal state of cache: ${cacheImpl.asMap()}")

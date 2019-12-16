@@ -1,5 +1,6 @@
 package io.gumichan01.gakusci.domain.search
 
+import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.model.ServiceResponse
@@ -17,7 +18,7 @@ import kotlin.test.Test
 class SearchAggregatorTest {
 
     private val fakeLauncher: SearchLauncher = mockk {
-        every { launch("lorem") } returns Channel<Option<ServiceResponse>>(4).run {
+        every { launch(QueryParam("lorem")) } returns Channel<Option<ServiceResponse>>(4).run {
             runBlocking { send(Some(ServiceResponse(1, listOf(ResultEntry("lorem", "ipsum"))))); close() }; this
         }
     }
@@ -25,7 +26,7 @@ class SearchAggregatorTest {
     @Test
     fun `aggregate result entries - return results`() {
         val aggregator = SearchAggregator(fakeLauncher)
-        val results: SearchResponse = runBlocking { aggregator.retrieveResults("lorem") }
+        val results: SearchResponse = runBlocking { aggregator.retrieveResults(QueryParam("lorem")) }
         assertThat(results.totalResults).isEqualTo(1)
         assertThat(results.entries).containsAnyOf(ResultEntry("lorem", "ipsum"))
     }

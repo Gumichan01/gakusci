@@ -1,5 +1,6 @@
 package io.gumichan01.gakusci.domain.search
 
+import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.utils.Option
@@ -13,7 +14,7 @@ import kotlinx.coroutines.withTimeoutOrNull
 
 class SearchLauncher(private val services: Set<IService>) {
 
-    fun launch(query: String): Channel<Option<ServiceResponse>> {
+    fun launch(queryParam: QueryParam): Channel<Option<ServiceResponse>> {
         if (services.isEmpty()) {
             return Channel<Option<ServiceResponse>>(0).run { close(); this }
         }
@@ -25,7 +26,7 @@ class SearchLauncher(private val services: Set<IService>) {
             CoroutineScope(Dispatchers.Default).launch {
                 try {
                     withTimeoutOrNull(serviceCallTimeout) {
-                        channel.send(service.search(query))
+                        channel.send(service.search(queryParam))
                     }
                 } finally {
                     if (runningCoroutinesCounter.decrementAndGet() == 0) {
