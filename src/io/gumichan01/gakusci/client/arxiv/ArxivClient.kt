@@ -13,8 +13,8 @@ import java.time.Duration
 
 class ArxivClient {
 
-    private val arxivUrl = "https://export.arxiv.org/api/query?search_query=%s"
-    private val rateLimiter = createLimiter()
+    private val arxivUrl = "https://export.arxiv.org/api/query?search_query=%s&max_results=%d"
+    private val rateLimiter: LocalBucket = createLimiter()
 
     private fun createLimiter(): LocalBucket {
         return Bucket4j.builder()
@@ -25,7 +25,7 @@ class ArxivClient {
     // TODO Handle query parameters (start, resultsPerPage, maximum results)
     fun retrieveResults(queryParam: QueryParam): ArxivResponse? {
         return if (rateLimiter.tryConsume(1L)) {
-            val url: String = arxivUrl.format(queryParam.query)
+            val url: String = arxivUrl.format(queryParam.query, queryParam.rows)
             val arxivFeed: ArxivFeed = Syndication(url).create(ArxivAtomReader::class.java).readAtom()
             ArxivResponse(arxivFeed.totalResults, arxivFeed.results())
         } else null
