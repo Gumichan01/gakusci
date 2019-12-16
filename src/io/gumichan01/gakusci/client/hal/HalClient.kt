@@ -9,11 +9,10 @@ import io.ktor.client.request.get
 
 class HalClient {
 
-    private val halUrl = "https://api.archives-ouvertes.fr/search/?q=%s&wt=json"
+    private val halUrl = "https://api.archives-ouvertes.fr/search/?q=%s&rows=%d&wt=json"
 
-    // TODO Handle query parameters (start, resultsPerPage, maximum results)
     suspend fun retrieveResults(queryParam: QueryParam): HalResponse {
-        val url = halUrl.format(queryParam.query)
+        val url = halUrl.format(queryParam.query, queryParam.rows)
         return retrieveData(url)
     }
 
