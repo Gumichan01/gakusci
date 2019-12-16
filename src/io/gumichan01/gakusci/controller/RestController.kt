@@ -13,7 +13,6 @@ import kotlinx.coroutines.FlowPreview
 @ExperimentalCoroutinesApi
 class RestController(private val searchAggregator: SearchAggregator) {
 
-    // TODO Handle maximum number of parameters (default value: 10; max: 1000)
     suspend fun handleRequest(call: ApplicationCall) {
         val queryParam: QueryParam? = retrieveParam(call.request.queryParameters)
         if (queryParam == null) {

@@ -22,7 +22,6 @@ class ArxivClient {
             .build()
     }
 
-    // TODO Handle query parameters (start, resultsPerPage, maximum results)
     fun retrieveResults(queryParam: QueryParam): ArxivResponse? {
         return if (rateLimiter.tryConsume(1L)) {
             val url: String = arxivUrl.format(queryParam.query, queryParam.rows)
