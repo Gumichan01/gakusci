@@ -6,6 +6,7 @@ import com.github.benmanes.caffeine.cache.Caffeine
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.model.ServiceResponse
+import io.gumichan01.gakusci.domain.utils.slice
 import io.gumichan01.gakusci.domain.utils.take
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,13 +26,14 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
     private val cacheImpl: Cache<String, ServiceResponse> =
         Caffeine.newBuilder().maximumSize(10L).build<String, ServiceResponse>()
 
-    // TODO Set pagination
     // TODO Update the cache if the number of results requested is bigger
     fun retrieveResults(queryParam: QueryParam): SearchResponse {
+        val start: Int = queryParam.start
         val (total, entries) = cacheImpl.getCachedValue(queryParam.query) { consume(queryParam) }
         logger.trace("Estimated cache size: ${cacheImpl.estimatedSize()}")
-        logger.trace("Total results: $total, start: ${queryParam.start}, number of entries: ${entries.size}")
-        return SearchResponse(total, queryParam.start, entries).take(queryParam.rows)
+        logger.trace("Total results: $total, start: $start, number of entries: ${entries.size}")
+        return SearchResponse(total, start, entries).take(queryParam.rows)
+            .slice(IntRange(start, start + queryParam.numPerPage - 1))
     }
 
     private fun consume(queryParam: QueryParam): ServiceResponse =

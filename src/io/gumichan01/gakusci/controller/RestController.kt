@@ -26,7 +26,8 @@ class RestController(private val searchAggregator: SearchAggregator) {
         return queryParameters["q"]?.let { query ->
             val start = queryParameters["start"]?.toInt() ?: 0
             val rows = queryParameters["max_results"]?.toInt() ?: 10
-            QueryParam(query, start, rows)
+            val numPerPage = queryParameters["num_per_page"]?.toInt() ?: 10
+            QueryParam(query, rows, start, numPerPage)
         }
     }
 }
