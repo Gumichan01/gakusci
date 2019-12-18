@@ -26,6 +26,7 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
         Caffeine.newBuilder().maximumSize(10L).build<String, ServiceResponse>()
 
     // TODO Set pagination
+    // TODO Update the cache if the number of results requested is bigger
     fun retrieveResults(queryParam: QueryParam): SearchResponse {
         val (total, entries) = cacheImpl.getCachedValue(queryParam.query) { consume(queryParam) }
         logger.trace("Estimated cache size: ${cacheImpl.estimatedSize()}")
