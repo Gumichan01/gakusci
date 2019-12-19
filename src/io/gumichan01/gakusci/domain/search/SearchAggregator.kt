@@ -34,7 +34,7 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
         logger.trace("Estimated cache size: ${cacheImpl.estimatedSize()}")
         logger.trace("Total results: $total, start: $start, number of entries: ${entries.size}")
         return SearchResponse(total, start, entries).take(queryParam.rows)
-            .slice(IntRange(start, start + queryParam.numPerPage - 1))
+            .slice(start, queryParam.numPerPage)
     }
 
     private fun consume(queryParam: QueryParam): ServiceResponse =

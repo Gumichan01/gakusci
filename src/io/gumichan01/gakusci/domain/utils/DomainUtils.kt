@@ -4,6 +4,10 @@ import io.gumichan01.gakusci.domain.model.SearchResponse
 
 fun SearchResponse.take(n: Int) = this.copy(entries = entries.take(n))
 
+fun SearchResponse.slice(start: Int, numPerPage: Int?): SearchResponse {
+    return numPerPage?.let { slice(IntRange(start, start + numPerPage - 1)) } ?: this
+}
+
 fun SearchResponse.slice(range: IntRange): SearchResponse {
     return if (range.last > entries.size) {
         this
