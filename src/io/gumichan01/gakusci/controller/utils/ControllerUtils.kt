@@ -9,7 +9,7 @@ fun retrieveWebParam(queryParameters: Parameters): Pair<QueryParam?, String> {
         val start = queryParameters["start"]?.toInt() ?: 0
 
         if (start > rows) {
-            Pair(null, "Bad request: start is greater than rows")
+            Pair(null, "Bad request: start is greater than max_results")
         } else {
             Pair(QueryParam(query, rows, start), "")
         }
@@ -24,8 +24,8 @@ fun retrieveApiParam(queryParameters: Parameters): Pair<QueryParam?, String> {
         val numPerPage = queryParameters["num_per_page"]?.toInt() ?: 10
 
         when {
-            start > rows -> Pair(null, "Bad request: start is greater than rows")
-            numPerPage > rows -> Pair(null, "Bad request: cannot get more entries per page than rows")
+            start > rows -> Pair(null, "Bad request: start is greater than max_results")
+            numPerPage > rows -> Pair(null, "Bad request: cannot get more entries per page than max_results")
             else -> Pair(QueryParam(query, rows, start, numPerPage), "")
         }
     } ?: Pair(null, "Bad request: no query parameter 'q' provided")
