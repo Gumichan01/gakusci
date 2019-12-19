@@ -55,9 +55,27 @@ class ApplicationTest {
                             "<script src=",
                             "</script>",
                             "</html>"
-                            )
+                        )
                     )
                 }
+            }
+        }
+    }
+
+    @Test
+    fun `test REST Web-service API v1 search, query with start greater than max_results - return Bad request`() {
+        withTestApplication({ gakusciModule() }) {
+            handleRequest(HttpMethod.Get, "/api/v1/researches/?q=a&max_results=10&start=100").apply {
+                assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
+            }
+        }
+    }
+
+    @Test
+    fun `test REST Web-service API v1 search, query with numPerPage greater than max_results - return Bad request`() {
+        withTestApplication({ gakusciModule() }) {
+            handleRequest(HttpMethod.Get, "/api/v1/researches/?q=b&max_results=10&start=1&num_per_page=100000").apply {
+                assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
             }
         }
     }
