@@ -31,8 +31,7 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
         val (total, entries) = cacheImpl.getOrUpdateCache(Pair(queryParam.query, queryParam.rows)) {
             consume(queryParam)
         }
-        logger.trace("Estimated cache size: ${cacheImpl.estimatedSize()}")
-        logger.trace("Total results: $total, start: $start, number of entries: ${entries.size}")
+        logger.trace("$queryParam - Total: $total, number of entries: ${entries.size}")
         return SearchResponse(total, start, entries).take(queryParam.rows)
             .slice(start, queryParam.numPerPage)
     }

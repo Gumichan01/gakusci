@@ -7,10 +7,14 @@ fun Cache<Pair<String, Int>, ServiceResponse>.getOrUpdateCache(
     key: Pair<String, Int>, f: () -> ServiceResponse
 ): ServiceResponse {
     val keyByQueryName: Pair<String, Int>? = getKeyOrNullByQueryName(key.query())
-    if (keyByQueryName != null && keyByQueryName.rows() < key.rows()) {
-        invalidate(keyByQueryName)
-    }
-    return getCachedValue(key, f)
+    return if (keyByQueryName != null) {
+        if (keyByQueryName.rows() < key.rows()) {
+            invalidate(keyByQueryName)
+            getCachedValue(key, f)
+        } else {
+            getCachedValue(keyByQueryName, f)
+        }
+    } else getCachedValue(key, f)
 }
 
 private fun Cache<Pair<String, Int>, ServiceResponse>.getCachedValue(
@@ -20,7 +24,9 @@ private fun Cache<Pair<String, Int>, ServiceResponse>.getCachedValue(
 }
 
 private fun Cache<Pair<String, Int>, ServiceResponse>.getKeyOrNullByQueryName(query: String): Pair<String, Int>? {
-    return asMap().keys.asSequence().filter { key -> key != null }.filter { key -> key.query() == query }.take(1)
+    return asMap().keys.asSequence()
+        .filter { key -> key != null }
+        .filter { key -> key.query() == query }.take(1)
         .firstOrNull()
 }
 
