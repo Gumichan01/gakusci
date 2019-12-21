@@ -18,7 +18,7 @@ data class ArxivFeed(
     @param:Element(name = "itemsPerPage")
     val itemsPerPage: Int,
 
-    @field:ElementList(name = "entry", inline = true)
-    @param:ElementList(name = "entry", inline = true)
-    val entries: List<Entry>
+    @field:ElementList(name = "entry", required = false, inline = true)
+    @param:ElementList(name = "entry", required = false, inline = true)
+    val entries: List<Entry>?
 )

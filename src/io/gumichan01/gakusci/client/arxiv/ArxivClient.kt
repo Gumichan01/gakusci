@@ -31,13 +31,13 @@ class ArxivClient {
     }
 
     fun ArxivFeed.results(): List<ArxivResultEntry> {
-        return entries.map { e ->
+        return entries?.map { e ->
             ArxivResultEntry(
                 e.authors.map { a -> ArxivAuthor(a.name) },
                 e.title,
                 ArxivUtils.toDate(e.published),
                 ArxivUtils.getWebsiteLink(e.links).href
             )
-        }
+        } ?: emptyList()
     }
 }
