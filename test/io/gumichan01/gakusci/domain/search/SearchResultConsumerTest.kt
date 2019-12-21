@@ -2,8 +2,6 @@ package io.gumichan01.gakusci.domain.search
 
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.gumichan01.gakusci.domain.model.ServiceResponse
-import io.gumichan01.gakusci.utils.Option
-import io.gumichan01.gakusci.utils.Some
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
@@ -13,7 +11,7 @@ internal class SearchResultConsumerTest {
 
     @Test
     fun `consume no result`() {
-        val channel: Channel<Option<ServiceResponse>> = Channel<Option<ServiceResponse>>(0).run { close(); this }
+        val channel = Channel<ServiceResponse>(0).run { close(); this }
         val response: ServiceResponse = runBlocking { SearchResultConsumer().consume(channel) }
         assertThat(response.totalResults).isEqualTo(0)
         assertThat(response.entries).isEmpty()
@@ -21,16 +19,9 @@ internal class SearchResultConsumerTest {
 
     @Test
     fun `consume 1 result entry`() {
-        val channel: Channel<Option<ServiceResponse>> = Channel<Option<ServiceResponse>>(1).run {
+        val channel = Channel<ServiceResponse>(1).run {
             runBlocking {
-                send(
-                    Some(
-                        ServiceResponse(
-                            1,
-                            listOf(ResultEntry("hello", "http://www.example.com"))
-                        )
-                    )
-                )
+                send(ServiceResponse(1, listOf(ResultEntry("hello", "http://www.example.com"))))
             }
             close()
             this
@@ -43,16 +34,14 @@ internal class SearchResultConsumerTest {
 
     @Test
     fun `consume 2 result entries from same source`() {
-        val channel: Channel<Option<ServiceResponse>> = Channel<Option<ServiceResponse>>(1).run {
+        val channel = Channel<ServiceResponse>(1).run {
             runBlocking {
                 send(
-                    Some(
-                        ServiceResponse(
-                            2,
-                            listOf(
-                                ResultEntry("hello", "http://www.example.com/1"),
-                                ResultEntry("world", "http://www.example.com/2")
-                            )
+                    ServiceResponse(
+                        2,
+                        listOf(
+                            ResultEntry("hello", "http://www.example.com/1"),
+                            ResultEntry("world", "http://www.example.com/2")
                         )
                     )
                 )
@@ -71,26 +60,22 @@ internal class SearchResultConsumerTest {
 
     @Test
     fun `consume several result entries from different sources`() {
-        val channel: Channel<Option<ServiceResponse>> = Channel<Option<ServiceResponse>>(4).run {
+        val channel = Channel<ServiceResponse>(4).run {
             runBlocking {
                 send(
-                    Some(
-                        ServiceResponse(
-                            2,
-                            listOf(
-                                ResultEntry("hello", "http://www.example.com/1"),
-                                ResultEntry("world", "http://www.example.com/2")
-                            )
+                    ServiceResponse(
+                        2,
+                        listOf(
+                            ResultEntry("hello", "http://www.example.com/1"),
+                            ResultEntry("world", "http://www.example.com/2")
                         )
                     )
                 )
                 send(
-                    Some(
-                        ServiceResponse(
-                            1,
-                            listOf(
-                                ResultEntry("foo", "http://www.bar.com")
-                            )
+                    ServiceResponse(
+                        1,
+                        listOf(
+                            ResultEntry("foo", "http://www.bar.com")
                         )
                     )
                 )

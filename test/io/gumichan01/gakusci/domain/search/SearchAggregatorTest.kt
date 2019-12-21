@@ -4,8 +4,6 @@ import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.model.ServiceResponse
-import io.gumichan01.gakusci.utils.Option
-import io.gumichan01.gakusci.utils.Some
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,8 +16,8 @@ import kotlin.test.Test
 class SearchAggregatorTest {
 
     private val fakeLauncher: SearchLauncher = mockk {
-        every { launch(QueryParam("lorem")) } returns Channel<Option<ServiceResponse>>(4).run {
-            runBlocking { send(Some(ServiceResponse(1, listOf(ResultEntry("lorem", "ipsum"))))); close() }; this
+        every { launch(QueryParam("lorem")) } returns Channel<ServiceResponse>(4).run {
+            runBlocking { send(ServiceResponse(1, listOf(ResultEntry("lorem", "ipsum")))); close() }; this
         }
     }
 
