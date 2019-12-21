@@ -6,6 +6,7 @@ import io.gumichan01.gakusci.client.hal.HalClient
 import io.gumichan01.gakusci.controller.RestController
 import io.gumichan01.gakusci.controller.WebController
 import io.gumichan01.gakusci.domain.search.SearchAggregator
+import io.gumichan01.gakusci.domain.search.SearchAggregatorBuilder
 import io.gumichan01.gakusci.domain.search.SearchLauncher
 import io.gumichan01.gakusci.domain.service.ArxivService
 import io.gumichan01.gakusci.domain.service.HalService
@@ -36,8 +37,8 @@ import java.io.File
 fun Application.gakusciModule() {
 
     val searchAggregator = SearchAggregator(SearchLauncher(setOf(HalService(HalClient()), ArxivService(ArxivClient()))))
-    val restController = RestController(searchAggregator)
-    val webController = WebController(searchAggregator)
+    val restController = RestController(SearchAggregatorBuilder)
+    val webController = WebController(SearchAggregatorBuilder)
     val envKind: EnvironmentKind = environmentKind()
 
     log.info("\n ${getBanner(envKind)}")
