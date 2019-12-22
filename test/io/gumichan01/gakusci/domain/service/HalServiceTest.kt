@@ -17,7 +17,7 @@ class HalServiceTest {
     private val halClientMock: HalClient = mockk {
         coEvery { retrieveResults(QueryParam("lorem")) } returns
                 HalResponse(HalResponseBody(1, 0, listOf(HalResultEntry(0, "", ""))))
-        coEvery { retrieveResults(QueryParam("dfnkusfk")) } throws Exception()
+        coEvery { retrieveResults(QueryParam("dfnkusfk")) } returns null
     }
 
     @Test

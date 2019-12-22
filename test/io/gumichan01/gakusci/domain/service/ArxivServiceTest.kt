@@ -26,7 +26,7 @@ class ArxivServiceTest {
             )
         )
 
-        coEvery { retrieveResults(QueryParam("dfnkusfk")) } throws Exception()
+        coEvery { retrieveResults(QueryParam("dfnkusfk")) } returns null
     }
 
     @Test
@@ -37,7 +37,7 @@ class ArxivServiceTest {
     }
 
     @Test
-    fun `arXiv services, invalid search on real client - return nothing`() {
+    fun `arXiv services, invalid search on fake client - return nothing`() {
         val service = ArxivService(arxivClientMock)
         val response: ServiceResponse? = runBlocking { service.search(QueryParam("dfnkusfk")) }
         assertThat(response).isNull()

@@ -9,10 +9,13 @@ import io.gumichan01.gakusci.client.arxiv.internal.ArxivAtomReader
 import io.gumichan01.gakusci.client.arxiv.internal.ArxivUtils
 import io.gumichan01.gakusci.client.arxiv.internal.model.ArxivFeed
 import io.gumichan01.gakusci.domain.model.QueryParam
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.time.Duration
 
 class ArxivClient {
 
+    private val logger: Logger = LoggerFactory.getLogger(ArxivClient::class.java)
     private val arxivUrl = "https://export.arxiv.org/api/query?search_query=%s&max_results=%d"
     private val rateLimiter: LocalBucket = createLimiter()
 
@@ -24,9 +27,17 @@ class ArxivClient {
 
     fun retrieveResults(queryParam: QueryParam): ArxivResponse? {
         return if (rateLimiter.tryConsume(1L)) {
-            val url: String = arxivUrl.format(queryParam.query, queryParam.rows)
-            val arxivFeed: ArxivFeed = Syndication(url).create(ArxivAtomReader::class.java).readAtom()
-            ArxivResponse(arxivFeed.totalResults, arxivFeed.results())
+            try {
+                val url: String = arxivUrl.format(queryParam.query, queryParam.rows)
+                val arxivFeed: ArxivFeed = Syndication(url).create(ArxivAtomReader::class.java).readAtom()
+                ArxivResponse(arxivFeed.totalResults, arxivFeed.results())
+            } catch (e: Exception) {
+                logger.trace(e.message)
+                if (logger.isTraceEnabled) {
+                    e.printStackTrace()
+                }
+                null
+            }
         } else null
     }
 
