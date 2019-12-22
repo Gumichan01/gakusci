@@ -52,14 +52,14 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
 
     class Builder(private var services: MutableSet<IService> = mutableSetOf()) {
 
-        fun withResearchServices(): Builder = apply { services.addAll(SearchType.RESEARCH.services) }
+        fun withResearchServices(): Builder = apply { services.addAll(DomainSearchType.RESEARCH.services) }
 
         fun build(): SearchAggregator {
             return SearchAggregator(SearchLauncher(services))
         }
     }
 
-    private enum class SearchType(val services: Set<IService>) {
+    private enum class DomainSearchType(val services: Set<IService>) {
         RESEARCH(setOf(HalService(HalClient()), ArxivService(ArxivClient())))
     }
 }
