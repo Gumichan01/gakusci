@@ -22,7 +22,6 @@ fun retrieveWebParam(queryParameters: Parameters): Pair<QueryParam?, String> {
     } ?: Pair(null, "Bad request: no query parameter 'q' provided")
 }
 
-// TODO prevent handling blank query
 fun retrieveApiParam(queryParameters: Parameters): Pair<QueryParam?, String> {
     return queryParameters["q"]?.let { query ->
         val start = queryParameters["start"]?.toInt() ?: 0
@@ -30,7 +29,12 @@ fun retrieveApiParam(queryParameters: Parameters): Pair<QueryParam?, String> {
         val numPerPage: Int? = queryParameters["num_per_page"]?.toInt()
 
         when {
-            start > rows -> Pair(null, "Bad request: start is greater than max_results")
+            query.isBlank() -> {
+                Pair(null, "Bad request: query parameter 'q' is blank")
+            }
+            start > rows -> {
+                Pair(null, "Bad request: start is greater than max_results")
+            }
             numPerPage != null && numPerPage > rows -> {
                 Pair(null, "Bad request: cannot get more entries per page than max_results")
             }
