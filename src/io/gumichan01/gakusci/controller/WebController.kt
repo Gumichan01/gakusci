@@ -12,10 +12,11 @@ import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class WebController() {
+class WebController {
 
     suspend fun handleRequest(call: ApplicationCall) {
         val (queryParam, message) = retrieveWebParam(call.request.queryParameters)
+        println(call.request.queryParameters.toString())
         if (queryParam == null) {
             call.respond(HttpStatusCode.BadRequest, message)
         } else {

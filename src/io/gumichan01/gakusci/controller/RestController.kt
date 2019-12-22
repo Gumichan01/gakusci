@@ -10,7 +10,7 @@ import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class RestController() {
+class RestController {
 
     suspend fun handleRequest(call: ApplicationCall) {
         val (queryParam, message) = retrieveApiParam(call.request.queryParameters)

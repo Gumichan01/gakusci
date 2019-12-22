@@ -8,10 +8,16 @@ fun retrieveWebParam(queryParameters: Parameters): Pair<QueryParam?, String> {
         val rows = 1000
         val start = queryParameters["start"]?.toInt() ?: 0
 
-        if (start > rows) {
-            Pair(null, "Bad request: start is greater than max_results")
-        } else {
-            Pair(QueryParam(query, rows, start), "")
+        when {
+            query.isBlank() -> {
+                Pair(null, "Bad request: query parameter 'q' is blank")
+            }
+            start > rows -> {
+                Pair(null, "Bad request: start is greater than max_results")
+            }
+            else -> {
+                Pair(QueryParam(query, rows, start), "")
+            }
         }
     } ?: Pair(null, "Bad request: no query parameter 'q' provided")
 }
