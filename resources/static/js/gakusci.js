@@ -1,21 +1,23 @@
 'use strict';
 
+const e = React.createElement;
+
 function GakuQuery() {
-  return React.createElement(
+  return e(
     'input',
     {id: "query", type: "text", name: "q"}
   );
 }
 
 function GakuSearchSubmit() {
-  return React.createElement(
+  return e(
     'input',
     {id: "search", type: "submit"}
   );
 }
 
 function GakuForm() {
-  return React.createElement(
+  return e(
     'form',
     {action: "/researches"},
     GakuQuery(),
@@ -32,4 +34,4 @@ function GakuForm() {
 
 */
 const domContainer = document.querySelector('#search_form');
-ReactDOM.render(React.createElement(GakuForm), domContainer);
+ReactDOM.render(e(GakuForm), domContainer);
