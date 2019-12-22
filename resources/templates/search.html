@@ -11,9 +11,9 @@
     <form action="/search">
         <input id="query" type="text" name="q"/>
         <input id="search" type="submit"/><br>
-        <input id="type_all" type="checkbox" name="t" value="research"/>
+        <input id="type_all" type="checkbox" name="t" value="research" th:checked="${research}"/>
         Research papers/articles
-        <input id="type_books" type="checkbox" name="t" value="books"/>
+        <input id="type_books" type="checkbox" name="t" value="books" th:checked="${books}"/>
         Books
     </form>
 

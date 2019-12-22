@@ -1,5 +1,6 @@
 package io.gumichan01.gakusci.controller
 
+import io.gumichan01.gakusci.controller.utils.SearchType
 import io.gumichan01.gakusci.controller.utils.retrieveSearchTypes
 import io.gumichan01.gakusci.controller.utils.retrieveWebParam
 import io.gumichan01.gakusci.domain.model.ResultEntry
@@ -27,7 +28,17 @@ class WebController {
             val types: List<String> = retrieveSearchTypes(call.request.queryParameters)
             val (totalResults: Int, _, entries: List<ResultEntry>) = buildSearchAggregator(types)
                 .retrieveResults(queryParam)
-            call.respond(ThymeleafContent("search", mapOf("numFound" to totalResults, "entries" to entries)))
+            call.respond(
+                ThymeleafContent(
+                    "search",
+                    mapOf(
+                        "numFound" to totalResults,
+                        "entries" to entries,
+                        SearchType.RESEARCH to types.contains(SearchType.RESEARCH),
+                        SearchType.BOOKS to types.contains(SearchType.BOOKS)
+                    )
+                )
+            )
         }
     }
 
@@ -35,7 +46,7 @@ class WebController {
         val builder = SearchAggregator.Builder()
         types.forEach { type ->
             when (type) {
-                "research" -> builder.withResearchServices()
+                SearchType.RESEARCH -> builder.withResearchServices()
                 else -> logger.trace("Unrecognized type: $type")
             }
         }
