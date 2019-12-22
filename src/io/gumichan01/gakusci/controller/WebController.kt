@@ -34,6 +34,7 @@ class WebController {
                     mapOf(
                         "numFound" to totalResults,
                         "entries" to entries,
+                        "query" to queryParam.query,
                         SearchType.RESEARCH to types.contains(SearchType.RESEARCH),
                         SearchType.BOOKS to types.contains(SearchType.BOOKS)
                     )
