@@ -5,6 +5,7 @@ import io.github.bucket4j.Bandwidth
 import io.github.bucket4j.Bucket4j
 import io.github.bucket4j.Refill
 import io.github.bucket4j.local.LocalBucket
+import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.arxiv.internal.ArxivAtomReader
 import io.gumichan01.gakusci.client.arxiv.internal.ArxivUtils
 import io.gumichan01.gakusci.client.arxiv.internal.model.ArxivFeed
@@ -13,7 +14,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
 
-class ArxivClient {
+class ArxivClient : IClient<ArxivResponse> {
 
     private val logger: Logger = LoggerFactory.getLogger(ArxivClient::class.java)
     private val arxivUrl = "https://export.arxiv.org/api/query?search_query=%s&max_results=%d"
@@ -25,7 +26,7 @@ class ArxivClient {
             .build()
     }
 
-    fun retrieveResults(queryParam: QueryParam): ArxivResponse? {
+    override suspend fun retrieveResults(queryParam: QueryParam): ArxivResponse? {
         return if (rateLimiter.tryConsume(1L)) {
             try {
                 val url: String = arxivUrl.format(queryParam.query, queryParam.rows)
@@ -41,7 +42,7 @@ class ArxivClient {
         } else null
     }
 
-    fun ArxivFeed.results(): List<ArxivResultEntry> {
+    private fun ArxivFeed.results(): List<ArxivResultEntry> {
         return entries?.map { e ->
             ArxivResultEntry(
                 e.authors.map { a -> ArxivAuthor(a.name) },
