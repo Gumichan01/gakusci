@@ -105,7 +105,7 @@ private fun Routing.restApiSearch(restController: RestController) {
 @FlowPreview
 @ExperimentalCoroutinesApi
 private fun Routing.webSearch(webController: WebController) {
-    get("/researches") {
+    get("/search") {
         webController.handleRequest(call)
     }
 }
