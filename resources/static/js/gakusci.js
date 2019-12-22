@@ -16,12 +16,26 @@ function GakuSearchSubmit() {
   );
 }
 
+function GakuSearchTypeSet(tvalue) {
+  return e(
+    'input',
+    {id: "type_all", type: "checkbox", name: 'type', value: tvalue}
+  );
+}
+
+function GakuTypeChoice() {
+  return e('div',)
+}
+
 function GakuForm() {
   return e(
     'form',
     {action: "/researches"},
     GakuQuery(),
-    GakuSearchSubmit()
+    GakuSearchSubmit(),
+    e('br'),
+    GakuSearchTypeSet("all"),
+    'AllSources'
   );
 }
 
