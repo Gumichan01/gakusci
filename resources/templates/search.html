@@ -11,8 +11,10 @@
     <form action="/search">
         <input id="query" type="text" name="q"/>
         <input id="search" type="submit"/><br>
-        <input id="type_all" type="checkbox" name="type" value="research"/>
+        <input id="type_all" type="checkbox" name="t" value="research"/>
         Research papers/articles
+        <input id="type_books" type="checkbox" name="t" value="books"/>
+        Books
     </form>
 
     <p th:text="${numFound + ' results'}"></p>
