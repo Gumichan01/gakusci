@@ -9,13 +9,20 @@
     <h1>Gakusci</h1>
     <p>/!\ This webapp is still in development /!\</p>
     <p><strong>DO NOT USE IT IN PRODUCTION</strong></p>
-    <div id="search_form"></div>
+    <!--<div id="search_form"></div>-->
+
+    <form action="/search">
+        <input id="query" type="text" name="q"/>
+        <input id="search" type="submit"/><br>
+        <input id="type_all" type="checkbox" name="type" value="research" checked/>
+        Research papers/articles
+    </form>
 
     <!-- React -->
-    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <!--<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>-->
+    <!--<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>-->
     <!-- Custom script that contains components -->
-    <script src="js/gakusci.js"></script>
+    <!--<script src="js/gakusci.js"></script>-->
 </div>
 </body>
 </html>
