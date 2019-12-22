@@ -6,8 +6,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.fold
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.reduce
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -23,7 +23,9 @@ class SearchResultConsumer {
     private suspend fun consumeResults(channel: Channel<ServiceResponse>): ServiceResponse {
         val (total, results) = channel.consumeAsFlow()
             .map { (total, responseEntries) -> Pair(total, listOf(responseEntries)) }
-            .reduce { acc, pair -> Pair(acc.first + pair.first, acc.second + pair.second) }
+            .fold(Pair<Int, List<List<ResultEntry>>>(0, emptyList())) { p1, p2 ->
+                Pair(p1.first + p2.first, p1.second + p2.second)
+            }
         return produceResponse(total, results)
     }
 
