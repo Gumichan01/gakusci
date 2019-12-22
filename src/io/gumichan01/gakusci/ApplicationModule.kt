@@ -1,15 +1,8 @@
 package io.gumichan01.gakusci
 
 import com.fasterxml.jackson.databind.SerializationFeature
-import io.gumichan01.gakusci.client.arxiv.ArxivClient
-import io.gumichan01.gakusci.client.hal.HalClient
 import io.gumichan01.gakusci.controller.RestController
 import io.gumichan01.gakusci.controller.WebController
-import io.gumichan01.gakusci.domain.search.SearchAggregator
-import io.gumichan01.gakusci.domain.search.SearchAggregatorBuilder
-import io.gumichan01.gakusci.domain.search.SearchLauncher
-import io.gumichan01.gakusci.domain.service.ArxivService
-import io.gumichan01.gakusci.domain.service.HalService
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -36,9 +29,8 @@ import java.io.File
 @ExperimentalCoroutinesApi
 fun Application.gakusciModule() {
 
-    val searchAggregator = SearchAggregator(SearchLauncher(setOf(HalService(HalClient()), ArxivService(ArxivClient()))))
-    val restController = RestController(SearchAggregatorBuilder)
-    val webController = WebController(SearchAggregatorBuilder)
+    val restController = RestController()
+    val webController = WebController()
     val envKind: EnvironmentKind = environmentKind()
 
     log.info("\n ${getBanner(envKind)}")
@@ -67,8 +59,7 @@ fun Application.gakusciModule() {
 
 @KtorExperimentalAPI
 private fun Application.environmentKind(): EnvironmentKind {
-    val envKind = environment.config.property("ktor.deployment.environment").getString()
-    return when (envKind) {
+    return when (val envKind = environment.config.property("ktor.deployment.environment").getString()) {
         "dev", "development" -> EnvironmentKind.DEV
         "prod", "production" -> EnvironmentKind.PRODUCTION
         "test" -> EnvironmentKind.TEST

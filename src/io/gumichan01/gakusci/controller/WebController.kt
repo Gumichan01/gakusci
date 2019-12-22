@@ -2,8 +2,7 @@ package io.gumichan01.gakusci.controller
 
 import io.gumichan01.gakusci.controller.utils.retrieveWebParam
 import io.gumichan01.gakusci.domain.model.ResultEntry
-import io.gumichan01.gakusci.domain.search.SearchAggregatorBuilder
-import io.gumichan01.gakusci.domain.search.SearchType
+import io.gumichan01.gakusci.domain.search.SearchAggregator
 import io.ktor.application.ApplicationCall
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
@@ -13,15 +12,15 @@ import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class WebController(private val searchAggregatorBuilder: SearchAggregatorBuilder) {
+class WebController() {
 
     suspend fun handleRequest(call: ApplicationCall) {
         val (queryParam, message) = retrieveWebParam(call.request.queryParameters)
         if (queryParam == null) {
             call.respond(HttpStatusCode.BadRequest, message)
         } else {
-            val (totalResults: Int, _, entries: List<ResultEntry>) = searchAggregatorBuilder.build(SearchType.RESEARCH)
-                .retrieveResults(queryParam)
+            val (totalResults: Int, _, entries: List<ResultEntry>) =
+                SearchAggregator.Builder().withResearchServices().build().retrieveResults(queryParam)
             call.respond(ThymeleafContent("search", mapOf("numFound" to totalResults, "entries" to entries)))
         }
     }

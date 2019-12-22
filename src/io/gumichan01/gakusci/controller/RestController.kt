@@ -1,8 +1,7 @@
 package io.gumichan01.gakusci.controller
 
 import io.gumichan01.gakusci.controller.utils.retrieveApiParam
-import io.gumichan01.gakusci.domain.search.SearchAggregatorBuilder
-import io.gumichan01.gakusci.domain.search.SearchType
+import io.gumichan01.gakusci.domain.search.SearchAggregator
 import io.ktor.application.ApplicationCall
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
@@ -11,7 +10,7 @@ import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class RestController(private val searchAggregatorBuilder: SearchAggregatorBuilder) {
+class RestController() {
 
     suspend fun handleRequest(call: ApplicationCall) {
         val (queryParam, message) = retrieveApiParam(call.request.queryParameters)
@@ -20,7 +19,7 @@ class RestController(private val searchAggregatorBuilder: SearchAggregatorBuilde
         } else {
             call.respond(
                 HttpStatusCode.OK,
-                searchAggregatorBuilder.build(SearchType.RESEARCH).retrieveResults(queryParam)
+                SearchAggregator.Builder().withResearchServices().build().retrieveResults(queryParam)
             )
         }
     }
