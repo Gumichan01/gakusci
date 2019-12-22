@@ -28,4 +28,14 @@ class SearchAggregatorTest {
         assertThat(results.totalResults).isEqualTo(1)
         assertThat(results.entries).containsAnyOf(ResultEntry("lorem", "ipsum"))
     }
+
+    @Test
+    fun `build research aggregator linked to no service`() {
+        assertThat(SearchAggregator.Builder().build()).isInstanceOf(SearchAggregator::class.java)
+    }
+
+    @Test
+    fun `build research aggregator with research services`() {
+        assertThat(SearchAggregator.Builder().withResearchServices().build()).isInstanceOf(SearchAggregator::class.java)
+    }
 }

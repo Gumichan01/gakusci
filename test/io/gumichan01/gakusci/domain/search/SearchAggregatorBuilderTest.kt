@@ -8,6 +8,5 @@ internal class SearchAggregatorBuilderTest {
     @Test
     fun `build research aggregator linked to no service`() {
         assertThat(SearchAggregatorBuilder.build(SearchType.RESEARCH)).isInstanceOf(SearchAggregator::class.java)
-
     }
 }
