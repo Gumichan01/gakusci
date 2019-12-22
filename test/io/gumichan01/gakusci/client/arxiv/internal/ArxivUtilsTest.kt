@@ -4,7 +4,6 @@ import io.gumichan01.gakusci.client.arxiv.internal.model.Link
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import kotlin.test.Test
 
 internal class ArxivUtilsTest {
