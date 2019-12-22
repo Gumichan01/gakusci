@@ -7,7 +7,6 @@
 <body>
 <div>
     <h1>Gakusci POC results</h1>
-    <!--<div id="search_form"></div>-->
 
     <form action="/search">
         <input id="query" type="text" name="q"/>
@@ -23,11 +22,6 @@
         <a th:href="${entry.url}" th:text="${entry.url}"></a>
     </div>
 
-    <!-- React -->
-    <!--<script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>-->
-    <!--<script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>-->
-    <!-- Custom script that contains components -->
-    <!--<script src="/js/gakusci.js"></script>-->
     <script src="/js/search.js"></script>
 </div>
 </body>
