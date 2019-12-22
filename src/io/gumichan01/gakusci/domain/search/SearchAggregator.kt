@@ -28,6 +28,8 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
     private val logger: Logger = LoggerFactory.getLogger(SearchAggregator::class.java)
 
     private val searchResultConsumer = SearchResultConsumer()
+    // TODO 1. The cache should be handled by the controller instead of the aggregator
+    // TODO 2. How to handle the cache properly if the results of search may changhe depending of the type of request
     private val cacheImpl: Cache<Pair<String, Int>, ServiceResponse> =
         Caffeine.newBuilder().maximumSize(10L).build<Pair<String, Int>, ServiceResponse>()
 

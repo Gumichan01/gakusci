@@ -22,7 +22,7 @@ fun retrieveWebParam(queryParameters: Parameters): Pair<QueryParam?, String> {
     } ?: Pair(null, "Bad request: no query parameter 'q' provided")
 }
 
-
+// TODO prevent handling blank query
 fun retrieveApiParam(queryParameters: Parameters): Pair<QueryParam?, String> {
     return queryParameters["q"]?.let { query ->
         val start = queryParameters["start"]?.toInt() ?: 0
@@ -37,4 +37,8 @@ fun retrieveApiParam(queryParameters: Parameters): Pair<QueryParam?, String> {
             else -> Pair(QueryParam(query, rows, start, numPerPage), "")
         }
     } ?: Pair(null, "Bad request: no query parameter 'q' provided")
+}
+
+fun retrieveSearchTypes(queryParameters: Parameters): List<String> {
+    return queryParameters.getAll("t") ?: emptyList()
 }
