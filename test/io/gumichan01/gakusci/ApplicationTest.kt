@@ -79,5 +79,27 @@ class ApplicationTest {
             }
         }
     }
+
+    @Test
+    fun `test web application, empty query - return Bad request`() {
+        withTestApplication({ gakusciModule() }) {
+            handleRequest(HttpMethod.Get, "/researches/?q=").apply {
+                with(response) {
+                    assertThat(status()).isEqualTo(HttpStatusCode.BadRequest)
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `test web application, blank query - return Bad request`() {
+        withTestApplication({ gakusciModule() }) {
+            handleRequest(HttpMethod.Get, "/researches/?q=     ").apply {
+                with(response) {
+                    assertThat(status()).isEqualTo(HttpStatusCode.BadRequest)
+                }
+            }
+        }
+    }
 }
 
