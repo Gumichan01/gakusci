@@ -1,10 +1,9 @@
 package io.gumichan01.gakusci.controller
 
-import io.gumichan01.gakusci.controller.utils.retrieveSearchType
+import io.gumichan01.gakusci.controller.utils.getSearchTypeFrom
 import io.gumichan01.gakusci.controller.utils.retrieveWebParam
 import io.gumichan01.gakusci.domain.model.ResultEntry
-import io.gumichan01.gakusci.domain.model.SearchResponse
-import io.gumichan01.gakusci.domain.search.SearchAggregator
+import io.gumichan01.gakusci.domain.search.SearchQueryProcessor
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.ktor.application.ApplicationCall
 import io.ktor.http.HttpStatusCode
@@ -17,19 +16,17 @@ import org.slf4j.LoggerFactory
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class WebController {
+class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
 
     private val logger: Logger = LoggerFactory.getLogger(WebController::class.java)
 
     suspend fun handleRequest(call: ApplicationCall) {
         val (queryParam, message) = retrieveWebParam(call.request.queryParameters)
-        val type: String? = retrieveSearchType(call.request.queryParameters)
         if (queryParam == null) {
             call.respond(HttpStatusCode.BadRequest, message)
         } else {
-            val (totalResults: Int, _, entries: List<ResultEntry>) = type?.let {
-                buildSearchAggregator(it).retrieveResults(queryParam)
-            } ?: SearchResponse(0, 0, emptyList())
+            val searchType: SearchType? = getSearchTypeFrom(call.request.queryParameters)
+            val (totalResults: Int, _, entries: List<ResultEntry>) = searchQueryProcessor.proceed(queryParam)
             call.respond(
                 ThymeleafContent(
                     "search",
@@ -37,20 +34,11 @@ class WebController {
                         "numFound" to totalResults,
                         "entries" to entries,
                         "query" to queryParam.query,
-                        SearchType.RESEARCH.value to (type == SearchType.RESEARCH.value),
-                        SearchType.BOOKS.value to (type == SearchType.BOOKS.value)
+                        SearchType.RESEARCH.value to (searchType == SearchType.RESEARCH),
+                        SearchType.BOOKS.value to (searchType == SearchType.BOOKS)
                     )
                 )
             )
         }
-    }
-
-    private fun buildSearchAggregator(type: String): SearchAggregator {
-        val builder = SearchAggregator.Builder()
-        when (type) {
-            SearchType.RESEARCH.value -> builder.withResearchServices()
-            else -> logger.trace("Unrecognized type: $type")
-        }
-        return builder.build()
     }
 }

@@ -3,6 +3,7 @@ package io.gumichan01.gakusci
 import com.fasterxml.jackson.databind.SerializationFeature
 import io.gumichan01.gakusci.controller.RestController
 import io.gumichan01.gakusci.controller.WebController
+import io.gumichan01.gakusci.domain.search.SearchQueryProcessor
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -29,8 +30,8 @@ import java.io.File
 @ExperimentalCoroutinesApi
 fun Application.gakusciModule() {
 
-    val restController = RestController()
-    val webController = WebController()
+    val restController = RestController(SearchQueryProcessor())
+    val webController = WebController(SearchQueryProcessor())
     val envKind: EnvironmentKind = environmentKind()
 
     log.info("\n ${getBanner(envKind)}")
