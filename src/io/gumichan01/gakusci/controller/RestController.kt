@@ -12,9 +12,8 @@ import kotlinx.coroutines.FlowPreview
 @ExperimentalCoroutinesApi
 class RestController(private val searchQueryProcessor: SearchQueryProcessor) {
 
-    // TODO several paths depending on the type on search to make
     suspend fun handleRequest(call: ApplicationCall) {
-        val (queryParam, message) = retrieveApiParam(call.request.queryParameters)
+        val (queryParam, message) = retrieveApiParam(call.request.queryParameters, call.parameters)
         if (queryParam == null) {
             call.respond(HttpStatusCode.BadRequest, message)
         } else {

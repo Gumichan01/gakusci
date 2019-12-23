@@ -1,6 +1,5 @@
 package io.gumichan01.gakusci.controller
 
-import io.gumichan01.gakusci.controller.utils.getSearchTypeFrom
 import io.gumichan01.gakusci.controller.utils.retrieveWebParam
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.gumichan01.gakusci.domain.search.SearchQueryProcessor
@@ -25,7 +24,7 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
         if (queryParam == null) {
             call.respond(HttpStatusCode.BadRequest, message)
         } else {
-            val searchType: SearchType? = getSearchTypeFrom(call.request.queryParameters)
+            val searchType: SearchType = queryParam.searchType
             val (totalResults: Int, _, entries: List<ResultEntry>) = searchQueryProcessor.proceed(queryParam)
             call.respond(
                 ThymeleafContent(

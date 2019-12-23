@@ -21,7 +21,7 @@ class SearchQueryProcessor(
     suspend fun proceed(queryParam: QueryParam): SearchResponse {
         return SearchAggregator.Builder().run {
             when (queryParam.searchType) {
-                SearchType.RESEARCH -> withResearchServices().withCache(cache)
+                SearchType.RESEARCH, SearchType.RESEARCHES -> withResearchServices().withCache(cache)
                 SearchType.BOOKS -> this.withCache(cache) // TODO handle books
             }
         }.build().retrieveResults(queryParam)

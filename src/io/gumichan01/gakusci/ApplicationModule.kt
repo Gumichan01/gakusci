@@ -98,7 +98,7 @@ private fun Routing.staticPage(env: EnvironmentKind) {
 @FlowPreview
 @ExperimentalCoroutinesApi
 private fun Routing.restApiSearch(restController: RestController) {
-    get("/api/v1/researches") {
+    get("/api/v1/{search_type}") {
         restController.handleRequest(call)
     }
 }
