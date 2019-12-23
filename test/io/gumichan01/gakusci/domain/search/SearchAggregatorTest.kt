@@ -1,10 +1,12 @@
 package io.gumichan01.gakusci.domain.search
 
+import com.github.benmanes.caffeine.cache.Cache
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.utils.SearchType
+import io.gumichan01.gakusci.domain.utils.getOrUpdateCache
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,12 +23,15 @@ class SearchAggregatorTest {
             runBlocking { send(ServiceResponse(1, listOf(ResultEntry("lorem", "ipsum")))); close() }; this
         }
     }
+    private val fakeCache: Cache<Pair<String, Int>, ServiceResponse> = mockk {
+        every { getOrUpdateCache(Pair("lorem", 1)) { ServiceResponse(1, listOf(ResultEntry("lorem", "ipsum"))) } }
+    }
 
     @Test
     fun `aggregate result entries - return results`() {
-        val aggregator = SearchAggregator(fakeLauncher)
+        val aggregator = SearchAggregator(fakeLauncher, fakeCache)
         val results: SearchResponse =
-            runBlocking { aggregator.retrieveResults(QueryParam("lorem", SearchType.RESEARCH)) }
+            runBlocking { aggregator.retrieveResults(QueryParam("lorem", SearchType.RESEARCH, rows = 1)) }
         assertThat(results.totalResults).isEqualTo(1)
         assertThat(results.entries).containsAnyOf(ResultEntry("lorem", "ipsum"))
     }
@@ -39,5 +44,12 @@ class SearchAggregatorTest {
     @Test
     fun `build research aggregator with research services`() {
         assertThat(SearchAggregator.Builder().withResearchServices().build()).isInstanceOf(SearchAggregator::class.java)
+    }
+
+    @Test
+    fun `build research aggregator with research services and a cache system`() {
+        assertThat(SearchAggregator.Builder().withResearchServices().withCache(fakeCache).build()).isInstanceOf(
+            SearchAggregator::class.java
+        )
     }
 }

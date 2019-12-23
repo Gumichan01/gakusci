@@ -23,13 +23,14 @@ import org.slf4j.LoggerFactory
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class SearchAggregator(private val searchLauncher: SearchLauncher) {
+class SearchAggregator(
+    private val searchLauncher: SearchLauncher,
+    cache: Cache<Pair<String, Int>, ServiceResponse>
+) {
 
     private val logger: Logger = LoggerFactory.getLogger(SearchAggregator::class.java)
 
     private val searchResultConsumer = SearchResultConsumer()
-    // TODO 1. The cache should be handled by the controller instead of the aggregator
-    // TODO 2. How to handle the cache properly if the results of search may change depending of the type of request
     private val cacheImpl: Cache<Pair<String, Int>, ServiceResponse> =
         Caffeine.newBuilder().maximumSize(10L).build<Pair<String, Int>, ServiceResponse>()
 
@@ -50,12 +51,17 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
     }
 
 
-    class Builder(private var services: MutableSet<IService> = mutableSetOf()) {
+    class Builder(
+        private var services: MutableSet<IService> = mutableSetOf(),
+        private var cache: Cache<Pair<String, Int>, ServiceResponse>? = null
+    ) {
 
         fun withResearchServices(): Builder = apply { services.addAll(DomainSearchType.RESEARCH.services) }
 
+        fun withCache(cache: Cache<Pair<String, Int>, ServiceResponse>): Builder = apply { this.cache = cache }
+
         fun build(): SearchAggregator {
-            return SearchAggregator(SearchLauncher(services))
+            return SearchAggregator(SearchLauncher(services), cache!!)
         }
     }
 
