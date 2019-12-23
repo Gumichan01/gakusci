@@ -1,7 +1,7 @@
 package io.gumichan01.gakusci.controller
 
 import io.gumichan01.gakusci.controller.utils.SearchType
-import io.gumichan01.gakusci.controller.utils.retrieveSearchTypes
+import io.gumichan01.gakusci.controller.utils.retrieveSearchType
 import io.gumichan01.gakusci.controller.utils.retrieveWebParam
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.gumichan01.gakusci.domain.search.SearchAggregator
@@ -22,34 +22,38 @@ class WebController {
 
     suspend fun handleRequest(call: ApplicationCall) {
         val (queryParam, message) = retrieveWebParam(call.request.queryParameters)
-        if (queryParam == null) {
-            call.respond(HttpStatusCode.BadRequest, message)
-        } else {
-            val types: List<String> = retrieveSearchTypes(call.request.queryParameters)
-            val (totalResults: Int, _, entries: List<ResultEntry>) = buildSearchAggregator(types)
-                .retrieveResults(queryParam)
-            call.respond(
-                ThymeleafContent(
-                    "search",
-                    mapOf(
-                        "numFound" to totalResults,
-                        "entries" to entries,
-                        "query" to queryParam.query,
-                        SearchType.RESEARCH to types.contains(SearchType.RESEARCH),
-                        SearchType.BOOKS to types.contains(SearchType.BOOKS)
+        val type: String? = retrieveSearchType(call.request.queryParameters)
+        when {
+            queryParam == null -> {
+                call.respond(HttpStatusCode.BadRequest, message)
+            }
+            type == null -> {
+                call.respond(HttpStatusCode.BadRequest, "Not search type specified")
+            }
+            else -> {
+                val (totalResults: Int, _, entries: List<ResultEntry>) = buildSearchAggregator(type)
+                    .retrieveResults(queryParam)
+                call.respond(
+                    ThymeleafContent(
+                        "search",
+                        mapOf(
+                            "numFound" to totalResults,
+                            "entries" to entries,
+                            "query" to queryParam.query,
+                            SearchType.RESEARCH to (type == SearchType.RESEARCH),
+                            SearchType.BOOKS to (type == SearchType.BOOKS)
+                        )
                     )
                 )
-            )
+            }
         }
     }
 
-    private fun buildSearchAggregator(types: List<String>): SearchAggregator {
+    private fun buildSearchAggregator(type: String): SearchAggregator {
         val builder = SearchAggregator.Builder()
-        types.forEach { type ->
-            when (type) {
-                SearchType.RESEARCH -> builder.withResearchServices()
-                else -> logger.trace("Unrecognized type: $type")
-            }
+        when (type) {
+            SearchType.RESEARCH -> builder.withResearchServices()
+            else -> logger.trace("Unrecognized type: $type")
         }
         return builder.build()
     }

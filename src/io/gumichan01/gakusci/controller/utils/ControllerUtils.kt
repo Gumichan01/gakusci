@@ -43,6 +43,4 @@ fun retrieveApiParam(queryParameters: Parameters): Pair<QueryParam?, String> {
     } ?: Pair(null, "Bad request: no query parameter 'q' provided")
 }
 
-fun retrieveSearchTypes(queryParameters: Parameters): List<String> {
-    return queryParameters.getAll("t") ?: emptyList()
-}
+fun retrieveSearchType(queryParameters: Parameters): String? = queryParameters["searchtype"]
