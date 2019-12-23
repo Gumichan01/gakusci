@@ -10,14 +10,10 @@ import io.ktor.response.respond
 import io.ktor.thymeleaf.ThymeleafContent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 @FlowPreview
 @ExperimentalCoroutinesApi
 class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
-
-    private val logger: Logger = LoggerFactory.getLogger(WebController::class.java)
 
     suspend fun handleRequest(call: ApplicationCall) {
         val (queryParam, message) = retrieveWebParam(call.request.queryParameters)
