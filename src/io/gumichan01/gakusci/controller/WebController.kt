@@ -40,8 +40,8 @@ class WebController {
                             "numFound" to totalResults,
                             "entries" to entries,
                             "query" to queryParam.query,
-                            SearchType.RESEARCH to (type == SearchType.RESEARCH),
-                            SearchType.BOOKS to (type == SearchType.BOOKS)
+                            SearchType.RESEARCH.value to (type == SearchType.RESEARCH.value),
+                            SearchType.BOOKS.value to (type == SearchType.BOOKS.value)
                         )
                     )
                 )
@@ -52,7 +52,7 @@ class WebController {
     private fun buildSearchAggregator(type: String): SearchAggregator {
         val builder = SearchAggregator.Builder()
         when (type) {
-            SearchType.RESEARCH -> builder.withResearchServices()
+            SearchType.RESEARCH.value -> builder.withResearchServices()
             else -> logger.trace("Unrecognized type: $type")
         }
         return builder.build()
