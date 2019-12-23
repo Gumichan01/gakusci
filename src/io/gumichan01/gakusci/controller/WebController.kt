@@ -1,6 +1,6 @@
 package io.gumichan01.gakusci.controller
 
-import io.gumichan01.gakusci.controller.utils.SearchType
+import io.gumichan01.gakusci.domain.utils.SearchType
 import io.gumichan01.gakusci.controller.utils.retrieveSearchType
 import io.gumichan01.gakusci.controller.utils.retrieveWebParam
 import io.gumichan01.gakusci.domain.model.ResultEntry
