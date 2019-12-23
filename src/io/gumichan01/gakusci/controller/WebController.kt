@@ -1,10 +1,11 @@
 package io.gumichan01.gakusci.controller
 
-import io.gumichan01.gakusci.domain.utils.SearchType
 import io.gumichan01.gakusci.controller.utils.retrieveSearchType
 import io.gumichan01.gakusci.controller.utils.retrieveWebParam
 import io.gumichan01.gakusci.domain.model.ResultEntry
+import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.search.SearchAggregator
+import io.gumichan01.gakusci.domain.utils.SearchType
 import io.ktor.application.ApplicationCall
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
@@ -23,29 +24,24 @@ class WebController {
     suspend fun handleRequest(call: ApplicationCall) {
         val (queryParam, message) = retrieveWebParam(call.request.queryParameters)
         val type: String? = retrieveSearchType(call.request.queryParameters)
-        when {
-            queryParam == null -> {
-                call.respond(HttpStatusCode.BadRequest, message)
-            }
-            type == null -> {
-                call.respond(HttpStatusCode.BadRequest, "Not search type specified")
-            }
-            else -> {
-                val (totalResults: Int, _, entries: List<ResultEntry>) = buildSearchAggregator(type)
-                    .retrieveResults(queryParam)
-                call.respond(
-                    ThymeleafContent(
-                        "search",
-                        mapOf(
-                            "numFound" to totalResults,
-                            "entries" to entries,
-                            "query" to queryParam.query,
-                            SearchType.RESEARCH.value to (type == SearchType.RESEARCH.value),
-                            SearchType.BOOKS.value to (type == SearchType.BOOKS.value)
-                        )
+        if (queryParam == null) {
+            call.respond(HttpStatusCode.BadRequest, message)
+        } else {
+            val (totalResults: Int, _, entries: List<ResultEntry>) = type?.let {
+                buildSearchAggregator(it).retrieveResults(queryParam)
+            } ?: SearchResponse(0, 0, emptyList())
+            call.respond(
+                ThymeleafContent(
+                    "search",
+                    mapOf(
+                        "numFound" to totalResults,
+                        "entries" to entries,
+                        "query" to queryParam.query,
+                        SearchType.RESEARCH.value to (type == SearchType.RESEARCH.value),
+                        SearchType.BOOKS.value to (type == SearchType.BOOKS.value)
                     )
                 )
-            }
+            )
         }
     }
 
