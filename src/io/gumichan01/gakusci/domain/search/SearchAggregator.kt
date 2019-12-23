@@ -1,7 +1,6 @@
 package io.gumichan01.gakusci.domain.search
 
 import com.github.benmanes.caffeine.cache.Cache
-import com.github.benmanes.caffeine.cache.Caffeine
 import io.gumichan01.gakusci.client.arxiv.ArxivClient
 import io.gumichan01.gakusci.client.hal.HalClient
 import io.gumichan01.gakusci.domain.model.QueryParam
@@ -25,14 +24,11 @@ import org.slf4j.LoggerFactory
 @ExperimentalCoroutinesApi
 class SearchAggregator(
     private val searchLauncher: SearchLauncher,
-    cache: Cache<Pair<String, Int>, ServiceResponse>
+    private val cacheImpl: Cache<Pair<String, Int>, ServiceResponse>
 ) {
 
     private val logger: Logger = LoggerFactory.getLogger(SearchAggregator::class.java)
-
     private val searchResultConsumer = SearchResultConsumer()
-    private val cacheImpl: Cache<Pair<String, Int>, ServiceResponse> =
-        Caffeine.newBuilder().maximumSize(10L).build<Pair<String, Int>, ServiceResponse>()
 
     fun retrieveResults(queryParam: QueryParam): SearchResponse {
         val start: Int = queryParam.start
