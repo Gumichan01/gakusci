@@ -6,6 +6,8 @@ import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.model.ServiceResponse
+import io.gumichan01.gakusci.domain.search.cache.CacheHandler
+import io.gumichan01.gakusci.domain.search.cache.SearchCache
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.every
 import io.mockk.mockk
@@ -23,9 +25,9 @@ class SearchAggregatorTest {
             runBlocking { send(ServiceResponse(1, listOf(ResultEntry("lorem", "ipsum")))); close() }; this
         }
     }
-    private val fakeCache: Cache<Pair<String, Int>, ServiceResponse> = mockk()
+    private val fakeCache: SearchCache = mockk()
 
-    private val testCache: Cache<Pair<String, Int>, ServiceResponse> = Caffeine.newBuilder().maximumSize(10).build()
+    private val testCache: SearchCache = CacheHandler().provideCache(SearchType.RESEARCH)
 
     @Test
     fun `aggregate result entries - return results`() {
