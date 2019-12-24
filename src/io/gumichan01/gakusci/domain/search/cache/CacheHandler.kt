@@ -5,7 +5,14 @@ import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.utils.SearchType
 
 class CacheHandler {
+
+    private val builder: Caffeine<Any, Any> by lazy { Caffeine.newBuilder().maximumSize(10L) }
+    private val researchCache: SearchCache by lazy { SearchCache(builder.build<Pair<String, Int>, ServiceResponse>()) }
+
     fun provideCache(searchType: SearchType): SearchCache {
-        return SearchCache(Caffeine.newBuilder().maximumSize(10L).build<Pair<String, Int>, ServiceResponse>())
+        return when (searchType) {
+            SearchType.RESEARCH, SearchType.RESEARCHES -> researchCache
+            else -> throw IllegalStateException("Cannot get cache from ${searchType.value}: this code must be unreachable")
+        }
     }
 }
