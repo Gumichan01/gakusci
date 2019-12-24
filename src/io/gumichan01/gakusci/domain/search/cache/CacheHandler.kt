@@ -8,11 +8,12 @@ class CacheHandler {
 
     private val builder: Caffeine<Any, Any> by lazy { Caffeine.newBuilder().maximumSize(10L) }
     private val researchCache: SearchCache by lazy { SearchCache(builder.build<Pair<String, Int>, ServiceResponse>()) }
+    private val bookCache: SearchCache by lazy { SearchCache(builder.build<Pair<String, Int>, ServiceResponse>()) }
 
     fun provideCache(searchType: SearchType): SearchCache {
         return when (searchType) {
             SearchType.RESEARCH, SearchType.RESEARCHES -> researchCache
-            else -> throw IllegalStateException("Cannot get cache from ${searchType.value}: this code must be unreachable")
+            SearchType.BOOKS -> bookCache
         }
     }
 }

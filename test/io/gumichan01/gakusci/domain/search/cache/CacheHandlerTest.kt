@@ -10,4 +10,9 @@ internal class CacheHandlerTest {
     fun `create cache handler and retrieve research cache`() {
         assertThat(CacheHandler().provideCache(SearchType.RESEARCH)).isInstanceOf(SearchCache::class.java)
     }
+
+    @Test
+    fun `create cache handler and retrieve book cache`() {
+        assertThat(CacheHandler().provideCache(SearchType.BOOKS)).isInstanceOf(SearchCache::class.java)
+    }
 }

@@ -33,7 +33,7 @@ fun retrieveApiParam(queryParameters: Parameters, pathParameters: Parameters): P
             numPerPage != null && numPerPage > rows -> {
                 Pair(null, "Bad request: cannot get more entries per page than max_results")
             }
-            else -> Pair(QueryParam(query, SearchType.RESEARCH, rows, start, numPerPage), "")
+            else -> Pair(QueryParam(query, searchType, rows, start, numPerPage), "")
         }
     } ?: Pair(null, "Bad request: no query parameter 'q' provided")
 }
