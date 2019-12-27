@@ -14,7 +14,7 @@ class SearchQueryProcessor(private val cacheHandler: CacheHandler = CacheHandler
         return SearchAggregator.Builder().run {
             when (queryParam.searchType) {
                 SearchType.RESEARCH, SearchType.RESEARCHES -> withResearchServices()
-                SearchType.BOOKS -> TODO("handle books")
+                SearchType.BOOKS -> withBookServices()
             }
         }.withCache(cacheHandler.provideCache(queryParam.searchType)).build().retrieveResults(queryParam)
     }

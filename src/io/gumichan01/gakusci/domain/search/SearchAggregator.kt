@@ -50,6 +50,8 @@ class SearchAggregator(private val searchLauncher: SearchLauncher, private val c
 
         fun withResearchServices(): Builder = apply { services.addAll(DomainSearchType.RESEARCH.services) }
 
+        fun withBookServices(): Builder = apply { services.addAll(DomainSearchType.BOOKS.services) }
+
         fun withCache(cache: SearchCache): Builder = apply { this.cache = cache }
 
         fun build(): SearchAggregator {
@@ -58,6 +60,6 @@ class SearchAggregator(private val searchLauncher: SearchLauncher, private val c
     }
 
     private enum class DomainSearchType(val services: Set<IService>) {
-        RESEARCH(setOf(HalService(HalClient()), ArxivService(ArxivClient())))
+        RESEARCH(setOf(HalService(HalClient()), ArxivService(ArxivClient()))), BOOKS(emptySet())
     }
 }

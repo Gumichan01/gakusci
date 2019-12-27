@@ -1,7 +1,5 @@
 package io.gumichan01.gakusci.domain.search
 
-import com.github.benmanes.caffeine.cache.Cache
-import com.github.benmanes.caffeine.cache.Caffeine
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.gumichan01.gakusci.domain.model.SearchResponse
@@ -15,6 +13,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import kotlin.test.Test
 
 @ExperimentalCoroutinesApi
@@ -44,14 +43,19 @@ class SearchAggregatorTest {
     }
 
     @Test
-    fun `build research aggregator with research services`() {
-        assertThat(SearchAggregator.Builder().withResearchServices().withCache(fakeCache).build())
-            .isInstanceOf(SearchAggregator::class.java)
+    fun `build research aggregator with no cache - must thrown NPE`() {
+        assertThatThrownBy { SearchAggregator.Builder().build() }.isInstanceOf(NullPointerException::class.java)
     }
 
     @Test
     fun `build research aggregator with research services and a cache system`() {
         assertThat(SearchAggregator.Builder().withResearchServices().withCache(fakeCache).build())
+            .isInstanceOf(SearchAggregator::class.java)
+    }
+
+    @Test
+    fun `build research aggregator with book services and a cache system`() {
+        assertThat(SearchAggregator.Builder().withBookServices().withCache(fakeCache).build())
             .isInstanceOf(SearchAggregator::class.java)
     }
 }
