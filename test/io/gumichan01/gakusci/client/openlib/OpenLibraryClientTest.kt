@@ -10,8 +10,8 @@ internal class OpenLibraryClientTest {
 
     @Test
     fun `Call the Open Library web-service - get results`() {
-        val response: String? =
+        val response: OpenLibraryResponse? =
             runBlocking { OpenLibraryClient().retrieveResults(QueryParam("gunnm", SearchType.BOOKS)) }
-        assertThat(response).isNotBlank()
+        assertThat(response).isNotNull
     }
 }
