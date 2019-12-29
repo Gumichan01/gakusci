@@ -17,7 +17,12 @@ class RestController(private val searchQueryProcessor: SearchQueryProcessor) {
         if (queryParam == null) {
             call.respond(HttpStatusCode.BadRequest, message)
         } else {
-            call.respond(HttpStatusCode.OK, searchQueryProcessor.proceed(queryParam))
+            val searchResponse = searchQueryProcessor.proceed(queryParam)
+            if (searchResponse.isEmpty()) {
+                call.respond(HttpStatusCode.NoContent)
+            } else {
+                call.respond(HttpStatusCode.OK, searchResponse)
+            }
         }
     }
 }
