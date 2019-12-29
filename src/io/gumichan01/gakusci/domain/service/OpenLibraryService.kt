@@ -8,10 +8,9 @@ import io.gumichan01.gakusci.domain.model.ServiceResponse
 
 class OpenLibraryService(val openLibClient: IClient<OpenLibraryResponse>) : IService {
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
-        // TODO Convert properly the open library response to ServiceResponse
         return openLibClient.retrieveResults(queryParam)?.let {
             val numFound = it.numFound
-            val entries: List<ResultEntry> = it.docs?.map { d -> ResultEntry(d.title, d.key) } ?: emptyList()
+            val entries: List<ResultEntry> = it.docs?.map { d -> ResultEntry(d.label(), d.link()) } ?: emptyList()
             ServiceResponse(numFound, entries)
         }
     }
