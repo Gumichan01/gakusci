@@ -15,6 +15,7 @@ data class OpenLibraryEntry(
     @JsonProperty("first_sentence") val firstSentences: List<String>?,
     @JsonProperty("id_librarything") val idLibraryThings: List<String>?,
     @JsonProperty("id_goodreads") val goodReadsIds: List<String>?,
+    @JsonProperty("id_amazon") val amazonIds: List<String>?,
     @JsonProperty("ia") val ias: List<String>?,
     @JsonProperty("ia_collection_s") val iaCollections: String?,
     @JsonProperty("ia_box_id") val iaBoxIds: List<String>?,
