@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class OpenLibraryEntry(
     @JsonProperty("title_suggest") val titleSuggest: String,
-    @JsonProperty("edition_key") val editionKeys: List<String>,
+    @JsonProperty("edition_key") val editionKeys: List<String>?,
     @JsonProperty("cover_i") val coverIndex: Int,
     @JsonProperty("isbn") val isbns: List<String>?,
     @JsonProperty("oclc") val oclcIds: List<String>?,
@@ -16,6 +16,14 @@ data class OpenLibraryEntry(
     @JsonProperty("id_librarything") val idLibraryThings: List<String>?,
     @JsonProperty("id_goodreads") val goodReadsIds: List<String>?,
     @JsonProperty("id_amazon") val amazonIds: List<String>?,
+    @JsonProperty("id_google") val googleIds: List<String>?,
+    @JsonProperty("id_alibris_id") val alibrisIds: List<String>?,
+    @JsonProperty("id_overdrive") val overdriveIds: List<String>?,
+    @JsonProperty("id_paperback_swap") val paperbackIds: List<String>?,
+    @JsonProperty("id_depósito_legal") val depositIds: List<String>?,
+    @JsonProperty("id_hathi_trust") val hathiIds: List<String>?,
+    @JsonProperty("id_project_gutenberg") val gutenbergIds: List<String>?,
+    @JsonProperty("id_wikidata") val wikidataIds: List<String>?,
     @JsonProperty("ia") val ias: List<String>?,
     @JsonProperty("ia_collection_s") val iaCollections: String?,
     @JsonProperty("ia_box_id") val iaBoxIds: List<String>?,
