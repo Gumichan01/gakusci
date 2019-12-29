@@ -12,7 +12,10 @@ import kotlin.test.Test
 
 internal class OpenLibraryServiceTest {
 
-    private val openLibResponseMock: OpenLibraryResponse = mockk()
+    private val openLibResponseMock: OpenLibraryResponse = mockk {
+        coEvery { numFound } returns 1
+        coEvery { docs } returns emptyList()
+    }
     private val openLibMock: OpenLibraryClient = mockk {
         coEvery { retrieveResults(QueryParam("gunnm", SearchType.BOOKS)) } returns openLibResponseMock
     }

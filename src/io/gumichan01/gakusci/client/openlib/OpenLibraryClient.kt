@@ -10,8 +10,6 @@ import io.ktor.client.request.get
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-// TODO Implement 'OpenLibraryResponse'
-// TODO openLibClient must be IClient<OpenLibraryResponse>
 class OpenLibraryClient : IClient<OpenLibraryResponse> {
 
     private val logger: Logger = LoggerFactory.getLogger(OpenLibraryClient::class.java)
