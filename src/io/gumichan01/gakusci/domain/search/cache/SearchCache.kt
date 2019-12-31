@@ -6,22 +6,20 @@ import io.gumichan01.gakusci.domain.model.ServiceResponse
 class SearchCache(cache: Cache<Pair<String, Int>, ServiceResponse>) :
     Cache<Pair<String, Int>, ServiceResponse> by cache {
 
-    fun getOrUpdateCache(key: Pair<String, Int>, f: () -> ServiceResponse): ServiceResponse {
+    // TODO it is possible to invalidate the key twice. FIXME
+    suspend fun getOrUpdateCache(key: Pair<String, Int>, f: suspend () -> ServiceResponse): ServiceResponse {
         val keyByQueryName: Pair<String, Int>? = getKeyOrNullByQueryName(key.query())
         return if (keyByQueryName != null) {
             if (keyByQueryName.rows() < key.rows()) {
                 invalidate(keyByQueryName)
-                getCachedValue(key, f)
+                f().also { put(key, it) }
             } else {
-                getCachedValue(keyByQueryName, f)
+                getIfPresent(keyByQueryName)!!
             }
-        } else getCachedValue(key, f)
+        } else f().also { put(key, it) }
     }
 
-    private fun getCachedValue(key: Pair<String, Int>, f: () -> ServiceResponse): ServiceResponse {
-        return get(key) { f() } ?: throw IllegalStateException("Illegal state of cache: ${asMap()}")
-    }
-
+    // TODO asMap() is thread-safe / coroutine-safe for reading, but if the cache is modified  after the iterator is generated, the behavior is undefined, FIXME
     private fun getKeyOrNullByQueryName(query: String): Pair<String, Int>? {
         return asMap().keys.asSequence()
             .filter { key -> key != null }

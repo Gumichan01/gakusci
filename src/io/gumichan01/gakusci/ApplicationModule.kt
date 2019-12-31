@@ -25,6 +25,8 @@ import kotlinx.coroutines.FlowPreview
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import java.io.File
 
+// TODO cosider creating strees test (Gatlin?)
+
 @FlowPreview
 @KtorExperimentalAPI
 @ExperimentalCoroutinesApi

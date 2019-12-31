@@ -5,7 +5,6 @@ import io.gumichan01.gakusci.client.hal.HalClient
 import io.gumichan01.gakusci.client.openlib.OpenLibraryClient
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
-import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.search.cache.SearchCache
 import io.gumichan01.gakusci.domain.service.ArxivService
 import io.gumichan01.gakusci.domain.service.HalService
@@ -13,11 +12,8 @@ import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.service.OpenLibraryService
 import io.gumichan01.gakusci.domain.utils.slice
 import io.gumichan01.gakusci.domain.utils.take
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.future.future
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -28,20 +24,14 @@ class SearchAggregator(private val searchLauncher: SearchLauncher, private val c
     private val logger: Logger = LoggerFactory.getLogger(SearchAggregator::class.java)
     private val searchResultConsumer = SearchResultConsumer()
 
-    fun retrieveResults(queryParam: QueryParam): SearchResponse {
+    suspend fun retrieveResults(queryParam: QueryParam): SearchResponse {
         val start: Int = queryParam.start
         val (total, entries) = cacheImpl.getOrUpdateCache(Pair(queryParam.query, queryParam.rows)) {
-            consume(queryParam)
+            searchResultConsumer.consume(searchLauncher.launch(queryParam))
         }
         logger.trace("$queryParam - Total: $total, number of entries: ${entries.size}")
         return SearchResponse(total, start, entries).take(queryParam.rows)
             .slice(start, queryParam.numPerPage)
-    }
-
-    private fun consume(queryParam: QueryParam): ServiceResponse {
-        return CoroutineScope(Dispatchers.Default).future {
-            searchResultConsumer.consume(searchLauncher.launch(queryParam))
-        }.get()
     }
 
 
