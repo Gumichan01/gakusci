@@ -28,8 +28,12 @@
 
     <div>
         <ul>
-            <li><a th:href="${'/search?q=' + query + '&searchtype=' + stype + '&start=' + pstart}"> |< Previous </a></li>
-            <li><a th:href="${'/search?q=' + query + '&searchtype=' + stype + '&start=' + nstart}"> Next >| </a></li>
+            <li th:if="${pstart} >= 0">
+                <a th:href="${'/search?q=' + query + '&searchtype=' + stype + '&start=' + pstart}"> |< Previous </a>
+            </li>
+            <li th:if="${pstart} < ${numFound}">
+                <a th:href="${'/search?q=' + query + '&searchtype=' + stype + '&start=' + nstart}"> Next >| </a>
+            </li>
         </ul>
     </div>
 
