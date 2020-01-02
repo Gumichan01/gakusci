@@ -30,6 +30,7 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
                         "entries" to entries,
                         "query" to queryParam.query,
                         "stype" to queryParam.searchType.value,
+                        "emptyEntries" to entries.isEmpty(),
                         "pstart" to queryParam.start - queryParam.numPerPage!!,
                         "nstart" to queryParam.start + queryParam.numPerPage,
                         SearchType.RESEARCH.value to (searchType == SearchType.RESEARCH),

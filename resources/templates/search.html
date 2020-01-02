@@ -19,16 +19,20 @@
         Books
     </form>
 
-    <p th:text="${numFound + ' results'}"></p>
+    <p th:if="${not emptyEntries}" th:text="${numFound + ' results'}"></p>
+
+    <div th:if="${emptyEntries}">
+        <p>No document found for <strong th:text="${query}"></strong></p>
+    </div>
 
     <div th:each="entry : ${entries}">
         <p class="entry_label" th:text="${entry.label}"></p>
         <a th:href="${entry.url}" th:text="${entry.url}"></a>
     </div>
 
-    <div>
+    <div th:if="${not emptyEntries}">
         <ul>
-            <li th:if="${pstart} >= 0">
+            <li th:if="${pstart} >= 0 and ${pstart} < ${numFound}">
                 <a th:href="${'/search?q=' + query + '&searchtype=' + stype + '&start=' + pstart}"> |< Previous </a>
             </li>
             <li th:if="${nstart} < ${numFound}">
