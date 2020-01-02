@@ -26,10 +26,12 @@
         <a th:href="${entry.url}" th:text="${entry.url}"></a>
     </div>
 
-    <ul>
-        <li><a href="#"> |< Previous </a></li>
-        <li><a href="#"> Next >| </a></li>
-    </ul>
+    <div>
+        <ul>
+            <li><a th:href="${'/search?q=' + query + '&searchtype=' + stype + '&start=' + pstart}"> |< Previous </a></li>
+            <li><a th:href="${'/search?q=' + query + '&searchtype=' + stype + '&start=' + nstart}"> Next >| </a></li>
+        </ul>
+    </div>
 
     <script src="/js/search.js"></script>
 </div>
