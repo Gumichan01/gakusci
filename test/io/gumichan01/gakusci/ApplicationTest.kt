@@ -63,9 +63,27 @@ class ApplicationTest {
     }
 
     @Test
+    fun `test web application search, query with negative start value - return Bad request`() {
+        withTestApplication({ gakusciModule() }) {
+            handleRequest(HttpMethod.Get, "/search/?q=lorem&searchtype=research&start=-10").apply {
+                assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
+            }
+        }
+    }
+
+    @Test
     fun `test REST Web-service API v1 search, query with start greater than max_results - return Bad request`() {
         withTestApplication({ gakusciModule() }) {
             handleRequest(HttpMethod.Get, "/api/v1/researches/?q=a&max_results=10&start=100").apply {
+                assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
+            }
+        }
+    }
+
+    @Test
+    fun `test REST Web-service API v1 search, query with negative start value - return Bad request`() {
+        withTestApplication({ gakusciModule() }) {
+            handleRequest(HttpMethod.Get, "/api/v1/researches/?q=a&start=-10").apply {
                 assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
             }
         }

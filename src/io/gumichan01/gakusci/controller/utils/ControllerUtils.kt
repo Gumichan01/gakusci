@@ -13,6 +13,7 @@ fun retrieveWebParam(queryParameters: Parameters): Pair<QueryParam?, String> {
 
         when {
             query.isBlank() -> Pair(null, "Bad request: query parameter 'q' is blank")
+            start < 0 -> Pair(null, "Bad request: negative start value: $start")
             start > rows -> Pair(null, "Bad request: start is greater than max_results")
             searchType == null -> Pair(null, "Bad request: no query parameter 'searchtype' provided")
             else -> Pair(QueryParam(query, searchType, rows, start, numPerPage), "")
@@ -29,6 +30,7 @@ fun retrieveApiParam(queryParameters: Parameters, pathParameters: Parameters): P
 
         when {
             query.isBlank() -> Pair(null, "Bad request: query parameter 'q' is blank")
+            start < 0 -> Pair(null, "Bad request: negative start value: $start")
             start > rows -> Pair(null, "Bad request: start is greater than max_results")
             searchType == null -> Pair(null, "Bad request: no query parameter 'searchtype' provided")
             numPerPage != null && numPerPage > rows -> {
