@@ -31,7 +31,7 @@
             <li th:if="${pstart} >= 0">
                 <a th:href="${'/search?q=' + query + '&searchtype=' + stype + '&start=' + pstart}"> |< Previous </a>
             </li>
-            <li th:if="${pstart} < ${numFound}">
+            <li th:if="${nstart} < ${numFound}">
                 <a th:href="${'/search?q=' + query + '&searchtype=' + stype + '&start=' + nstart}"> Next >| </a>
             </li>
         </ul>
