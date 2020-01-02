@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" type="text/css" href="/css/search.css">
+
     <meta charset="UTF-8">
     <title>GakuSci search results - POC</title>
 </head>
@@ -23,6 +25,11 @@
         <p class="entry_label" th:text="${entry.label}"></p>
         <a th:href="${entry.url}" th:text="${entry.url}"></a>
     </div>
+
+    <ul>
+        <li><a href="#"> |< Previous </a></li>
+        <li><a href="#"> Next >| </a></li>
+    </ul>
 
     <script src="/js/search.js"></script>
 </div>
