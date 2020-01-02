@@ -90,6 +90,15 @@ class ApplicationTest {
     }
 
     @Test
+    fun `test REST Web-service API v1 search, negative max_results - return Bad request`() {
+        withTestApplication({ gakusciModule() }) {
+            handleRequest(HttpMethod.Get, "/api/v1/researches/?q=b&max_results=-1").apply {
+                assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
+            }
+        }
+    }
+
+    @Test
     fun `test REST Web-service API v1 search, query with numPerPage greater than max_results - return Bad request`() {
         withTestApplication({ gakusciModule() }) {
             handleRequest(HttpMethod.Get, "/api/v1/researches/?q=b&max_results=10&start=1&num_per_page=100000").apply {
