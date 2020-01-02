@@ -8,13 +8,14 @@ fun retrieveWebParam(queryParameters: Parameters): Pair<QueryParam?, String> {
     return queryParameters["q"]?.let { query ->
         val rows = 1000
         val start = queryParameters["start"]?.toInt() ?: 0
+        val numPerPage = 10
         val searchType: SearchType? = getSearchTypeFrom(queryParameters)
 
         when {
             query.isBlank() -> Pair(null, "Bad request: query parameter 'q' is blank")
             start > rows -> Pair(null, "Bad request: start is greater than max_results")
             searchType == null -> Pair(null, "Bad request: no query parameter 'searchtype' provided")
-            else -> Pair(QueryParam(query, searchType, rows, start), "")
+            else -> Pair(QueryParam(query, searchType, rows, start, numPerPage), "")
         }
     } ?: Pair(null, "Bad request: no query parameter 'q' provided")
 }
