@@ -26,7 +26,7 @@ class SearchAggregator(private val searchLauncher: SearchLauncher, private val c
 
     suspend fun retrieveResults(queryParam: QueryParam): SearchResponse {
         val start: Int = queryParam.start
-        val (total, entries) = cacheImpl.getOrUpdateCache(Pair(queryParam.query, queryParam.rows)) {
+        val (total, entries) = cacheImpl.getOrUpdateCache(queryParam) {
             searchResultConsumer.consume(searchLauncher.launch(queryParam))
         }
         logger.trace("$queryParam - Total: $total, number of entries: ${entries.size}")
