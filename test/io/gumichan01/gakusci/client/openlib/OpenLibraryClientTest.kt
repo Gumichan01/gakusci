@@ -8,7 +8,7 @@ import kotlin.test.Test
 
 internal class OpenLibraryClientTest {
 
-    @Test
+    //@Test
     fun `Call the Open Library web-service - get results`() {
         val response: OpenLibraryResponse? =
             runBlocking { OpenLibraryClient().retrieveResults(QueryParam("gunnm", SearchType.BOOKS)) }
