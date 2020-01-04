@@ -16,7 +16,7 @@ fun retrieveWebParam(queryParameters: Parameters): Pair<QueryParam?, String> {
             query.isBlank() -> Pair(null, "Bad request: query parameter 'q' is blank")
             start < 0 -> Pair(null, "Bad request: negative start value: $start")
             start > rows -> Pair(null, "Bad request: start is greater than max_results")
-            searchType == null -> Pair(null, "Bad request: no query parameter 'searchtype' provided")
+            searchType == null -> Pair(null, "Bad request: no query parameter 'stype' provided")
             else -> Pair(QueryParam(query, searchType, rows, start, numPerPage), "")
         }
     } ?: Pair(null, "Bad request: no query parameter 'q' provided")
@@ -35,7 +35,7 @@ fun retrieveApiParam(queryParameters: Parameters, pathParameters: Parameters): P
             start < 0 -> Pair(null, "Bad request: negative start value: $start")
             rows < 0 -> Pair(null, "Bad request: negative rows value: $rows")
             start > rows -> Pair(null, "Bad request: start is greater than max_results")
-            searchType == null -> Pair(null, "Bad request: no query parameter 'searchtype' provided")
+            searchType == null -> Pair(null, "Bad request: no query parameter 'stype' provided")
             numPerPage != null && numPerPage > rows -> {
                 Pair(null, "Bad request: cannot get more entries per page than max_results")
             }
@@ -45,7 +45,7 @@ fun retrieveApiParam(queryParameters: Parameters, pathParameters: Parameters): P
 }
 
 private fun getSearchTypeFrom(parameters: Parameters): SearchType? {
-    return parameters["searchtype"]?.let {
+    return parameters["stype"]?.let {
         when (it) {
             SearchType.RESEARCH.value -> SearchType.RESEARCH
             SearchType.BOOKS.value -> SearchType.BOOKS

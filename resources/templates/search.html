@@ -13,9 +13,9 @@
     <form action="/search">
         <input id="query" type="text" name="q" th:value="${query}"/>
         <input id="search" type="submit"/><br>
-        <input id="type_all" type="radio" name="searchtype" value="research" th:checked="${research}"/>
+        <input id="type_all" type="radio" name="stype" value="research" th:checked="${research}"/>
         Research papers/articles
-        <input id="type_books" type="radio" name="searchtype" value="books" th:checked="${books}"/>
+        <input id="type_books" type="radio" name="stype" value="books" th:checked="${books}"/>
         Books
     </form>
 
@@ -34,10 +34,10 @@
     <div th:if="${not emptyEntries}">
         <ul>
             <li th:if="${pstart} >= 0 and ${pstart} < ${numFound}">
-                <a th:href="${'/search?q=' + query + '&searchtype=' + stype + '&start=' + pstart}"> |< Previous </a>
+                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + pstart}"> |< Previous </a>
             </li>
             <li th:if="${nstart} < ${numFound}">
-                <a th:href="${'/search?q=' + query + '&searchtype=' + stype + '&start=' + nstart}"> Next >| </a>
+                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + nstart}"> Next >| </a>
             </li>
         </ul>
     </div>

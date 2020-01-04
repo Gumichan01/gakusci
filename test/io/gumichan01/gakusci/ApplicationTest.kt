@@ -43,7 +43,7 @@ class ApplicationTest {
     @Test
     fun `test web application, normal case - return OK and HTML content`() {
         withTestApplication({ gakusciModule() }) {
-            handleRequest(HttpMethod.Get, "/search/?q=lorem&searchtype=research").apply {
+            handleRequest(HttpMethod.Get, "/search/?q=lorem&stype=research").apply {
                 with(response) {
                     assertThat(status()).isEqualTo(HttpStatusCode.OK)
                     assertThat(content).isNotBlank()
@@ -65,7 +65,7 @@ class ApplicationTest {
     @Test
     fun `test web application search, query with negative start value - return Bad request`() {
         withTestApplication({ gakusciModule() }) {
-            handleRequest(HttpMethod.Get, "/search/?q=lorem&searchtype=research&start=-10").apply {
+            handleRequest(HttpMethod.Get, "/search/?q=lorem&stype=research&start=-10").apply {
                 assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
             }
         }
