@@ -22,6 +22,7 @@ fun retrieveWebParam(queryParameters: Parameters): Pair<QueryParam?, String> {
     } ?: Pair(null, "Bad request: no query parameter 'q' provided")
 }
 
+// TODO make the API consistent
 fun retrieveApiParam(queryParameters: Parameters, pathParameters: Parameters): Pair<QueryParam?, String> {
     return queryParameters["q"]?.let { query ->
         val start = queryParameters["start"]?.toInt() ?: 0

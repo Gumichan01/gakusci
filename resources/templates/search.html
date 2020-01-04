@@ -30,6 +30,7 @@
         <a th:href="${entry.url}" th:text="${entry.url}"></a>
     </div>
 
+    <!-- TODO pagination (|<< |< 1 ... 10 >| >>|) -->
     <div th:if="${not emptyEntries}">
         <ul>
             <li th:if="${pstart} >= 0 and ${pstart} < ${numFound}">
