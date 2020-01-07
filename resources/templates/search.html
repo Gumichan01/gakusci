@@ -33,30 +33,42 @@
     </div>
 
     <br>
-
-    <!-- TODO pagination (|<< |< 1 ... 10 >| >>|) -->
-    <div th:if="${not emptyEntries}">
+    <!--/*
+        Numbered Page interval
+        currentPage < 6 -> [1, 10]
+        currentPage < maxPage -> [currentPage - 4, currentPage + 5] (numFound is the totalResults)
+        else -> [maxPage - numPerPage + 1, maxPage]
+      */-->
+    <div th:if="${not emptyEntries}"
+         th:with="MEDIAN_PAGE=5,
+         MIN_INTERVAL_P=4,
+         MAX_INTERVAL_P=5,
+         MIN_OFFSET_LAST_P=9,
+         CURRENT_PAGE=${start / numPerPage + 1},
+         MAX_PAGE=${numFound / numPerPage  + ((numFound % numPerPage) > 0 ? 1 : 0)},
+         MIN_NUM_PAGE=${CURRENT_PAGE <= MEDIAN_PAGE ? 1 : (CURRENT_PAGE + MAX_INTERVAL_P < MAX_PAGE ? CURRENT_PAGE - MIN_INTERVAL_P : MAX_PAGE - MIN_OFFSET_LAST_P) },
+         MAX_NUM_PAGE=${CURRENT_PAGE <= MEDIAN_PAGE ? (MAX_PAGE < 10 ? MAX_PAGE : 10) : (CURRENT_PAGE + MAX_INTERVAL_P < MAX_PAGE ? CURRENT_PAGE + MAX_INTERVAL_P : MAX_PAGE) }">
         <ul>
-            <!-- First -->
+            <!--/* First */-->
             <li th:if="${pstart} >= 0">
-                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=0'}"> |<< </a>
+                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=0'}"> |&lt;&lt; </a>
             </li>
-            <!-- Previous page -->
+            <!--/* Previous page */-->
             <li th:if="${pstart} >= 0 and ${pstart} < ${numFound}">
-                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + pstart}"> |< </a>
+                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + pstart}"> |&lt; </a>
             </li>
-            <!-- Numbered page links -->
-            <li th:each="numPage : ${#numbers.sequence(1, 10, 1)}">
-                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + (10 * numPage - 10)}"
+            <!--/* Numbered page links */-->
+            <li th:each="numPage : ${#numbers.sequence(MIN_NUM_PAGE, MAX_NUM_PAGE, 1)}">
+                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + (numPerPage * numPage - numPerPage)}"
                    th:text="${numPage}"></a>
             </li>
-            <!-- Next page -->
+            <!--/* Next page */-->
             <li th:if="${nstart} < ${numFound}">
-                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + nstart}"> >| </a>
+                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + nstart}"> &gt;| </a>
             </li>
-            <!-- Last -->
+            <!--/* Last */-->
             <li th:if="${nstart} < ${numFound}">
-                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + lastStart}"> >>| </a>
+                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + lastStart}"> &gt;&gt;| </a>
             </li>
         </ul>
 
