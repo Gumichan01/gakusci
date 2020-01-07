@@ -37,22 +37,29 @@
     <!-- TODO pagination (|<< |< 1 ... 10 >| >>|) -->
     <div th:if="${not emptyEntries}">
         <ul>
+            <!-- First -->
             <li th:if="${pstart} >= 0">
-                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=0'}"> |<< First </a>
+                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=0'}"> |<< </a>
             </li>
+            <!-- Previous page -->
             <li th:if="${pstart} >= 0 and ${pstart} < ${numFound}">
-                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + pstart}"> |< Previous </a>
+                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + pstart}"> |< </a>
             </li>
-            <li th:if="${nstart} < ${numFound}">
-                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + nstart}"> Next >| </a>
+            <!-- Numbered page links -->
+            <li th:each="numPage : ${#numbers.sequence(1, 10, 1)}">
+                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + (10 * numPage - 10)}"
+                   th:text="${numPage}"></a>
             </li>
+            <!-- Next page -->
             <li th:if="${nstart} < ${numFound}">
-                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + lastStart}"> Last >>| </a>
+                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + nstart}"> >| </a>
+            </li>
+            <!-- Last -->
+            <li th:if="${nstart} < ${numFound}">
+                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + lastStart}"> >>| </a>
             </li>
         </ul>
-        <!--<div th:each="num : ${#numbers.sequence(0, 10, 1)}">
-            <p th:text="${ num }"></p>
-        </div>-->
+
     </div>
 
     <script src="/js/search.js"></script>
