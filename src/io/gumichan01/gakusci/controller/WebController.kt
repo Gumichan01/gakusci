@@ -34,6 +34,7 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
                         "emptyEntries" to entries.isEmpty(),
                         "pstart" to queryParam.start - queryParam.numPerPage!!,
                         "nstart" to queryParam.start + queryParam.numPerPage,
+                        "lastStart" to totalResults - queryParam.numPerPage,
                         SearchType.RESEARCH.value to (searchType == SearchType.RESEARCH),
                         SearchType.BOOKS.value to (searchType == SearchType.BOOKS)
                     )

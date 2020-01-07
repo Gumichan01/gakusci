@@ -37,11 +37,17 @@
     <!-- TODO pagination (|<< |< 1 ... 10 >| >>|) -->
     <div th:if="${not emptyEntries}">
         <ul>
+            <li th:if="${pstart} >= 0">
+                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=0'}"> |<< First </a>
+            </li>
             <li th:if="${pstart} >= 0 and ${pstart} < ${numFound}">
                 <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + pstart}"> |< Previous </a>
             </li>
             <li th:if="${nstart} < ${numFound}">
                 <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + nstart}"> Next >| </a>
+            </li>
+            <li th:if="${nstart} < ${numFound}">
+                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + lastStart}"> Last >>| </a>
             </li>
         </ul>
         <!--<div th:each="num : ${#numbers.sequence(0, 10, 1)}">
