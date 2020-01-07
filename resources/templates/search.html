@@ -19,16 +19,20 @@
         Books
     </form>
 
-    <p th:if="${not emptyEntries}" th:text="${numFound + ' results'}"></p>
+    <br>
 
     <div th:if="${emptyEntries}">
         <p>No document found for <strong th:text="${query}"></strong></p>
     </div>
 
+    <p th:if="${not emptyEntries}" th:text="${numFound + ' results'}"></p>
+
     <div th:each="entry : ${entries}">
         <p class="entry_label" th:text="${entry.label}"></p>
         <a th:href="${entry.url}" th:text="${entry.url}"></a>
     </div>
+
+    <br>
 
     <!-- TODO pagination (|<< |< 1 ... 10 >| >>|) -->
     <div th:if="${not emptyEntries}">
@@ -40,6 +44,9 @@
                 <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + nstart}"> Next >| </a>
             </li>
         </ul>
+        <!--<div th:each="num : ${#numbers.sequence(0, 10, 1)}">
+            <p th:text="${ num }"></p>
+        </div>-->
     </div>
 
     <script src="/js/search.js"></script>
