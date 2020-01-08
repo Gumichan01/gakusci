@@ -20,7 +20,7 @@ For the moment, this application can only deal with research papers/articles. So
 - Research papers/articles (WIP)
 
 Gakusci only interacts with services that expose a public API and do not require authentication.
-This API can REST(-like/-ful) or based on ATOM/RSS syndication.
+Their API can be REST(-like/-ful) or based on ATOM/RSS syndication.
 
 ## Build & run ##
 
