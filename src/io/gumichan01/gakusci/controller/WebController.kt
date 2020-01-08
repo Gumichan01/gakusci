@@ -15,7 +15,6 @@ import kotlinx.coroutines.FlowPreview
 @ExperimentalCoroutinesApi
 class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
 
-    // TODO create bad request error page ()
     suspend fun handleRequest(call: ApplicationCall) {
         val (queryParam, message) = retrieveWebParam(call.request.queryParameters)
         if (queryParam == null) {

@@ -2,7 +2,7 @@ package io.gumichan01.gakusci.client.openlib
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class OpenLibraryEntry(
+data class OpenLibrarySearchEntry(
     @JsonProperty("title_suggest") val titleSuggest: String,
     @JsonProperty("edition_key") val editionKeys: List<String>?,
     @JsonProperty("cover_i") val coverIndex: Int,

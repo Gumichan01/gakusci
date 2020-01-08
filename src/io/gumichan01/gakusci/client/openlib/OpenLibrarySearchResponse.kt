@@ -9,9 +9,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 * The response format contains two properties that has the same value and seems identical: "num_found" and numFound
 * The documentation (1st december, 2016) does not seems up-to-date.
 */
-data class OpenLibraryResponse(
+data class OpenLibrarySearchResponse(
     val start: Int,
     @JsonProperty("num_found") val numFound: Int,
     @JsonProperty("numFound") val numFoundBis: Int,
-    val docs: List<OpenLibraryEntry>?
+    val docs: List<OpenLibrarySearchEntry>?
 )

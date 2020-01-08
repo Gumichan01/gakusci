@@ -1,7 +1,7 @@
 package io.gumichan01.gakusci.domain.service
 
 import io.gumichan01.gakusci.client.openlib.OpenLibraryClient
-import io.gumichan01.gakusci.client.openlib.OpenLibraryResponse
+import io.gumichan01.gakusci.client.openlib.OpenLibrarySearchResponse
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.coEvery
@@ -12,7 +12,7 @@ import kotlin.test.Test
 
 internal class OpenLibraryServiceTest {
 
-    private val openLibResponseMock: OpenLibraryResponse = mockk {
+    private val openLibResponseMock: OpenLibrarySearchResponse = mockk {
         coEvery { numFound } returns 1
         coEvery { docs } returns emptyList()
     }
