@@ -15,7 +15,9 @@ private fun isValidISBN10(bookNumber: String): Boolean {
 private fun isValidCheckDigitISBN10(bookNumber: String): Boolean {
     val simplifiedBookNumber = bookNumber.replace(Regex("[- ]"), "")
     return simplifiedBookNumber.length == 10 &&
-            simplifiedBookNumber.map { c -> c.toInt() }.mapIndexed { i, v -> v * (10 - i) }.reduce { acc, sum -> acc + sum } % 11 == 0
+            simplifiedBookNumber.map { c -> c.toInt() }
+                .mapIndexed { i, v -> v * (10 - i) }
+                .reduce { acc, sum -> acc + sum } % 11 == 0
 }
 
 // Check https://isbn-information.com/the-13-digit-isbn.html
@@ -25,7 +27,7 @@ private fun isValidISBN13(bookNumber: String): Boolean {
     return bookNumber.matches(Regex("$isbn13Regex|$isbn13WithoutSeparatorRegex")) && isValidCheckDigitISBN13(bookNumber)
 }
 
-fun isValidCheckDigitISBN13(bookNumber: String): Boolean {
+private fun isValidCheckDigitISBN13(bookNumber: String): Boolean {
     val simplifiedBookNumber = bookNumber.replace(Regex("[- ]"), "")
     return simplifiedBookNumber.length == 13 &&
             simplifiedBookNumber.map { c -> c.toInt() }
