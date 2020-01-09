@@ -8,7 +8,7 @@ import org.assertj.core.api.Assertions.assertThat
 internal class OpenLibrarySearchClientTest {
 
     //@Test
-    fun `Call the Open Library web-service - get results`() {
+    fun `Call the Open Library web-service - search for results`() {
         val response: OpenLibrarySearchResponse? =
             runBlocking { OpenLibrarySearchClient().retrieveResults(QueryParam("gunnm", SearchType.BOOKS)) }
         assertThat(response).isNotNull
