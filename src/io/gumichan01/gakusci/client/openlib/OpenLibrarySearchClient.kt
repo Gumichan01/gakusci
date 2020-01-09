@@ -10,8 +10,6 @@ import io.ktor.client.request.get
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-// TODO Use the Book API if the query name is a(n) ISBN/LCCN/OCLC number
-// https://openlibrary.org/dev/docs/api/books
 class OpenLibrarySearchClient : IClient<OpenLibrarySearchResponse> {
 
     private val logger: Logger = LoggerFactory.getLogger(OpenLibrarySearchClient::class.java)
