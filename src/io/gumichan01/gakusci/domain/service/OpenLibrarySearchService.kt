@@ -6,7 +6,7 @@ import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 
-class OpenLibraryService(val openLibraryClient: IClient<OpenLibrarySearchResponse>) : IService {
+class OpenLibrarySearchService(val openLibraryClient: IClient<OpenLibrarySearchResponse>) : IService {
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
         return openLibraryClient.retrieveResults(queryParam)?.let {
             val numFound = it.numFound

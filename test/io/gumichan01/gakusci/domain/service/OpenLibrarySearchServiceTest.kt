@@ -10,7 +10,7 @@ import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import kotlin.test.Test
 
-internal class OpenLibraryServiceTest {
+internal class OpenLibrarySearchServiceTest {
 
     private val openLibResponseMock: OpenLibrarySearchResponse = mockk {
         coEvery { numFound } returns 1
@@ -22,7 +22,7 @@ internal class OpenLibraryServiceTest {
 
     @Test
     fun `OpenLibrary service - valid search on fake client, get results`() {
-        val service = OpenLibraryService(openLibSearchMock)
+        val service = OpenLibrarySearchService(openLibSearchMock)
         val response = runBlocking { service.search(QueryParam("gunnm", SearchType.BOOKS)) }
         assertThat(response).isNotNull
     }

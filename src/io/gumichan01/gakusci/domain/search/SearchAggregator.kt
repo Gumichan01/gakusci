@@ -9,7 +9,7 @@ import io.gumichan01.gakusci.domain.search.cache.SearchCache
 import io.gumichan01.gakusci.domain.service.ArxivService
 import io.gumichan01.gakusci.domain.service.HalService
 import io.gumichan01.gakusci.domain.service.IService
-import io.gumichan01.gakusci.domain.service.OpenLibraryService
+import io.gumichan01.gakusci.domain.service.OpenLibrarySearchService
 import io.gumichan01.gakusci.domain.utils.slice
 import io.gumichan01.gakusci.domain.utils.take
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -53,6 +53,6 @@ class SearchAggregator(private val searchLauncher: SearchLauncher, private val c
 
     private enum class DomainSearchType(val services: Set<IService>) {
         RESEARCH(setOf(HalService(HalClient()), ArxivService(ArxivClient()))),
-        BOOKS(setOf(OpenLibraryService(OpenLibrarySearchClient())))
+        BOOKS(setOf(OpenLibrarySearchService(OpenLibrarySearchClient())))
     }
 }
