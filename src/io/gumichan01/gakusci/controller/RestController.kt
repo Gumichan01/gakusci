@@ -1,5 +1,6 @@
 package io.gumichan01.gakusci.controller
 
+import io.gumichan01.gakusci.controller.utils.isEmpty
 import io.gumichan01.gakusci.controller.utils.retrieveApiParam
 import io.gumichan01.gakusci.domain.search.SearchQueryProcessor
 import io.ktor.application.ApplicationCall

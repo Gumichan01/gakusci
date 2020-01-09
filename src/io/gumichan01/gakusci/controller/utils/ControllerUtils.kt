@@ -1,6 +1,7 @@
 package io.gumichan01.gakusci.controller.utils
 
 import io.gumichan01.gakusci.domain.model.QueryParam
+import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.ktor.http.Parameters
 
@@ -88,3 +89,6 @@ private fun getApiSearchTypeFrom(parameters: Parameters): SearchType? {
     }
 }
 
+fun SearchResponse.isEmpty(): Boolean {
+    return totalResults == 0 && entries.isEmpty()
+}
