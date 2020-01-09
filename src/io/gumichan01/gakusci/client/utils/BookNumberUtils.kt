@@ -1,6 +1,8 @@
 package io.gumichan01.gakusci.client.utils
 
 
+fun normalizeBookNumber(bookNumber: String) = bookNumber.replace(Regex("[- ]"), "")
+
 fun isValidISBN(bookNumber: String): Boolean {
     return isValidISBN10(bookNumber) || isValidISBN13(bookNumber)
 }
@@ -13,7 +15,7 @@ private fun isValidISBN10(bookNumber: String): Boolean {
 }
 
 private fun isValidCheckDigitISBN10(bookNumber: String): Boolean {
-    val simplifiedBookNumber = bookNumber.replace(Regex("[- ]"), "")
+    val simplifiedBookNumber = normalizeBookNumber(bookNumber)
     return simplifiedBookNumber.length == 10 &&
             simplifiedBookNumber.map { c -> c.toInt() }
                 .mapIndexed { i, v -> v * (10 - i) }
@@ -28,7 +30,7 @@ private fun isValidISBN13(bookNumber: String): Boolean {
 }
 
 private fun isValidCheckDigitISBN13(bookNumber: String): Boolean {
-    val simplifiedBookNumber = bookNumber.replace(Regex("[- ]"), "")
+    val simplifiedBookNumber = normalizeBookNumber(bookNumber)
     return simplifiedBookNumber.length == 13 &&
             simplifiedBookNumber.map { c -> c.toInt() }
                 .mapIndexed { i, v -> v * (if ((i % 2) == 0) 1 else 3) }
