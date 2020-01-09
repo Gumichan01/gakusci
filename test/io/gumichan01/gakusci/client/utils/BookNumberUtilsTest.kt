@@ -7,7 +7,7 @@ internal class BookNumberUtilsTest {
 
     @Test
     fun `check valid ISBN-10 - no dash, no space`() {
-        assertThat(isValidISBN("2123456802")).isTrue()
+        assertThat(isValidISBN("1421500574")).isTrue()
     }
 
     @Test
@@ -38,5 +38,15 @@ internal class BookNumberUtilsTest {
     @Test
     fun `check invalid ISBN-10 - it contains non-digit, non-dash and non-space characters`() {
         assertThat(isValidISBN("2-1234-K580-2")).isFalse()
+    }
+
+    @Test
+    fun `check valid ISBN-10 - valid checksum`() {
+        assertThat(isValidISBN("0-19-852663-6")).isTrue()
+    }
+
+    @Test
+    fun `check invalid ISBN-10 - invalid checksum`() {
+        assertThat(isValidISBN("0-19-852663-0")).isFalse()
     }
 }
