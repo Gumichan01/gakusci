@@ -49,4 +49,39 @@ internal class BookNumberUtilsTest {
     fun `check invalid ISBN-10 - invalid checksum`() {
         assertThat(isValidISBN("0-19-852663-0")).isFalse()
     }
+
+    @Test
+    fun `check valid ISBN-13 - no dash, no space`() {
+        assertThat(isValidISBN("9781421500577")).isTrue()
+    }
+
+    @Test
+    fun `check valid ISBN-13 - with dashes`() {
+        assertThat(isValidISBN("978-1-4215-0057-7")).isTrue()
+    }
+
+    @Test
+    fun `check valid ISBN-13 - with spaces`() {
+        assertThat(isValidISBN("978 1 4215 0057 7")).isTrue()
+    }
+
+    @Test
+    fun `check invalid ISBN-13 - mixed dashes and space`() {
+        assertThat(isValidISBN("978 1-4215-0057 7")).isFalse()
+    }
+
+    @Test
+    fun `check invalid ISBN-13 - it contains non-digit, non-dash and non-space characters`() {
+        assertThat(isValidISBN("978-1-4215-K057-7")).isFalse()
+    }
+
+    @Test
+    fun `check valid ISBN-13 - valid checksum`() {
+        assertThat(isValidISBN("978-1-4215-0057-7")).isTrue()
+    }
+
+    @Test
+    fun `check invalid ISBN-13 - invalid checksum`() {
+        assertThat(isValidISBN("978-1-4215-0057-0")).isFalse()
+    }
 }
