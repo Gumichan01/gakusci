@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory
 
 // TODO Use the Book API if the query name is a(n) ISBN/LCCN/OCLC number
 // https://openlibrary.org/dev/docs/api/books
-class OpenLibraryClient : IClient<OpenLibrarySearchResponse> {
+class OpenLibrarySearchClient : IClient<OpenLibrarySearchResponse> {
 
-    private val logger: Logger = LoggerFactory.getLogger(OpenLibraryClient::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(OpenLibrarySearchClient::class.java)
     // NOTE This URL refers to an experimental Open Library API, so this class must be considered experimental
     private val openLibrarySearchUrl = "https://openlibrary.org/search.json?q=%s"
 

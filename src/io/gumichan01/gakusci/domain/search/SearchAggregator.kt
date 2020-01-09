@@ -2,7 +2,7 @@ package io.gumichan01.gakusci.domain.search
 
 import io.gumichan01.gakusci.client.arxiv.ArxivClient
 import io.gumichan01.gakusci.client.hal.HalClient
-import io.gumichan01.gakusci.client.openlib.OpenLibraryClient
+import io.gumichan01.gakusci.client.openlib.OpenLibrarySearchClient
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.search.cache.SearchCache
@@ -53,6 +53,6 @@ class SearchAggregator(private val searchLauncher: SearchLauncher, private val c
 
     private enum class DomainSearchType(val services: Set<IService>) {
         RESEARCH(setOf(HalService(HalClient()), ArxivService(ArxivClient()))),
-        BOOKS(setOf(OpenLibraryService(OpenLibraryClient())))
+        BOOKS(setOf(OpenLibraryService(OpenLibrarySearchClient())))
     }
 }

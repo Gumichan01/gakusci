@@ -1,6 +1,6 @@
 package io.gumichan01.gakusci.domain.service
 
-import io.gumichan01.gakusci.client.openlib.OpenLibraryClient
+import io.gumichan01.gakusci.client.openlib.OpenLibrarySearchClient
 import io.gumichan01.gakusci.client.openlib.OpenLibrarySearchResponse
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.utils.SearchType
@@ -16,13 +16,13 @@ internal class OpenLibraryServiceTest {
         coEvery { numFound } returns 1
         coEvery { docs } returns emptyList()
     }
-    private val openLibMock: OpenLibraryClient = mockk {
+    private val openLibSearchMock: OpenLibrarySearchClient = mockk {
         coEvery { retrieveResults(QueryParam("gunnm", SearchType.BOOKS)) } returns openLibResponseMock
     }
 
     @Test
     fun `OpenLibrary service - valid search on fake client, get results`() {
-        val service = OpenLibraryService(openLibMock)
+        val service = OpenLibraryService(openLibSearchMock)
         val response = runBlocking { service.search(QueryParam("gunnm", SearchType.BOOKS)) }
         assertThat(response).isNotNull
     }
