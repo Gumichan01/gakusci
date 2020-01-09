@@ -5,7 +5,7 @@ import io.gumichan01.gakusci.domain.utils.SearchType
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 
-internal class OpenLibraryClientTest {
+internal class OpenLibrarySearchClientTest {
 
     //@Test
     fun `Call the Open Library web-service - get results`() {
