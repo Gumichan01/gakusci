@@ -1,7 +1,7 @@
 package io.gumichan01.gakusci.client.utils
 
 
-fun normalizeIsbn(bookNumber: String) = bookNumber.replace(Regex("[- ]"), "")
+fun normalizeIsbn(bookNumber: String): String = bookNumber.replace(Regex("[- ]"), "")
 
 // Check https://www.loc.gov/marc/lccn-namespace.html to get information about how LCCNs are normalized
 fun normalizeLccn(bookNumber: String): String {
@@ -33,9 +33,9 @@ private fun isValidISBN10(bookNumber: String): Boolean {
 }
 
 private fun isValidCheckDigitISBN10(bookNumber: String): Boolean {
-    val simplifiedBookNumber = normalizeIsbn(bookNumber)
-    return simplifiedBookNumber.length == 10 &&
-            simplifiedBookNumber.map { c -> c.toInt() }
+    val simplifiedIsbn13: String = normalizeIsbn(bookNumber)
+    return simplifiedIsbn13.length == 10 &&
+            simplifiedIsbn13.map { c -> c.toInt() }
                 .mapIndexed { i, v -> v * (10 - i) }
                 .reduce { acc, sum -> acc + sum } % 11 == 0
 }
@@ -48,22 +48,22 @@ private fun isValidISBN13(bookNumber: String): Boolean {
 }
 
 private fun isValidCheckDigitISBN13(bookNumber: String): Boolean {
-    val simplifiedBookNumber = normalizeIsbn(bookNumber)
-    return simplifiedBookNumber.length == 13 &&
-            simplifiedBookNumber.map { c -> c.toInt() }
+    val simplifiedIsbn13: String = normalizeIsbn(bookNumber)
+    return simplifiedIsbn13.length == 13 &&
+            simplifiedIsbn13.map { c -> c.toInt() }
                 .mapIndexed { i, v -> v * (if ((i % 2) == 0) 1 else 3) }
                 .reduce { acc, sum -> acc + sum } % 10 == 0
 }
 
-// Note: the book number is not normalized, so you must normalize it by using @normalizeLccn
 // https://www.loc.gov/marc/lccn-namespace.html
 fun isValidLCCN(bookNumber: String): Boolean {
-    return bookNumber.takeLast(8).matches(Regex("[0-9]{8}")) &&
-            when (bookNumber.length) {
-                9 -> bookNumber.first().isLetter()
-                10 -> bookNumber.take(2).matches(Regex("[0-9]{2}|[a-zA-Z]{2}"))
-                11 -> bookNumber.take(3).matches(Regex("[a-zA-Z]([0-9]{2}|[a-zA-Z]{2})"))
-                12 -> bookNumber.take(4).matches(Regex("[a-zA-Z]{2}[0-9]{2}"))
+    val normalizedLccn: String = normalizeLccn(bookNumber)
+    return normalizedLccn.takeLast(8).matches(Regex("[0-9]{8}")) &&
+            when (normalizedLccn.length) {
+                9 -> normalizedLccn.first().isLetter()
+                10 -> normalizedLccn.take(2).matches(Regex("[0-9]{2}|[a-zA-Z]{2}"))
+                11 -> normalizedLccn.take(3).matches(Regex("[a-zA-Z]([0-9]{2}|[a-zA-Z]{2})"))
+                12 -> normalizedLccn.take(4).matches(Regex("[a-zA-Z]{2}[0-9]{2}"))
                 else -> false
             }
 }

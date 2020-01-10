@@ -10,7 +10,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.request.get
 
-class OpenLibraryBookClient: IClient<String> {
+class OpenLibraryBookClient : IClient<String> {
     private val openLibrarySearchUrl = "http://openlibrary.org/api/books?bibkeys=%s&format=json"
 
     override suspend fun retrieveResults(queryParam: QueryParam): String? {
