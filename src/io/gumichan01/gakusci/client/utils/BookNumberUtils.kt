@@ -54,3 +54,16 @@ private fun isValidCheckDigitISBN13(bookNumber: String): Boolean {
                 .mapIndexed { i, v -> v * (if ((i % 2) == 0) 1 else 3) }
                 .reduce { acc, sum -> acc + sum } % 10 == 0
 }
+
+// Note: the book number is not normalized, so you must normalize it by using @normalizeLccn
+// https://www.loc.gov/marc/lccn-namespace.html
+fun isValidLCCN(bookNumber: String): Boolean {
+    return bookNumber.takeLast(8).matches(Regex("[0-9]{8}")) &&
+            when (bookNumber.length) {
+                9 -> bookNumber.first().isLetter()
+                10 -> bookNumber.take(2).matches(Regex("[0-9]{2}|[a-zA-Z]{2}"))
+                11 -> bookNumber.take(3).matches(Regex("[a-zA-Z]([0-9]{2}|[a-zA-Z]{2})"))
+                12 -> bookNumber.take(4).matches(Regex("[a-zA-Z]{2}[0-9]{2}"))
+                else -> false
+            }
+}

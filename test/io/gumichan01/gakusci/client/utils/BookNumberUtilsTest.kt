@@ -114,4 +114,69 @@ internal class BookNumberUtilsTest {
     fun `normalize LCCN - empty string`() {
         assertThat(normalizeLccn("")).isEqualTo("")
     }
+
+    @Test
+    fun `check valid LCCN - 9 characters`() {
+        assertThat(isValidLCCN("n78890351")).isTrue()
+    }
+
+    @Test
+    fun `check invalid LCCN - 9 characters but does not start with a letter`() {
+        assertThat(isValidLCCN("278890351")).isFalse()
+    }
+
+    @Test
+    fun `check valid LCCN - 10 characters starting with two letters`() {
+        assertThat(isValidLCCN("nd78890351")).isTrue()
+    }
+
+    @Test
+    fun `check valid LCCN - 10 characters starting with two digits`() {
+        assertThat(isValidLCCN("4278890351")).isTrue()
+    }
+
+    @Test
+    fun `check invalid LCCN - 10 characters but does not start with either two digits or two letters`() {
+        assertThat(isValidLCCN("4d78890351")).isFalse()
+    }
+
+    @Test
+    fun `check valid LCCN - 11 characters starting with a letter followed by two letters`() {
+        assertThat(isValidLCCN("and78890351")).isTrue()
+    }
+
+    @Test
+    fun `check valid LCCN - 11 characters starting with a letter followed by two digits`() {
+        assertThat(isValidLCCN("a4278890351")).isTrue()
+    }
+
+    @Test
+    fun `check invalid LCCN - 11 characters but the first character is not alphabetic`() {
+        assertThat(isValidLCCN("2nd78890351")).isFalse()
+    }
+
+    @Test
+    fun `check invalid LCCN - 11 characters, the first character is alphabetic but is not followed by either two digits or two letters`() {
+        assertThat(isValidLCCN("24d78890351")).isFalse()
+    }
+
+    @Test
+    fun `check valid LCCN - 12 characters, the first two characters must be alphabetic and the remaining characters digits`() {
+        assertThat(isValidLCCN("ba4278890351")).isTrue()
+    }
+
+    @Test
+    fun `check invalidvalid LCCN - 12 characters, the first two characters are not alphabetic`() {
+        assertThat(isValidLCCN("004278890351")).isFalse()
+    }
+
+    @Test
+    fun `check invalidvalid LCCN - 12 characters, the first two characters are alphabetic but the remaining characters are not digits (1)`() {
+        assertThat(isValidLCCN("bazz78890351")).isFalse()
+    }
+
+    @Test
+    fun `check invalidvalid LCCN - 12 characters, the first two characters are alphabetic but the remaining characters are not digits (2)`() {
+        assertThat(isValidLCCN("ba4278890Z51")).isFalse()
+    }
 }
