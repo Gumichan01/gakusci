@@ -26,4 +26,9 @@ internal class OpenLibraryBookClientTest {
 //    fun `format invalid ISBN - get empty text`() {
 //        assertThat(OpenLibraryBookClient().formatBookNumber("978-1-4215-0057-0")).isBlank()
 //    }
+//
+//    @Test // Note: formatBookNumber()  is private, so you need to make it public in order to test is
+//    fun `format valid LCCN - get formatted text`() {
+//        assertThat(OpenLibraryBookClient().formatBookNumber("n78890351")).isEqualTo("LCCN:n78890351")
+//    }
 }
