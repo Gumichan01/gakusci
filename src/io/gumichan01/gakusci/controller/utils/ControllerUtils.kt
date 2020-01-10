@@ -7,7 +7,7 @@ import io.ktor.http.Parameters
 
 fun retrieveWebParam(queryParameters: Parameters): Pair<QueryParam?, String> {
     return queryParameters["q"]?.let { query ->
-        val defaultRows = 1000
+        val defaultRows = 100
         val numPerPage = 10
         val start = queryParameters["start"]?.toInt() ?: 0
         val rows = if (start + numPerPage > defaultRows) start * 2 else defaultRows
