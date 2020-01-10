@@ -2,7 +2,7 @@ package io.gumichan01.gakusci.client.openlib
 
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.utils.isValidISBN
-import io.gumichan01.gakusci.client.utils.normalizeBookNumber
+import io.gumichan01.gakusci.client.utils.normalizeIsbn
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
@@ -20,7 +20,7 @@ class OpenLibraryBookClient: IClient<String> {
     private fun formatBookNumber(bookNumber: String): String {
         return StringBuilder().run {
             if (isValidISBN(bookNumber)) {
-                append("ISBN:${normalizeBookNumber(bookNumber)}")
+                append("ISBN:${normalizeIsbn(bookNumber)}")
             } else this
         }.toString()
     }

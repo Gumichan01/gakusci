@@ -84,4 +84,34 @@ internal class BookNumberUtilsTest {
     fun `check invalid ISBN-13 - invalid checksum`() {
         assertThat(isValidISBN("978-1-4215-0057-0")).isFalse()
     }
+
+    @Test
+    fun `normalize LCCN - already normalized`() {
+        assertThat(normalizeLccn("n78890351")).isEqualTo("n78890351")
+    }
+
+    @Test
+    fun `normalize LCCN containing spaces`() {
+        assertThat(normalizeLccn("n7 8890 351")).isEqualTo("n78890351")
+    }
+
+    @Test
+    fun `normalize LCCN containing at least a forward slash`() {
+        assertThat(normalizeLccn("n78890351/acc/r75")).isEqualTo("n78890351")
+    }
+
+    @Test
+    fun `normalize LCCN containing one hyphen - nominal case`() {
+        assertThat(normalizeLccn("2001-000002")).isEqualTo("2001000002")
+    }
+
+    @Test
+    fun `normalize LCCN containing one hyphen - substring following (to the right of) the (removed) hyphen`() {
+        assertThat(normalizeLccn("85-2")).isEqualTo("85000002")
+    }
+
+    @Test
+    fun `normalize LCCN - empty string`() {
+        assertThat(normalizeLccn("")).isEqualTo("")
+    }
 }
