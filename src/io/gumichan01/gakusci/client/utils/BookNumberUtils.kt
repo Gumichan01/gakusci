@@ -67,3 +67,7 @@ fun isValidLCCN(bookNumber: String): Boolean {
                 else -> false
             }
 }
+
+fun isValidOCLC(bookNumber: String): Boolean {
+    return bookNumber.matches(Regex("[0-9]+"))
+}

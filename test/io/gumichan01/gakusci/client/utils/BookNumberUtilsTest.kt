@@ -166,17 +166,32 @@ internal class BookNumberUtilsTest {
     }
 
     @Test
-    fun `check invalidvalid LCCN - 12 characters, the first two characters are not alphabetic`() {
+    fun `check invalid LCCN - 12 characters, the first two characters are not alphabetic`() {
         assertThat(isValidLCCN("004278890351")).isFalse()
     }
 
     @Test
-    fun `check invalidvalid LCCN - 12 characters, the first two characters are alphabetic but the remaining characters are not digits (1)`() {
+    fun `check invalid LCCN - 12 characters, the first two characters are alphabetic but the remaining characters are not digits (1)`() {
         assertThat(isValidLCCN("bazz78890351")).isFalse()
     }
 
     @Test
-    fun `check invalidvalid LCCN - 12 characters, the first two characters are alphabetic but the remaining characters are not digits (2)`() {
+    fun `check invalid LCCN - 12 characters, the first two characters are alphabetic but the remaining characters are not digits (2)`() {
         assertThat(isValidLCCN("ba4278890Z51")).isFalse()
+    }
+
+    @Test
+    fun `check valid OCLC number`() {
+        assertThat(isValidOCLC("18936737")).isTrue()
+    }
+
+    @Test
+    fun `check invalid OCLC number - alphabetic characters`() {
+        assertThat(isValidOCLC("1b9e6737")).isFalse()
+    }
+
+    @Test
+    fun `check invalid OCLC number - special characters`() {
+        assertThat(isValidOCLC("1b93$7€7")).isFalse()
     }
 }
