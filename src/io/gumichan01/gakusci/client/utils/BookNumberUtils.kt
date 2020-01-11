@@ -60,6 +60,7 @@ fun isValidLCCN(bookNumber: String): Boolean {
     val normalizedLccn: String = normalizeLccn(bookNumber)
     return normalizedLccn.takeLast(8).matches(Regex("[0-9]{8}")) &&
             when (normalizedLccn.length) {
+                8 -> true
                 9 -> normalizedLccn.first().isLetter()
                 10 -> normalizedLccn.take(2).matches(Regex("[0-9]{2}|[a-zA-Z]{2}"))
                 11 -> normalizedLccn.take(3).matches(Regex("[a-zA-Z]([0-9]{2}|[a-zA-Z]{2})"))

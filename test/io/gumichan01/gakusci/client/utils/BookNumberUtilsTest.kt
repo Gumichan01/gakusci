@@ -116,6 +116,16 @@ internal class BookNumberUtilsTest {
     }
 
     @Test
+    fun `check valid LCCN - 8 characters`() {
+        assertThat(isValidLCCN("62019420")).isTrue()
+    }
+
+    @Test
+    fun `check invalid LCCN - 8 characters, bad character`() {
+        assertThat(isValidLCCN("62o19420")).isFalse()
+    }
+
+    @Test
     fun `check valid LCCN - 9 characters`() {
         assertThat(isValidLCCN("n78890351")).isTrue()
     }
