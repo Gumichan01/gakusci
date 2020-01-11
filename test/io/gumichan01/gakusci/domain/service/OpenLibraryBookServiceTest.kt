@@ -13,7 +13,9 @@ import kotlin.test.Test
 internal class OpenLibraryBookServiceTest {
 
     private val openLibBookMock: OpenLibraryBookClient = mockk {
-        coEvery { retrieveResults(QueryParam("1421500574", SearchType.BOOKS)) } returns OpenLibraryBookResponse("","","","","")
+        coEvery {
+            retrieveResults(QueryParam("1421500574", SearchType.BOOKS))
+        } returns listOf(OpenLibraryBookResponse("", "", "", "", ""))
     }
 
     @Test
