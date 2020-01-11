@@ -12,13 +12,20 @@ import kotlin.test.Test
 internal class OpenLibraryBookServiceTest {
 
     private val openLibBookMock: OpenLibraryBookClient = mockk {
-        coEvery { retrieveResults(QueryParam("ISBN:1421500574", SearchType.BOOKS)) } returns "fake result"
+        coEvery { retrieveResults(QueryParam("1421500574", SearchType.BOOKS)) } returns "fake result"
     }
 
     @Test
     fun `OpenLibrary book service - valid search on fake client, get results`() {
         val service = OpenLibraryBookService(openLibBookMock)
-        val response = runBlocking { service.search(QueryParam("ISBN:1421500574", SearchType.BOOKS)) }
+        val response = runBlocking { service.search(QueryParam("1421500574", SearchType.BOOKS)) }
+        Assertions.assertThat(response).isNotNull
+    }
+
+    @Test
+    fun `OpenLibrary book service - valid search on real client, get results`() {
+        val service = OpenLibraryBookService(OpenLibraryBookClient())
+        val response = runBlocking { service.search(QueryParam("1421500574", SearchType.BOOKS)) }.also { println(it) }
         Assertions.assertThat(response).isNotNull
     }
 }

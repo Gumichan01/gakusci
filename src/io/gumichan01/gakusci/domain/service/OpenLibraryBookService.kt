@@ -7,7 +7,7 @@ import io.gumichan01.gakusci.domain.model.ServiceResponse
 class OpenLibraryBookService(private val openLibBookClient: IClient<String>) : IService {
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
         return openLibBookClient.retrieveResults(queryParam)?.let {
-            println(it)
-            ServiceResponse(0, emptyList()) }
+            ServiceResponse(0, emptyList())
+        }
     }
 }
