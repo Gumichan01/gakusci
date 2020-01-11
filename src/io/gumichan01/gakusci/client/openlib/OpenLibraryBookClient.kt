@@ -23,8 +23,9 @@ class OpenLibraryBookClient : IClient<List<OpenLibraryBookResponse>> {
         return StringBuilder().run {
             when {
                 isValidISBN(bookNumber) -> append("ISBN:${normalizeIsbn(bookNumber)}")
+                // A valid OCLC number a valid LCCN
+                isValidOCLC(bookNumber) -> append("OCLC:$bookNumber,LCCN:${normalizeLccn(bookNumber)}")
                 isValidLCCN(normalizeLccn(bookNumber)) -> append("LCCN:${normalizeLccn(bookNumber)}")
-                isValidOCLC(bookNumber) -> append("OCLC:$bookNumber")
                 else -> this
             }
         }.toString()
