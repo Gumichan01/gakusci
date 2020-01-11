@@ -2,11 +2,15 @@ package io.gumichan01.gakusci.domain.search
 
 import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.gumichan01.gakusci.domain.model.ServiceResponse
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import kotlin.test.Test
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 internal class SearchResultConsumerTest {
 
     @Test

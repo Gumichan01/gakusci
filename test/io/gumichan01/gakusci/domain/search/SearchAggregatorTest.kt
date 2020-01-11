@@ -10,12 +10,14 @@ import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import kotlin.test.Test
 
+@FlowPreview
 @ExperimentalCoroutinesApi
 class SearchAggregatorTest {
 
