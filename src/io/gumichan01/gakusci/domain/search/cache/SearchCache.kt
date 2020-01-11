@@ -21,7 +21,11 @@ class SearchCache(cache: Cache<String, ServiceResponse>) :
                 } else {
                     response
                 }
-            } else f().also { put(param.query, it) }
+            } else f().also { r -> if (r.isEmpty()) put(param.query, r) }
         }
+    }
+
+    private fun ServiceResponse.isEmpty(): Boolean {
+        return totalResults == 0 && entries.isEmpty()
     }
 }
