@@ -5,12 +5,11 @@ import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.utils.SearchType
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
-import java.lang.reflect.Method
 import kotlin.test.Test
 
 internal class OpenLibraryBookClientTest {
 
-//    @Test
+    //    @Test
     fun `Call the Open Library web-service - get book by ISBN`() {
         val client: IClient<String> = OpenLibraryBookClient()
         val response: String? = runBlocking { client.retrieveResults(QueryParam("ISBN:1421500574", SearchType.BOOKS)) }
@@ -30,5 +29,10 @@ internal class OpenLibraryBookClientTest {
 //    @Test // Note: formatBookNumber()  is private, so you need to make it public in order to test is
 //    fun `format valid LCCN - get formatted text`() {
 //        assertThat(OpenLibraryBookClient().formatBookNumber("n78890351")).isEqualTo("LCCN:n78890351")
+//    }
+//
+//    @Test
+//    fun `format invalid LCCN - get formatted text`() {
+//        assertThat(OpenLibraryBookClient().formatBookNumber("478890351")).isBlank()
 //    }
 }
