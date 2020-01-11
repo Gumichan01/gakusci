@@ -32,7 +32,17 @@ internal class OpenLibraryBookClientTest {
 //    }
 //
 //    @Test
-//    fun `format invalid LCCN - get formatted text`() {
+//    fun `format invalid LCCN - get empty text`() {
 //        assertThat(OpenLibraryBookClient().formatBookNumber("478890351")).isBlank()
+//    }
+//
+//    @Test
+//    fun `format valid OCLC - get formatted text`() {
+//        assertThat(OpenLibraryBookClient().formatBookNumber("18936737")).isEqualTo("OCLC:18936737")
+//    }
+//
+//    @Test
+//    fun `format invalid OCLC - get empty text`() {
+//        assertThat(OpenLibraryBookClient().formatBookNumber("1$9367e7")).isBlank()
 //    }
 }
