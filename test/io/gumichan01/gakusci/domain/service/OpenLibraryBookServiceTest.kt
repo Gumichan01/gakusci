@@ -1,6 +1,7 @@
 package io.gumichan01.gakusci.domain.service
 
 import io.gumichan01.gakusci.client.openlib.OpenLibraryBookClient
+import io.gumichan01.gakusci.client.openlib.OpenLibraryBookResponse
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.coEvery
@@ -12,7 +13,7 @@ import kotlin.test.Test
 internal class OpenLibraryBookServiceTest {
 
     private val openLibBookMock: OpenLibraryBookClient = mockk {
-        coEvery { retrieveResults(QueryParam("1421500574", SearchType.BOOKS)) } returns "fake result"
+        coEvery { retrieveResults(QueryParam("1421500574", SearchType.BOOKS)) } returns OpenLibraryBookResponse("","","","","")
     }
 
     @Test

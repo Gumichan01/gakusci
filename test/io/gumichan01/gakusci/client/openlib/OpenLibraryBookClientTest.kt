@@ -9,25 +9,25 @@ import kotlin.test.Test
 
 internal class OpenLibraryBookClientTest {
 
-//    @Test
+    @Test
     fun `Call the Open Library web-service - get book by ISBN`() {
-        val client: IClient<String> = OpenLibraryBookClient()
-        val response: String? = runBlocking { client.retrieveResults(QueryParam("ISBN:1421500574", SearchType.BOOKS)) }
-        assertThat(response).isNotNull()
+        val client: IClient<OpenLibraryBookResponse> = OpenLibraryBookClient()
+        val response: OpenLibraryBookResponse? = runBlocking { client.retrieveResults(QueryParam("1421500574", SearchType.BOOKS)) }
+        assertThat(response).isNotNull
     }
 
-//    @Test
+    @Test
     fun `Call the Open Library web-service - get book by LCCN`() {
-        val client: IClient<String> = OpenLibraryBookClient()
-        val response: String? = runBlocking { client.retrieveResults(QueryParam("LCCN:n78890351", SearchType.BOOKS)) }
-        assertThat(response).isNotNull()
+        val client: IClient<OpenLibraryBookResponse> = OpenLibraryBookClient()
+        val response: OpenLibraryBookResponse? = runBlocking { client.retrieveResults(QueryParam("62019420", SearchType.BOOKS)) }
+        assertThat(response).isNotNull
     }
 
-//    @Test
+    @Test
     fun `Call the Open Library web-service - get book by OCLC number`() {
-        val client: IClient<String> = OpenLibraryBookClient()
-        val response: String? = runBlocking { client.retrieveResults(QueryParam("OCLC:18936737", SearchType.BOOKS)) }
-        assertThat(response).isNotNull()
+        val client: IClient<OpenLibraryBookResponse> = OpenLibraryBookClient()
+        val response: OpenLibraryBookResponse? = runBlocking { client.retrieveResults(QueryParam("18936737", SearchType.BOOKS)) }
+        assertThat(response).isNotNull
     }
 //    @Test // Note: formatBookNumber()  is private, so you need to make it public in order to test is
 //    fun `format valid ISBN - get formatted text`() {
