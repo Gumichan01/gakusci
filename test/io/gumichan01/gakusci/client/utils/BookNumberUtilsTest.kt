@@ -204,4 +204,39 @@ internal class BookNumberUtilsTest {
     fun `check invalid OCLC number - special characters`() {
         assertThat(isValidOCLC("1b93$7€7")).isFalse()
     }
+
+    @Test
+    fun `generate book number from text - ISBN-10 text OK`() {
+        val generateBookNumberFromText = generateBookNumberFromText("1421500574")
+        assertThat(generateBookNumberFromText?.type).isEqualTo(BookNumberType.ISBN)
+        assertThat(generateBookNumberFromText?.value).isEqualTo("1421500574")
+    }
+
+    @Test
+    fun `generate book number from text - ISBN-13 text OK`() {
+        val generateBookNumberFromText = generateBookNumberFromText("978-1-4215-0057-7")
+        assertThat(generateBookNumberFromText?.type).isEqualTo(BookNumberType.ISBN)
+        assertThat(generateBookNumberFromText?.value).isEqualTo("9781421500577")
+    }
+
+    // LCCN ba4278890351
+    @Test
+    fun `generate book number from text - OCLC text OK`() {
+        val generateBookNumberFromText = generateBookNumberFromText("18936737")
+        assertThat(generateBookNumberFromText?.type).isEqualTo(BookNumberType.OCLC)
+        assertThat(generateBookNumberFromText?.value).isEqualTo("18936737")
+    }
+
+    @Test
+    fun `generate book number from text - LCCN text OK`() {
+        val generateBookNumberFromText = generateBookNumberFromText("ba4278890351")
+        assertThat(generateBookNumberFromText?.type).isEqualTo(BookNumberType.LCCN)
+        assertThat(generateBookNumberFromText?.value).isEqualTo("ba4278890351")
+    }
+
+    @Test
+    fun `generate book number from text - unrecognized book number`() {
+        val generateBookNumberFromText = generateBookNumberFromText("427$$9oe51")
+        assertThat(generateBookNumberFromText?.type).isNull()
+    }
 }

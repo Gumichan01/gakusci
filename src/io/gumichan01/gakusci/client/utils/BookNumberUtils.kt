@@ -1,5 +1,14 @@
 package io.gumichan01.gakusci.client.utils
 
+fun generateBookNumberFromText(text: String): BookNumber? {
+    return when {
+        isValidISBN(text) -> BookNumber(BookNumberType.ISBN, normalizeIsbn(text))
+        isValidOCLC(text) -> BookNumber(BookNumberType.OCLC, text)
+        isValidLCCN(text) -> BookNumber(BookNumberType.LCCN, normalizeLccn(text))
+        else -> null
+    }
+}
+
 
 fun normalizeIsbn(bookNumber: String): String = bookNumber.replace(Regex("[- ]"), "")
 
