@@ -15,6 +15,7 @@ internal class OpenLibraryBookClientTest {
         val response: OpenLibraryBookResponse? =
             runBlocking { client.retrieveResults(QueryParam("1421500574", SearchType.BOOKS)) }
         assertThat(response).isNotNull
+        assertThat(response?.bibKey).isEqualTo("1421500574")
     }
 
     @Test
