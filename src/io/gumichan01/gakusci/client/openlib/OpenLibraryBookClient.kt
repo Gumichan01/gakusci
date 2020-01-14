@@ -3,7 +3,6 @@ package io.gumichan01.gakusci.client.openlib
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.gumichan01.gakusci.client.IClient
-import io.gumichan01.gakusci.client.hal.HalClient
 import io.gumichan01.gakusci.client.utils.BookNumber
 import io.gumichan01.gakusci.client.utils.generateBookNumberFromText
 import io.gumichan01.gakusci.domain.model.QueryParam

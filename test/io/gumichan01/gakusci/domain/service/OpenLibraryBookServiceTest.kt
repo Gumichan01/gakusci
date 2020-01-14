@@ -39,7 +39,7 @@ internal class OpenLibraryBookServiceTest {
         )
     }
 
-    @Test
+//    @Test
     fun `OpenLibrary book service - valid search on real client, get results`() {
         val service = OpenLibraryBookService(OpenLibraryBookClient())
         val response = runBlocking { service.search(QueryParam("1421500574", SearchType.BOOKS)) }.also { println(it) }
