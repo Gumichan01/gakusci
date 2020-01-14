@@ -16,6 +16,7 @@ class OpenLibraryBookClient : IClient<OpenLibraryBookResponse> {
     override suspend fun retrieveResults(queryParam: QueryParam): OpenLibraryBookResponse? {
         val bookNumber: BookNumber? = generateBookNumberFromText(queryParam.query)
         return if (bookNumber != null) {
+            // TODO try-catch in the client
             HttpClient(Apache).use { it.get<String>(openLibrarySearchUrl.format(bookNumber.format())) }.fromJson()
         } else {
             null

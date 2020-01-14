@@ -13,6 +13,7 @@ import kotlinx.coroutines.FlowPreview
 @ExperimentalCoroutinesApi
 class RestController(private val searchQueryProcessor: SearchQueryProcessor) {
 
+    // TODO handle books search (new path)
     suspend fun handleRequest(call: ApplicationCall) {
         val (queryParam, message) = retrieveApiParam(call.request.queryParameters, call.parameters)
         if (queryParam == null) {

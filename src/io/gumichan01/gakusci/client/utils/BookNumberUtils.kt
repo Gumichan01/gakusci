@@ -1,6 +1,7 @@
 package io.gumichan01.gakusci.client.utils
 
 fun generateBookNumberFromText(text: String): BookNumber? {
+    // TODO Detect if the text starts with the type of id follow by ':' as a separator - "<type>:"
     return when {
         isValidISBN(text) -> BookNumber(BookNumberType.ISBN, normalizeIsbn(text))
         isValidOCLC(text) -> BookNumber(BookNumberType.OCLC, text)

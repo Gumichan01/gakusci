@@ -22,6 +22,7 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
         } else {
             val searchType: SearchType = queryParam.searchType
             val (totalResults: Int, _, entries: List<ResultEntry>) = searchQueryProcessor.proceed(queryParam)
+            // TODO Define a new template for book results and use it for book search
             call.respond(
                 ThymeleafContent(
                     "search",
