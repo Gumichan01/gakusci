@@ -3,11 +3,11 @@ package io.gumichan01.gakusci.domain.service
 import io.gumichan01.gakusci.client.openlib.OpenLibraryBookClient
 import io.gumichan01.gakusci.client.openlib.OpenLibraryBookResponse
 import io.gumichan01.gakusci.domain.model.QueryParam
+import io.gumichan01.gakusci.domain.model.ResultEntry
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import kotlin.test.Test
 
@@ -30,6 +30,13 @@ internal class OpenLibraryBookServiceTest {
         val service = OpenLibraryBookService(openLibBookMock)
         val response = runBlocking { service.search(QueryParam("1421500574", SearchType.BOOKS)) }
         assertThat(response).isNotNull
+        assertThat(response?.totalResults).isEqualTo(1)
+        assertThat(response?.entries).contains(
+            ResultEntry(
+                "1421500574",
+                "http://openlibrary.org/books/OL8490428M/Battle_Angel_Alita"
+            )
+        )
     }
 
     @Test
