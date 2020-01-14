@@ -24,7 +24,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun `test web application, normal case - return OK and HTML content`() {
+    fun `test web application, normal case with research - return OK and HTML content`() {
         withTestApplication({ gakusciModule() }) {
             handleRequest(HttpMethod.Get, "/search/?q=lorem&stype=research").apply {
                 with(response) {
@@ -34,6 +34,52 @@ class ApplicationTest {
                         listOf(
                             "<html>",
                             "<div>",
+                            "</div>",
+                            "<script src=",
+                            "</script>",
+                            "</html>"
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `test web application, normal case with books - return OK and HTML content`() {
+        withTestApplication({ gakusciModule() }) {
+            handleRequest(HttpMethod.Get, "/search/?q=lorem&stype=books").apply {
+                with(response) {
+                    assertThat(status()).isEqualTo(HttpStatusCode.OK)
+                    assertThat(content).isNotBlank()
+                    assertThat(content).contains(
+                        listOf(
+                            "<html>",
+                            "<div>",
+                            "</div>",
+                            "<script src=",
+                            "</script>",
+                            "</html>"
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `test web application, search for a book by ISBN - return OK and HTML content`() {
+        withTestApplication({ gakusciModule() }) {
+            handleRequest(HttpMethod.Get, "/search/?q=ISBN:9784088766829&stype=books").apply {
+                with(response) {
+                    assertThat(status()).isEqualTo(HttpStatusCode.OK)
+                    assertThat(content).isNotBlank()
+                    assertThat(content).contains(
+                        listOf(
+                            "<html>",
+                            "<div>",
+                            "ISBN",
+                            "9784088766829",
                             "</div>",
                             "<script src=",
                             "</script>",
