@@ -27,8 +27,15 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
     }
 
     private fun generateThymeleafContent(queryParam: QueryParam, response: SearchResponse): ThymeleafContent {
+
+        val template: String = when (queryParam.searchType) {
+            SearchType.RESEARCH -> "research"
+            SearchType.BOOKS -> "books"
+            else -> throw IllegalStateException("Cannot create HTML template for ${queryParam.searchType}")
+        }
+
         return ThymeleafContent(
-            "research", mapOf(
+            template, mapOf(
                 "numFound" to response.totalResults,
                 "entries" to response.entries,
                 "query" to queryParam.query,
