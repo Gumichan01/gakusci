@@ -1,6 +1,7 @@
 package io.gumichan01.gakusci.controller
 
 import io.gumichan01.gakusci.controller.utils.retrieveWebParam
+import io.gumichan01.gakusci.domain.model.entry.IResultEntry
 import io.gumichan01.gakusci.domain.model.entry.SimpleResultEntry
 import io.gumichan01.gakusci.domain.search.SearchQueryProcessor
 import io.gumichan01.gakusci.domain.utils.SearchType
@@ -21,7 +22,7 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
             call.respond(HttpStatusCode.BadRequest, message)
         } else {
             val searchType: SearchType = queryParam.searchType
-            val (totalResults: Int, _, entries: List<SimpleResultEntry>) = searchQueryProcessor.proceed(queryParam)
+            val (totalResults: Int, _, entries: List<IResultEntry>) = searchQueryProcessor.proceed(queryParam)
             // TODO Define a new template for book results and use it for book search
             call.respond(
                 ThymeleafContent(
