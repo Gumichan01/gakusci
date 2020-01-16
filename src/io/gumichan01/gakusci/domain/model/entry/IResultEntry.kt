@@ -1,3 +1,6 @@
 package io.gumichan01.gakusci.domain.model.entry
 
-interface IResultEntry
+interface IResultEntry {
+    fun label() : String
+    fun link() : String
+}

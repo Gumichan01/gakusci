@@ -28,8 +28,8 @@
     <p th:if="${not emptyEntries}" th:text="${numFound + ' results'}"></p>
 
     <div th:each="entry : ${entries}">
-        <p class="entry_label" th:text="${entry.label}"></p>
-        <a th:href="${entry.url}" th:text="${entry.url}"></a>
+        <p class="entry_label" th:text="${entry.label()}"></p>
+        <a th:href="${entry.link()}" th:text="${entry.link()}"></a>
     </div>
 
     <br>
