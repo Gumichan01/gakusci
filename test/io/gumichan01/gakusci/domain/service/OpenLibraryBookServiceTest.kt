@@ -3,6 +3,7 @@ package io.gumichan01.gakusci.domain.service
 import io.gumichan01.gakusci.client.openlib.OpenLibraryBookClient
 import io.gumichan01.gakusci.client.openlib.OpenLibraryBookResponse
 import io.gumichan01.gakusci.domain.model.QueryParam
+import io.gumichan01.gakusci.domain.model.entry.BookEntry
 import io.gumichan01.gakusci.domain.model.entry.SimpleResultEntry
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.coEvery
@@ -32,9 +33,12 @@ internal class OpenLibraryBookServiceTest {
         assertThat(response).isNotNull
         assertThat(response?.totalResults).isEqualTo(1)
         assertThat(response?.entries).contains(
-            SimpleResultEntry(
-                "1421500574",
-                "http://openlibrary.org/books/OL8490428M/Battle_Angel_Alita"
+            BookEntry(
+                SimpleResultEntry(
+                    "1421500574",
+                    "http://openlibrary.org/books/OL8490428M/Battle_Angel_Alita"
+                ),
+                "https://covers.openlibrary.org/b/id/764825-S.jpg"
             )
         )
     }
