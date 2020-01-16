@@ -3,7 +3,7 @@ package io.gumichan01.gakusci.domain.service
 import io.gumichan01.gakusci.client.openlib.OpenLibraryBookClient
 import io.gumichan01.gakusci.client.openlib.OpenLibraryBookResponse
 import io.gumichan01.gakusci.domain.model.QueryParam
-import io.gumichan01.gakusci.domain.model.ResultEntry
+import io.gumichan01.gakusci.domain.model.SimpleResultEntry
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -32,14 +32,14 @@ internal class OpenLibraryBookServiceTest {
         assertThat(response).isNotNull
         assertThat(response?.totalResults).isEqualTo(1)
         assertThat(response?.entries).contains(
-            ResultEntry(
+            SimpleResultEntry(
                 "1421500574",
                 "http://openlibrary.org/books/OL8490428M/Battle_Angel_Alita"
             )
         )
     }
 
-//    @Test
+    //    @Test
     fun `OpenLibrary book service - valid search on real client, get results`() {
         val service = OpenLibraryBookService(OpenLibraryBookClient())
         val response = runBlocking { service.search(QueryParam("1421500574", SearchType.BOOKS)) }.also { println(it) }

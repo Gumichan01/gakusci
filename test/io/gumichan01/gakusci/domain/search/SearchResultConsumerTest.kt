@@ -1,6 +1,6 @@
 package io.gumichan01.gakusci.domain.search
 
-import io.gumichan01.gakusci.domain.model.ResultEntry
+import io.gumichan01.gakusci.domain.model.SimpleResultEntry
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -25,7 +25,7 @@ internal class SearchResultConsumerTest {
     fun `consume 1 result entry`() {
         val channel = Channel<ServiceResponse>(1).run {
             runBlocking {
-                send(ServiceResponse(1, listOf(ResultEntry("hello", "http://www.example.com"))))
+                send(ServiceResponse(1, listOf(SimpleResultEntry("hello", "http://www.example.com"))))
             }
             close()
             this
@@ -33,7 +33,7 @@ internal class SearchResultConsumerTest {
         val response: ServiceResponse = runBlocking { SearchResultConsumer().consume(channel) }
         assertThat(response.totalResults).isEqualTo(1)
         assertThat(response.entries).isNotEmpty
-        assertThat(response.entries).contains(ResultEntry("hello", "http://www.example.com"))
+        assertThat(response.entries).contains(SimpleResultEntry("hello", "http://www.example.com"))
     }
 
     @Test
@@ -44,8 +44,8 @@ internal class SearchResultConsumerTest {
                     ServiceResponse(
                         2,
                         listOf(
-                            ResultEntry("hello", "http://www.example.com/1"),
-                            ResultEntry("world", "http://www.example.com/2")
+                            SimpleResultEntry("hello", "http://www.example.com/1"),
+                            SimpleResultEntry("world", "http://www.example.com/2")
                         )
                     )
                 )
@@ -57,8 +57,8 @@ internal class SearchResultConsumerTest {
         assertThat(response.totalResults).isEqualTo(2)
         assertThat(response.entries).isNotEmpty
         assertThat(response.entries).contains(
-            ResultEntry("hello", "http://www.example.com/1"),
-            ResultEntry("world", "http://www.example.com/2")
+            SimpleResultEntry("hello", "http://www.example.com/1"),
+            SimpleResultEntry("world", "http://www.example.com/2")
         )
     }
 
@@ -70,8 +70,8 @@ internal class SearchResultConsumerTest {
                     ServiceResponse(
                         2,
                         listOf(
-                            ResultEntry("hello", "http://www.example.com/1"),
-                            ResultEntry("world", "http://www.example.com/2")
+                            SimpleResultEntry("hello", "http://www.example.com/1"),
+                            SimpleResultEntry("world", "http://www.example.com/2")
                         )
                     )
                 )
@@ -79,7 +79,7 @@ internal class SearchResultConsumerTest {
                     ServiceResponse(
                         1,
                         listOf(
-                            ResultEntry("foo", "http://www.bar.com")
+                            SimpleResultEntry("foo", "http://www.bar.com")
                         )
                     )
                 )
@@ -92,9 +92,9 @@ internal class SearchResultConsumerTest {
         assertThat(response.entries).isNotEmpty
         assertThat(response.entries).isEqualTo(
             listOf(
-                ResultEntry("hello", "http://www.example.com/1"),
-                ResultEntry("foo", "http://www.bar.com"),
-                ResultEntry("world", "http://www.example.com/2")
+                SimpleResultEntry("hello", "http://www.example.com/1"),
+                SimpleResultEntry("foo", "http://www.bar.com"),
+                SimpleResultEntry("world", "http://www.example.com/2")
             )
         )
     }

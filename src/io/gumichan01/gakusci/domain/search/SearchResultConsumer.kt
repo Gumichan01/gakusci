@@ -1,6 +1,6 @@
 package io.gumichan01.gakusci.domain.search
 
-import io.gumichan01.gakusci.domain.model.ResultEntry
+import io.gumichan01.gakusci.domain.model.SimpleResultEntry
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -23,14 +23,14 @@ class SearchResultConsumer {
     private suspend fun consumeResults(channel: Channel<ServiceResponse>): ServiceResponse {
         val (total, results) = channel.consumeAsFlow()
             .map { (total, responseEntries) -> Pair(total, listOf(responseEntries)) }
-            .fold(Pair<Int, List<List<ResultEntry>>>(0, emptyList())) { p1, p2 ->
+            .fold(Pair<Int, List<List<SimpleResultEntry>>>(0, emptyList())) { p1, p2 ->
                 Pair(p1.first + p2.first, p1.second + p2.second)
             }
         return produceResponse(total, results)
     }
 
-    private fun produceResponse(total: Int, results: List<List<ResultEntry>>): ServiceResponse {
-        val entries: MutableList<ResultEntry> = mutableListOf()
+    private fun produceResponse(total: Int, results: List<List<SimpleResultEntry>>): ServiceResponse {
+        val entries: MutableList<SimpleResultEntry> = mutableListOf()
         var sequences = results
         while (sequences.isNotEmpty()) {
             sequences = sequences.filter { seq -> seq.isNotEmpty() }
