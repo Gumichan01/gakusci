@@ -1,4 +1,4 @@
 
-li {
+li, .book {
     display: inline-block;
 }
