@@ -1,6 +1,6 @@
 package io.gumichan01.gakusci.domain.search
 
-import io.gumichan01.gakusci.domain.model.SimpleResultEntry
+import io.gumichan01.gakusci.domain.model.entry.SimpleResultEntry
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
