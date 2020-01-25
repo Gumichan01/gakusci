@@ -21,7 +21,6 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
         if (queryParam == null) {
             call.respond(HttpStatusCode.BadRequest, message)
         } else {
-            // TODO Define a new template for book results and use it for book search
             call.respond(generateThymeleafContent(queryParam, searchQueryProcessor.proceed(queryParam)))
         }
     }
