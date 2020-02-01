@@ -77,7 +77,7 @@ data class OpenLibrarySearchEntry(
 
     fun thumbnail(): String {
         return if (coverIndex == 0) {
-            ""
+            "/image/not-found.jpg"
         } else {
             "https://covers.openlibrary.org/b/id/${coverIndex}-M.jpg"
         }
