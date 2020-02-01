@@ -2,3 +2,8 @@
 li, .book {
     display: inline-block;
 }
+
+img {
+    max-width: 64px;
+    height: 50%;
+}
