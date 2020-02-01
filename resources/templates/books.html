@@ -26,24 +26,33 @@
 
     <p th:if="${not emptyEntries}" th:text="${numFound + ' results'}"></p>
 
-    <div th:each="entry : ${entries}">
-        <ul>
-            <li><img th:src="${entry.thumbnailUrl}"/></li>
-            <li>
+    <div class="container">
+        <div class="entry" th:each="entry : ${entries}">
+            <div class="cover">
+                <img th:src="${entry.thumbnailUrl}"/>
+            </div>
+            <div class="content">
                 <p class="entry_label" th:text="${entry.label()}"></p>
-                <a th:href="${entry.link()}" th:text="${entry.link()}"></a>
-            </li>
-        </ul>
+                <p><a th:href="${entry.link()}" th:text="${entry.link()}"></a></p>
+            </div>
+            <!--/*
+                    <ul>
+                        <li><img th:src="${entry.thumbnailUrl}"/></li>
+                        <li>
+                            <p class="entry_label" th:text="${entry.label()}"></p>
+                            <a th:href="${entry.link()}" th:text="${entry.link()}"></a>
+                        </li>
+                    </ul>
+            */-->
+        </div>
     </div>
-
-    <br>
     <!--/*
         Numbered Page interval
         currentPage < 6 -> [1, 10]
         currentPage < maxPage -> [currentPage - 4, currentPage + 5] (numFound is the totalResults)
         else -> [maxPage - numPerPage + 1, maxPage]
       */-->
-    <div th:if="${not emptyEntries}"
+    <div class="pagination" th:if="${not emptyEntries}"
          th:with="MEDIAN_PAGE=5,
          MIN_INTERVAL_P=4,
          MAX_INTERVAL_P=5,
