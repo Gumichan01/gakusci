@@ -79,7 +79,7 @@ data class OpenLibrarySearchEntry(
         return if (coverIndex == 0) {
             ""
         } else {
-            "https://covers.openlibrary.org/b/id/${coverIndex}-S.jpg"
+            "https://covers.openlibrary.org/b/id/${coverIndex}-M.jpg"
         }
     }
 }
