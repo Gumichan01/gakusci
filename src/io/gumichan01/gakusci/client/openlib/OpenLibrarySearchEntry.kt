@@ -73,7 +73,13 @@ data class OpenLibrarySearchEntry(
         return "(${if (firstPublishYear == 0) "n.d" else firstPublishYear.toString()})"
     }
 
-    fun link(): String {
-        return "https://openlibrary.org$key"
+    fun link(): String = "https://openlibrary.org$key"
+
+    fun thumbnail(): String {
+        return if (coverIndex == 0) {
+            ""
+        } else {
+            "https://covers.openlibrary.org/b/id/${coverIndex}-S.jpg"
+        }
     }
 }

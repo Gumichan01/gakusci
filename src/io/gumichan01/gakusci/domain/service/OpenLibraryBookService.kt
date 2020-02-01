@@ -10,7 +10,6 @@ import io.gumichan01.gakusci.domain.model.entry.SimpleResultEntry
 class OpenLibraryBookService(private val openLibBookClient: IClient<OpenLibraryBookResponse>) : IService {
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
         return openLibBookClient.retrieveResults(queryParam)?.let {
-            // TODO BookResultEntry with more properties (thumbnail url)
             ServiceResponse(1, listOf(BookEntry(SimpleResultEntry(it.bibKey, it.infoUrl), it.thumbnailUrl ?: "")))
         }
     }

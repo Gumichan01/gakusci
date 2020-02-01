@@ -28,8 +28,7 @@
 
     <div th:each="entry : ${entries}">
         <ul>
-            <li th:if="${!#strings.isEmpty(entry.thumbnailUrl)}"><img th:src="${entry.thumbnailUrl}"/></li>
-            <li th:unless="${!#strings.isEmpty(entry.thumbnailUrl)}"><p>¯\_(ツ)_/¯</p></li>
+            <li><img th:src="${entry.thumbnailUrl}"/></li>
             <li>
                 <p class="entry_label" th:text="${entry.label()}"></p>
                 <a th:href="${entry.link()}" th:text="${entry.link()}"></a>

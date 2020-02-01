@@ -12,8 +12,8 @@ class OpenLibrarySearchService(private val openLibrarySearchClient: IClient<Open
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
         return openLibrarySearchClient.retrieveResults(queryParam)?.let {
             val numFound = it.numFound
-            val entries: List<IResultEntry> = it.docs?.map { d ->
-                BookEntry(SimpleResultEntry(d.label(), d.link()), "")
+            val entries: List<IResultEntry> = it.docs?.map { doc ->
+                BookEntry(SimpleResultEntry(doc.label(), doc.link()), doc.thumbnail())
             } ?: emptyList()
             ServiceResponse(numFound, entries)
         }
