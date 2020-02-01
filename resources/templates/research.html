@@ -20,11 +20,11 @@
 
     <br>
 
-    <div th:if="${emptyEntries}">
+    <div class="container" th:if="${emptyEntries}">
         <p>No document found for <strong th:text="${query}"></strong></p>
     </div>
 
-    <p th:if="${not emptyEntries}" th:text="${numFound + ' results'}"></p>
+    <p class="result" th:if="${not emptyEntries}" th:text="${numFound + ' results'}"></p>
 
     <div class="container" th:each="entry : ${entries}">
         <p class="entry_label" th:text="${entry.label()}"></p>
