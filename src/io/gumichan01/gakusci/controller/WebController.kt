@@ -32,6 +32,8 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
             SearchType.BOOKS -> "books"
             else -> throw IllegalStateException("Cannot create HTML template for ${queryParam.searchType}")
         }
+        val numPerPage: Int = queryParam.numPerPage!!
+        val pageOffset: Int = response.totalResults % numPerPage
 
         return ThymeleafContent(
             template, mapOf(
@@ -40,11 +42,11 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
                 "query" to queryParam.query,
                 "stype" to queryParam.searchType.value,
                 "emptyEntries" to response.entries.isEmpty(),
-                "pstart" to queryParam.start - queryParam.numPerPage!!,
+                "pstart" to queryParam.start - numPerPage,
                 "start" to queryParam.start,
-                "nstart" to queryParam.start + queryParam.numPerPage,
-                "lastStart" to response.totalResults - (response.totalResults % queryParam.numPerPage),
-                "numPerPage" to queryParam.numPerPage,
+                "nstart" to queryParam.start + numPerPage,
+                "lastStart" to response.totalResults - (if (pageOffset == 0) 10 else pageOffset),
+                "numPerPage" to numPerPage,
                 SearchType.RESEARCH.value to (queryParam.searchType == SearchType.RESEARCH),
                 SearchType.BOOKS.value to (queryParam.searchType == SearchType.BOOKS)
             )
