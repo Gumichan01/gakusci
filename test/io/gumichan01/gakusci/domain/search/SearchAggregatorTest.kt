@@ -33,11 +33,9 @@ class SearchAggregatorTest {
     }
     private val fakeCache: SearchCache = mockk()
 
-    private val testCache: SearchCache = CacheHandler().provideCache(SearchType.RESEARCH)
-
     @Test
     fun `aggregate result entries - return results`() {
-        val aggregator = SearchAggregator(fakeLauncher, testCache)
+        val aggregator = SearchAggregator(fakeLauncher)
         val results: SearchResponse =
             runBlocking { aggregator.retrieveResults(QueryParam("lorem", SearchType.RESEARCH)) }
         assertThat(results.totalResults).isEqualTo(1)
@@ -51,23 +49,18 @@ class SearchAggregatorTest {
 
     @Test
     fun `build research aggregator linked to no service`() {
-        assertThat(SearchAggregator.Builder().withCache(fakeCache).build()).isInstanceOf(SearchAggregator::class.java)
+        assertThat(SearchAggregator.Builder().build()).isInstanceOf(SearchAggregator::class.java)
     }
 
     @Test
-    fun `build research aggregator with no cache - must thrown NPE`() {
-        assertThatThrownBy { SearchAggregator.Builder().build() }.isInstanceOf(NullPointerException::class.java)
-    }
-
-    @Test
-    fun `build research aggregator with research services and a cache system`() {
-        assertThat(SearchAggregator.Builder().withResearchServices().withCache(fakeCache).build())
+    fun `build research aggregator with research services`() {
+        assertThat(SearchAggregator.Builder().withResearchServices().build())
             .isInstanceOf(SearchAggregator::class.java)
     }
 
     @Test
-    fun `build research aggregator with book services and a cache system`() {
-        assertThat(SearchAggregator.Builder().withBookServices().withCache(fakeCache).build())
+    fun `build research aggregator with book services`() {
+        assertThat(SearchAggregator.Builder().withBookServices().build())
             .isInstanceOf(SearchAggregator::class.java)
     }
 }

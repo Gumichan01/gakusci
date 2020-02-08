@@ -6,7 +6,6 @@ import io.gumichan01.gakusci.client.openlib.OpenLibraryBookClient
 import io.gumichan01.gakusci.client.openlib.OpenLibrarySearchClient
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
-import io.gumichan01.gakusci.domain.search.cache.SearchCache
 import io.gumichan01.gakusci.domain.service.*
 import io.gumichan01.gakusci.domain.utils.slice
 import io.gumichan01.gakusci.domain.utils.take
@@ -17,7 +16,7 @@ import org.slf4j.LoggerFactory
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class SearchAggregator(private val searchLauncher: SearchLauncher, private val cacheImpl: SearchCache) {
+class SearchAggregator(private val searchLauncher: SearchLauncher) {
 
     private val logger: Logger = LoggerFactory.getLogger(SearchAggregator::class.java)
     private val searchResultConsumer = SearchResultConsumer()
@@ -25,9 +24,6 @@ class SearchAggregator(private val searchLauncher: SearchLauncher, private val c
     suspend fun retrieveResults(queryParam: QueryParam): SearchResponse {
         val start: Int = queryParam.start
         val t1: Long = System.currentTimeMillis()
-//        val (total, entries) = cacheImpl.getOrUpdateCache(queryParam) {
-//            searchResultConsumer.consume(searchLauncher.launch(queryParam))
-//        }
         val (total, entries) = searchResultConsumer.consume(searchLauncher.launch(queryParam))
         val t2: Long = System.currentTimeMillis()
         logger.trace("time: ${t2 - t1}")
@@ -37,19 +33,13 @@ class SearchAggregator(private val searchLauncher: SearchLauncher, private val c
     }
 
 
-    class Builder(
-        private var services: MutableSet<IService> = mutableSetOf(),
-        private var cache: SearchCache? = null
-    ) {
+    class Builder(private var services: MutableSet<IService> = mutableSetOf()) {
 
         fun withResearchServices(): Builder = apply { services.addAll(DomainSearchType.RESEARCH.services) }
-
         fun withBookServices(): Builder = apply { services.addAll(DomainSearchType.BOOKS.services) }
 
-        fun withCache(cache: SearchCache): Builder = apply { this.cache = cache }
-
         fun build(): SearchAggregator {
-            return SearchAggregator(SearchLauncher(services), cache!!)
+            return SearchAggregator(SearchLauncher(services))
         }
     }
 
