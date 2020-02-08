@@ -19,4 +19,8 @@ class CacheHandler {
             SearchType.BOOKS -> bookCache
         }
     }
+
+    fun createFreshCache(): SearchCache {
+        return SearchCache(builder.build<String, ServiceResponse>())
+    }
 }
