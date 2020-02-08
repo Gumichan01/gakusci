@@ -23,10 +23,7 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
 
     suspend fun retrieveResults(queryParam: QueryParam): SearchResponse {
         val start: Int = queryParam.start
-        val t1: Long = System.currentTimeMillis()
         val (total, entries) = searchResultConsumer.consume(searchLauncher.launch(queryParam))
-        val t2: Long = System.currentTimeMillis()
-        logger.trace("time: ${t2 - t1}")
         logger.trace("$queryParam - Total: $total, number of entries: ${entries.size}")
         return SearchResponse(total, start, entries).take(queryParam.rows)
             .slice(start, queryParam.numPerPage)
