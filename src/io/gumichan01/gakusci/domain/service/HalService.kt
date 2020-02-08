@@ -17,7 +17,7 @@ class HalService(private val halClient: IClient<HalResponse>) : IService {
                     e.uri
                 )
             } ?: emptyList()
-            return ServiceResponse(totalResults, entries)
+            ServiceResponse(totalResults, entries)
         }
     }
 }
