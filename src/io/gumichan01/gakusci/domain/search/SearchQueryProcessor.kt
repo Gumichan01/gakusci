@@ -7,6 +7,9 @@ import io.gumichan01.gakusci.domain.utils.SearchType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
+/*
+    This is the entry point of the search domain used by the controller in order to process the search.
+ */
 @FlowPreview
 @ExperimentalCoroutinesApi
 class SearchQueryProcessor() {

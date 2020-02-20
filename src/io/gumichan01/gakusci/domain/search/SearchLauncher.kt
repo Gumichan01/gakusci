@@ -21,6 +21,7 @@ class SearchLauncher(private val services: Set<IService>) {
         val serviceCallTimeout = 15000L
         val runningCoroutinesCounter: AtomicInt = atomic(services.size)
         val channel = Channel<ServiceResponse>(capacity = 64)
+        // Each coroutine a service is launched in is a producer of search results, as in the Producer/Consumer pattern
         services.forEach { service ->
             CoroutineScope(Dispatchers.Default).launch {
                 try {

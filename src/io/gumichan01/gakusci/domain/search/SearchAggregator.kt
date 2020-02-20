@@ -29,7 +29,7 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
             .slice(start, queryParam.numPerPage)
     }
 
-
+    // Depending on the type of the search domain (research papers, books), a dedicated aggregator must be built
     class Builder(private var services: MutableSet<IService> = mutableSetOf()) {
 
         fun withResearchServices(): Builder = apply { services.addAll(DomainSearchType.RESEARCH.services) }
