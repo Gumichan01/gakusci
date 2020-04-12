@@ -1,7 +1,7 @@
 package io.gumichan01.gakusci.domain.search
 
-import io.gumichan01.gakusci.domain.model.entry.SimpleResultEntry
 import io.gumichan01.gakusci.domain.model.ServiceResponse
+import io.gumichan01.gakusci.domain.model.entry.SimpleResultEntry
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
@@ -25,12 +25,16 @@ internal class SearchResultConsumerTest {
     fun `consume 1 result entry`() {
         val channel = Channel<ServiceResponse>(1).run {
             runBlocking {
-                send(ServiceResponse(1, listOf(
-                    SimpleResultEntry(
-                        "hello",
-                        "http://www.example.com"
+                send(
+                    ServiceResponse(
+                        1, listOf(
+                            SimpleResultEntry(
+                                "hello",
+                                "http://www.example.com"
+                            )
+                        )
                     )
-                )))
+                )
             }
             close()
             this

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory
 class OpenLibrarySearchClient : IClient<OpenLibrarySearchResponse> {
 
     private val logger: Logger = LoggerFactory.getLogger(OpenLibrarySearchClient::class.java)
+
     // NOTE This URL refers to an experimental Open Library API, so this class must be considered experimental
     private val openLibrarySearchUrl = "https://openlibrary.org/search.json?q=%s"
 

@@ -9,7 +9,7 @@ import kotlin.test.Test
 
 internal class OpenLibraryBookClientTest {
 
-//    @Test
+    //    @Test
     fun `Call the Open Library web-service (real external service) - get book by ISBN`() {
         val client: IClient<OpenLibraryBookResponse> = OpenLibraryBookClient()
         val response: OpenLibraryBookResponse? =

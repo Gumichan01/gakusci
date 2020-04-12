@@ -1,10 +1,9 @@
 package io.gumichan01.gakusci.domain.search
 
 import io.gumichan01.gakusci.domain.model.QueryParam
-import io.gumichan01.gakusci.domain.model.entry.SimpleResultEntry
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.model.ServiceResponse
-import io.gumichan01.gakusci.domain.search.cache.CacheHandler
+import io.gumichan01.gakusci.domain.model.entry.SimpleResultEntry
 import io.gumichan01.gakusci.domain.search.cache.SearchCache
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.every
@@ -14,7 +13,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import kotlin.test.Test
 
 @FlowPreview
@@ -23,12 +21,18 @@ class SearchAggregatorTest {
 
     private val fakeLauncher: SearchLauncher = mockk {
         every { launch(QueryParam("lorem", SearchType.RESEARCH)) } returns Channel<ServiceResponse>(4).run {
-            runBlocking { send(ServiceResponse(1, listOf(
-                SimpleResultEntry(
-                    "lorem",
-                    "ipsum"
-                )
-            ))); close() }; this
+            runBlocking {
+                send(
+                    ServiceResponse(
+                        1, listOf(
+                            SimpleResultEntry(
+                                "lorem",
+                                "ipsum"
+                            )
+                        )
+                    )
+                ); close()
+            }; this
         }
     }
     private val fakeCache: SearchCache = mockk()
