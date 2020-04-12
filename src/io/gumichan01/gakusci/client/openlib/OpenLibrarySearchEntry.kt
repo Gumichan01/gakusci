@@ -24,6 +24,7 @@ data class OpenLibrarySearchEntry(
     @JsonProperty("id_hathi_trust") val hathiIds: List<String>?,
     @JsonProperty("id_project_gutenberg") val gutenbergIds: List<String>?,
     @JsonProperty("id_wikidata") val wikidataIds: List<String>?,
+    @JsonProperty("id_freebase") val freebaseIds: List<String>?,
     @JsonProperty("ia") val ias: List<String>?,
     @JsonProperty("ia_collection_s") val iaCollections: String?,
     @JsonProperty("ia_box_id") val iaBoxIds: List<String>?,
