@@ -18,7 +18,7 @@ class PenguinRandomHouseIsbnServiceTest {
         coEvery {
             retrieveResults(
                 QueryParam(
-                    "lorem",
+                    "9780140439212",
                     SearchType.BOOKS
                 )
             )
@@ -30,7 +30,7 @@ class PenguinRandomHouseIsbnServiceTest {
     @Test
     fun `penguin random house services, valid search on fake client - return results`() {
         val service = PenguinRandomHouseIsbnService(penguinIsbnClient)
-        val response: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.BOOKS)) }
+        val response: ServiceResponse? = runBlocking { service.search(QueryParam("9780140439212", SearchType.BOOKS)) }
         Assertions.assertThat(response).isNotNull
     }
 
