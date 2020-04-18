@@ -9,8 +9,4 @@ data class PenguinRandomHouseResponse(
     @JsonProperty("authorweb") val author: String,
     @JsonProperty("titleweb") val title: String,
     @JsonProperty("onsaledate") val publishDate: String
-) {
-    fun label(): String = "$title, $author, ${publishDate.split("/").last()}"
-    fun link(): String = "https://penguinrandomhouse.com/search/site?q=$isbn"
-    fun thumbnail(): String = "https://images1.penguinrandomhouse.com/cover/$isbn"
-}
+)
