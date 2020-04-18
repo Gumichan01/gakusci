@@ -2,6 +2,7 @@ package io.gumichan01.gakusci.domain.service
 
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseIsbnResponse
+import io.gumichan01.gakusci.client.utils.BookNumberType
 import io.gumichan01.gakusci.client.utils.generateBookNumberFromText
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
@@ -14,9 +15,11 @@ class PenguinRandomHouseIsbnService(private val isbnClient: IClient<PenguinRando
 
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
         return generateBookNumberFromText(queryParam.query)?.let { book ->
-            isbnClient.retrieveResults(queryParam.copy(query = book.value))?.let {
-                ServiceResponse(1, listOf(BookEntry(label(it), link(it), thumbnail(it))))
-            }
+            if (book.type == BookNumberType.ISBN) {
+                isbnClient.retrieveResults(queryParam.copy(query = book.value))?.let {
+                    ServiceResponse(1, listOf(BookEntry(label(it), link(it), thumbnail(it))))
+                }
+            } else null
         }
     }
 
