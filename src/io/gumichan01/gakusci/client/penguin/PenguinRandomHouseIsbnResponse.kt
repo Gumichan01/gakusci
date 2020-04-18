@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class PenguinRandomHouseResponse(
+data class PenguinRandomHouseIsbnResponse(
     @JsonProperty("isbn") val isbn: String,
     @JsonProperty("authorweb") val author: String,
     @JsonProperty("titleweb") val title: String,

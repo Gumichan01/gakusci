@@ -1,7 +1,7 @@
 package io.gumichan01.gakusci.domain.service
 
 import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseIsbnClient
-import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseResponse
+import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseIsbnResponse
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.utils.SearchType
@@ -22,7 +22,7 @@ class PenguinRandomHouseIsbnServiceTest {
                     SearchType.BOOKS
                 )
             )
-        } returns PenguinRandomHouseResponse("9780140439212", "marc", "ipsum", "2020")
+        } returns PenguinRandomHouseIsbnResponse("9780140439212", "marc", "ipsum", "2020")
 
         coEvery { retrieveResults(QueryParam("dfnkusfk", SearchType.BOOKS)) } returns null
     }
