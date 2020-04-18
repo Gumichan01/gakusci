@@ -3,6 +3,7 @@ package io.gumichan01.gakusci.client.openlib
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.gumichan01.gakusci.client.IClient
+import io.gumichan01.gakusci.client.utils.trace
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
@@ -26,10 +27,7 @@ class OpenLibrarySearchClient : IClient<OpenLibrarySearchResponse> {
         return try {
             HttpClient(Apache).use { it.get<String>(url) }.fromJson()
         } catch (e: Exception) {
-            logger.trace(e.message)
-            if (logger.isTraceEnabled) {
-                e.printStackTrace()
-            }
+            trace(logger, e)
             null
         }
     }

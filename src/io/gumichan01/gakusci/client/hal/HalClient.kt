@@ -1,6 +1,7 @@
 package io.gumichan01.gakusci.client.hal
 
 import io.gumichan01.gakusci.client.IClient
+import io.gumichan01.gakusci.client.utils.trace
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
@@ -29,10 +30,7 @@ class HalClient : IClient<HalResponse> {
         return try {
             client.use { it.get(url) }
         } catch (e: Exception) {
-            logger.trace(e.message)
-            if (logger.isTraceEnabled) {
-                e.printStackTrace()
-            }
+            trace(logger, e)
             null
         }
     }

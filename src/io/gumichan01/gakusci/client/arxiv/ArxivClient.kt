@@ -9,6 +9,7 @@ import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.arxiv.internal.ArxivAtomReader
 import io.gumichan01.gakusci.client.arxiv.internal.ArxivUtils
 import io.gumichan01.gakusci.client.arxiv.internal.model.ArxivFeed
+import io.gumichan01.gakusci.client.utils.trace
 import io.gumichan01.gakusci.domain.model.QueryParam
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -33,10 +34,7 @@ class ArxivClient : IClient<ArxivResponse> {
                 val arxivFeed: ArxivFeed = Syndication(url).create(ArxivAtomReader::class.java).readAtom()
                 ArxivResponse(arxivFeed.totalResults, arxivFeed.results())
             } catch (e: Exception) {
-                logger.trace(e.message)
-                if (logger.isTraceEnabled) {
-                    e.printStackTrace()
-                }
+                trace(logger, e)
                 null
             }
         } else null

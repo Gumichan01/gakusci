@@ -3,6 +3,7 @@ package io.gumichan01.gakusci.client.openlib
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.gumichan01.gakusci.client.IClient
+import io.gumichan01.gakusci.client.utils.trace
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
@@ -19,17 +20,16 @@ class OpenLibraryBookClient : IClient<OpenLibraryBookResponse> {
         return try {
             HttpClient(Apache).use { it.get<String>(openLibrarySearchUrl.format(queryParam.query)) }.fromJson()
         } catch (e: Exception) {
-            logger.trace(e.message)
-            if (logger.isTraceEnabled) {
-                e.printStackTrace()
-            }
+            trace(logger, e)
             null
         }
     }
+
+    private fun String.fromJson(): OpenLibraryBookResponse? {
+        return jacksonObjectMapper().readValue(
+            this,
+            object : TypeReference<Map<String, OpenLibraryBookResponse>>() {}).values.toList().firstOrNull()
+    }
 }
 
-private fun String.fromJson(): OpenLibraryBookResponse? {
-    return jacksonObjectMapper().readValue(
-        this,
-        object : TypeReference<Map<String, OpenLibraryBookResponse>>() {}).values.toList().firstOrNull()
-}
+
