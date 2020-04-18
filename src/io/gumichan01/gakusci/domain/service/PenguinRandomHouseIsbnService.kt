@@ -8,6 +8,8 @@ import io.gumichan01.gakusci.client.utils.isValidISBN13
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.model.entry.BookEntry
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class PenguinRandomHouseIsbnService(private val isbnClient: IClient<PenguinRandomHouseIsbnResponse>) : IService {
 
@@ -25,7 +27,9 @@ class PenguinRandomHouseIsbnService(private val isbnClient: IClient<PenguinRando
     }
 
     private fun label(isbnResponse: PenguinRandomHouseIsbnResponse): String {
-        return isbnResponse.run { "$title, $author, ${publishDate.split("/").last()}" }
+        val pattern: DateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+        val date: LocalDate = LocalDate.parse(isbnResponse.publishDate, pattern)
+        return isbnResponse.run { "$title, $author, ${date.year}" }
     }
 
     private fun thumbnail(isbnResponse: PenguinRandomHouseIsbnResponse): String {
