@@ -15,7 +15,7 @@ internal class OpenLibraryBookServiceTest {
 
     private val openLibBookMock: OpenLibraryBookClient = mockk {
         coEvery {
-            retrieveResults(QueryParam("1421500574", SearchType.BOOKS))
+            retrieveResults(QueryParam("ISBN:1421500574", SearchType.BOOKS))
         } returns OpenLibraryBookResponse(
             "1421500574",
             "http://openlibrary.org/books/OL8490428M/Battle_Angel_Alita",
