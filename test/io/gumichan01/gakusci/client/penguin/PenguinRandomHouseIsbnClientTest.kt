@@ -8,7 +8,7 @@ import kotlin.test.Test
 
 internal class PenguinRandomHouseIsbnClientTest {
 
-    @Test
+//    @Test
     fun `test basic access to the web-service - get result in text format`() {
         val res = runBlocking {
             PenguinRandomHouseIsbnClient().retrieveResults(QueryParam("9780140439212", SearchType.BOOKS))
