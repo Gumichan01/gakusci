@@ -11,8 +11,11 @@ class PenguinRandomHouseSearchClientTest {
 
     @Test
     fun `check valid request to external service - must return result`() {
-        val client: IClient<String> = PenguinRandomHouseSearchClient()
-        val response = runBlocking { client.retrieveResults(QueryParam("marx", SearchType.BOOKS)) }
-        Assertions.assertThat(response).isNotNull()
+        val client: IClient<PenguinRandomHouseSearchResponse> = PenguinRandomHouseSearchClient()
+        val queryParam = QueryParam("marx", SearchType.BOOKS)
+        val response: PenguinRandomHouseSearchResponse? =
+            runBlocking { client.retrieveResults(queryParam) }
+        Assertions.assertThat(response).isNotNull
+        Assertions.assertThat(response?.isbnEntries).isNotEmpty
     }
 }
