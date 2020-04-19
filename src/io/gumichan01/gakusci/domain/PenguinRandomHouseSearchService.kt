@@ -9,11 +9,20 @@ import io.gumichan01.gakusci.domain.service.IService
 
 class PenguinRandomHouseSearchService(private val searchClient: IClient<PenguinRandomHouseSearchResponse>) : IService {
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
-        return searchClient.retrieveResults(queryParam)?.let {response ->
+        return searchClient.retrieveResults(queryParam)?.let { response ->
             if (response.isbnEntries.isEmpty())
                 ServiceResponse(0, emptyList())
             else
-                ServiceResponse(1, listOf(BookEntry("","","")))
+                ServiceResponse(
+                    1,
+                    listOf(
+                        BookEntry(
+                            "marx",
+                            "https//penguinrandomhouse.com/search/site?q=",
+                            "https://penguinrandomhouse.com/cover/"
+                        )
+                    )
+                )
         }
     }
 }
