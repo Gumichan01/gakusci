@@ -5,6 +5,8 @@ import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseSearchResponse
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.model.entry.IResultEntry
+import io.gumichan01.gakusci.domain.search.cache.CacheHandler
+import io.gumichan01.gakusci.domain.search.cache.SearchCache
 import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.utils.SearchType
 import kotlinx.atomicfu.AtomicInt
@@ -21,13 +23,18 @@ class PenguinRandomHouseSearchService(
     private val searchClient: IClient<PenguinRandomHouseSearchResponse>,
     private val searchService: IService
 ) : IService {
+
+    private val cache: SearchCache = CacheHandler().createFreshCache()
+
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
-        return searchClient.retrieveResults(queryParam)?.let { response ->
-            response.isbnEntries.run {
-                when {
-                    isEmpty() -> ServiceResponse(0, emptyList())
-                    size == 1 -> searchService.search(QueryParam(first(), SearchType.BOOKS))
-                    else -> retrieveResultsFromExternalService(this)
+        return cache.getOrUpdateCache(queryParam) {
+            searchClient.retrieveResults(queryParam)?.let { response ->
+                response.isbnEntries.run {
+                    when {
+                        isEmpty() -> ServiceResponse(0, emptyList())
+                        size == 1 -> searchService.search(QueryParam(first(), SearchType.BOOKS))
+                        else -> retrieveResultsFromExternalService(this)
+                    }
                 }
             }
         }
