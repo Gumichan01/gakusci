@@ -17,10 +17,7 @@ class HalService(private val halClient: IClient<HalResponse>) : IService {
             halClient.retrieveResults(queryParam)?.let {
                 val (totalResults, _, results) = it.body
                 val entries: List<SimpleResultEntry> = results?.map { e ->
-                    SimpleResultEntry(
-                        e.label,
-                        e.uri
-                    )
+                    SimpleResultEntry(e.label, e.uri)
                 } ?: emptyList()
                 ServiceResponse(totalResults, entries)
             }

@@ -16,12 +16,7 @@ class ArxivService(private val arxivClient: IClient<ArxivResponse>) : IService {
         return cache.getOrUpdateCache(queryParam) {
             arxivClient.retrieveResults(queryParam)?.let {
                 val (totalResults, results) = it
-                val entries = results.map { r ->
-                    SimpleResultEntry(
-                        r.label(),
-                        r.link
-                    )
-                }
+                val entries = results.map { r -> SimpleResultEntry(r.label(), r.link) }
                 ServiceResponse(totalResults, entries)
             }
         }
