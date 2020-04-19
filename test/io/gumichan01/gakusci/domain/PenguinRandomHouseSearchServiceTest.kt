@@ -18,6 +18,8 @@ class PenguinRandomHouseSearchServiceTest {
     private val searchClientMock: IClient<PenguinRandomHouseSearchResponse> = mockk {
         coEvery { retrieveResults(QueryParam("marx", SearchType.BOOKS, 1)) } returns
                 PenguinRandomHouseSearchResponse(listOf("9780140043204"))
+        coEvery { retrieveResults(QueryParam("lorem", SearchType.BOOKS)) } returns
+                PenguinRandomHouseSearchResponse(listOf("9780140043204", "9780140150964"))
         coEvery {
             retrieveResults(
                 QueryParam(
@@ -28,9 +30,34 @@ class PenguinRandomHouseSearchServiceTest {
         } returns PenguinRandomHouseSearchResponse(emptyList())
     }
 
+    private val searchServiceMock: IService = mockk {
+        coEvery { search(QueryParam("9780140043204", SearchType.BOOKS)) } returns
+                ServiceResponse(
+                    1,
+                    listOf(
+                        BookEntry(
+                            "marx",
+                            "https//penguinrandomhouse.com/search/site?q=",
+                            "https://penguinrandomhouse.com/cover/"
+                        )
+                    )
+                )
+        coEvery { search(QueryParam("9780140150964", SearchType.BOOKS)) } returns
+                ServiceResponse(
+                    1,
+                    listOf(
+                        BookEntry(
+                            "marx2",
+                            "https//penguinrandomhouse.com/search/site?q=",
+                            "https://penguinrandomhouse.com/cover/"
+                        )
+                    )
+                )
+    }
+
     @Test
     fun `Send valid search request but get no result - returns response with no entry`() {
-        val service: IService = PenguinRandomHouseSearchService(searchClientMock)
+        val service: IService = PenguinRandomHouseSearchService(searchClientMock, searchServiceMock)
         val result: ServiceResponse? = runBlocking { service.search(QueryParam("9780140043204", SearchType.BOOKS)) }
         Assertions.assertThat(result).isNotNull
         Assertions.assertThat(result?.totalResults).isZero()
@@ -39,7 +66,7 @@ class PenguinRandomHouseSearchServiceTest {
 
     @Test
     fun `Send valid search request and get one result - returns response with one entry`() {
-        val service: IService = PenguinRandomHouseSearchService(searchClientMock)
+        val service: IService = PenguinRandomHouseSearchService(searchClientMock, searchServiceMock)
         val result: ServiceResponse? = runBlocking { service.search(QueryParam("marx", SearchType.BOOKS, 1)) }
         Assertions.assertThat(result).isNotNull
         Assertions.assertThat(result?.totalResults).isNotZero()
@@ -50,7 +77,7 @@ class PenguinRandomHouseSearchServiceTest {
 
     @Test
     fun `Send valid search request and get one result - returns response with one valid entry`() {
-        val service: IService = PenguinRandomHouseSearchService(searchClientMock)
+        val service: IService = PenguinRandomHouseSearchService(searchClientMock, searchServiceMock)
         val result: ServiceResponse? = runBlocking { service.search(QueryParam("marx", SearchType.BOOKS, 1)) }
         Assertions.assertThat(result).isNotNull
         Assertions.assertThat(result?.entries?.first()).isInstanceOf(BookEntry::class.java)
@@ -58,5 +85,14 @@ class PenguinRandomHouseSearchServiceTest {
         Assertions.assertThat(bookEntry.label).containsIgnoringCase("marx")
         Assertions.assertThat(bookEntry.url).startsWith("https").contains("penguinrandomhouse.com/search/site?q=")
         Assertions.assertThat(bookEntry.thumbnailUrl).startsWith("https").contains("penguinrandomhouse.com/cover/")
+    }
+
+    @Test
+    fun `Send valid search request and get several results - returns response with several entries`() {
+        val service: IService = PenguinRandomHouseSearchService(searchClientMock, searchServiceMock)
+        val result: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.BOOKS)) }
+        Assertions.assertThat(result).isNotNull
+        Assertions.assertThat(result?.entries).hasAtLeastOneElementOfType(BookEntry::class.java)
+        Assertions.assertThat(result?.entries?.size).isGreaterThan(1)
     }
 }
