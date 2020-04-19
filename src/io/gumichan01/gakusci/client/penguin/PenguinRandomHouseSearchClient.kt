@@ -20,7 +20,6 @@ class PenguinRandomHouseSearchClient : IClient<PenguinRandomHouseSearchResponse>
 
     override suspend fun retrieveResults(queryParam: QueryParam): PenguinRandomHouseSearchResponse? {
         val url: String = searchUrl.format(queryParam.rows, queryParam.query)
-
         return try {
             val xmlText = HttpClient(Apache).use { it.get<String>(url) }
             PenguinRandomHouseSearchResponse(extractIsbnsFromXml(xmlText))

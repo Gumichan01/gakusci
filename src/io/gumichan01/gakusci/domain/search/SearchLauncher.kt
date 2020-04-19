@@ -18,15 +18,21 @@ class SearchLauncher(private val services: Set<IService>) {
             return Channel<ServiceResponse>(0).run { close(); this }
         }
 
-        val serviceCallTimeout = 15000L
-        val runningCoroutinesCounter: AtomicInt = atomic(services.size)
+        val serviceCallTimeout = 20000L
+        val nbServices = services.size
+        val runningCoroutinesCounter: AtomicInt = atomic(nbServices)
         val channel = Channel<ServiceResponse>(capacity = 64)
+
+        // Since the user wants at most rows results, each service will provide at most rows divided by the number of services
+        val serviceQueryParam = if (queryParam.rows > nbServices) {
+            queryParam.copy(rows = queryParam.rows / nbServices)
+        } else queryParam
         // Each coroutine a service is launched in is a producer of search results, as in the Producer/Consumer pattern
         services.forEach { service ->
             CoroutineScope(Dispatchers.Default).launch {
                 try {
                     withTimeoutOrNull(serviceCallTimeout) {
-                        service.search(queryParam)?.let { channel.send(it) }
+                        service.search(serviceQueryParam)?.let { channel.send(it) }
                     }
                 } finally {
                     if (runningCoroutinesCounter.decrementAndGet() == 0) {
