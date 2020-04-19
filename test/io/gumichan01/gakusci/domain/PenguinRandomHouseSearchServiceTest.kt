@@ -16,4 +16,13 @@ class PenguinRandomHouseSearchServiceTest {
         val result: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.BOOKS)) }
         Assertions.assertThat(result).isNotNull
     }
+
+    @Test
+    fun `Send valid search request but get no result - returns response with no entry`() {
+        val service: IService = PenguinRandomHouseSearchService()
+        val result: ServiceResponse? = runBlocking { service.search(QueryParam("9780140043204", SearchType.BOOKS)) }
+        Assertions.assertThat(result).isNotNull
+        Assertions.assertThat(result?.totalResults).isZero()
+        Assertions.assertThat(result?.entries).isEmpty()
+    }
 }

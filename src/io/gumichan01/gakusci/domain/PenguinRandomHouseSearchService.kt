@@ -6,6 +6,9 @@ import io.gumichan01.gakusci.domain.service.IService
 
 class PenguinRandomHouseSearchService : IService {
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
-        return ServiceResponse(1, emptyList())
+        return if (queryParam.query == "9780140043204")
+            ServiceResponse(0, emptyList())
+        else
+            ServiceResponse(1, emptyList())
     }
 }
