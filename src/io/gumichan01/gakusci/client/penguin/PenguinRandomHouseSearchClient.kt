@@ -22,16 +22,15 @@ class PenguinRandomHouseSearchClient : IClient<PenguinRandomHouseSearchResponse>
         val url: String = searchUrl.format(queryParam.rows, queryParam.query)
 
         return try {
-//            InputStreamReader(FileInputStream(File("/home/luxon/prive/gumichan01/gakusci/marx.xml"))).use { it.readText() }
-//                .let { xmlText ->
-            PenguinRandomHouseSearchResponse(extractIsbns(HttpClient(Apache).use { it.get<String>(url) }))
+            val xmlText = HttpClient(Apache).use { it.get<String>(url) }
+            PenguinRandomHouseSearchResponse(extractIsbnsFromXml(xmlText))
         } catch (e: Exception) {
             trace(logger, e)
             null
         }
     }
 
-    private fun extractIsbns(xmlText: String): List<String> {
+    private fun extractIsbnsFromXml(xmlText: String): List<String> {
         val input = ByteArrayInputStream(xmlText.toByteArray(Charset.forName("UTF-8")))
         val elementsByTagName: NodeList = DocumentBuilderFactory.newInstance()
             .newDocumentBuilder().parse(input).documentElement

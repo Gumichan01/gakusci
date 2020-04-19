@@ -9,7 +9,7 @@ import kotlin.test.Test
 
 class PenguinRandomHouseSearchClientTest {
 
-    @Test
+//    @Test
     fun `check valid request to external service - must return result`() {
         val client: IClient<PenguinRandomHouseSearchResponse> = PenguinRandomHouseSearchClient()
         val queryParam = QueryParam("marx", SearchType.BOOKS)
