@@ -5,6 +5,8 @@ import io.gumichan01.gakusci.client.hal.HalClient
 import io.gumichan01.gakusci.client.openlib.OpenLibraryBookClient
 import io.gumichan01.gakusci.client.openlib.OpenLibrarySearchClient
 import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseIsbnClient
+import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseSearchClient
+import io.gumichan01.gakusci.domain.PenguinRandomHouseSearchService
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.service.*
@@ -33,22 +35,24 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
     // Depending on the type of the search domain (research papers, books), a dedicated aggregator must be built
     class Builder(private var services: MutableSet<IService> = mutableSetOf()) {
 
-        fun withResearchServices(): Builder = apply { services.addAll(DomainSearchType.RESEARCH.services) }
-        fun withBookServices(): Builder = apply { services.addAll(DomainSearchType.BOOKS.services) }
+        fun withResearchServices(): Builder = apply { services.addAll(DomainSearchType.RESEARCH) }
+        fun withBookServices(): Builder = apply { services.addAll(DomainSearchType.BOOKS) }
 
         fun build(): SearchAggregator {
             return SearchAggregator(SearchLauncher(services))
         }
     }
 
-    private enum class DomainSearchType(val services: Set<IService>) {
-        RESEARCH(setOf(HalService(HalClient()), ArxivService(ArxivClient()))),
-        BOOKS(
+    private object DomainSearchType {
+        private val penguinIsbnService = PenguinRandomHouseIsbnService(PenguinRandomHouseIsbnClient())
+
+        val RESEARCH: Set<IService> by lazy { setOf(HalService(HalClient()), ArxivService(ArxivClient())) }
+        val BOOKS: Set<IService> by lazy {
             setOf(
                 OpenLibrarySearchService(OpenLibrarySearchClient()),
-                OpenLibraryBookService(OpenLibraryBookClient()),
-                PenguinRandomHouseIsbnService(PenguinRandomHouseIsbnClient())
+                OpenLibraryBookService(OpenLibraryBookClient()), penguinIsbnService,
+                PenguinRandomHouseSearchService(PenguinRandomHouseSearchClient(), penguinIsbnService)
             )
-        )
+        }
     }
 }
