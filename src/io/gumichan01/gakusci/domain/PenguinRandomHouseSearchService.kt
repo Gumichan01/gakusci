@@ -29,22 +29,20 @@ class PenguinRandomHouseSearchService(
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
         return cache.getOrUpdateCache(queryParam) {
             searchClient.retrieveResults(queryParam)?.let { response ->
-                response.isbnEntries.run {
-                    when {
-                        isEmpty() -> ServiceResponse(0, emptyList())
-                        size == 1 -> searchService.search(QueryParam(first(), SearchType.BOOKS))
-                        else -> retrieveResultsFromExternalService(this)
+                response.isbnEntries.asSequence().distinct().take(queryParam.rows)
+                    .map { isbn -> QueryParam(isbn, SearchType.BOOKS) }.toList().run {
+                        when {
+                            isEmpty() -> ServiceResponse(0, emptyList())
+                            size == 1 -> searchService.search(first())
+                            else -> retrieveResultsFromExternalService(this)
+                        }
                     }
-                }
             }
         }
     }
 
-    // Assuming that there are several ISBN entries
-    private suspend fun retrieveResultsFromExternalService(isbnEntries: List<String>): ServiceResponse? {
-        return isbnEntries.asSequence().distinct()
-            .map { isbn -> QueryParam(isbn, SearchType.BOOKS) }
-            .toList().let { queries -> launchRequests(queries) }
+    private suspend fun retrieveResultsFromExternalService(isbnEntries: List<QueryParam>): ServiceResponse? {
+        return launchRequests(isbnEntries)
             .consumeAsFlow().filterNotNull().map { response -> response.entries }
             .fold(mutableListOf<IResultEntry>()) { currentList, entries -> currentList.addAll(entries); currentList }
             .toList().let { entries -> ServiceResponse(entries.size, entries) }
