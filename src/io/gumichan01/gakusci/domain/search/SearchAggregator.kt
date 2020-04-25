@@ -27,9 +27,9 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
     suspend fun retrieveResults(queryParam: QueryParam): SearchResponse {
         val start: Int = queryParam.start
         val (total, entries) = searchResultConsumer.consume(searchLauncher.launch(queryParam))
-        logger.trace("$queryParam - Total: $total, number of entries: ${entries.size}")
         return SearchResponse(total, start, entries).take(queryParam.rows)
             .slice(start, queryParam.numPerPage)
+            .also { logger.trace("${queryParam.query} - Total: ${it.totalResults}, number of entries: ${it.entries.size}") }
     }
 
     // Depending on the type of the search domain (research papers, books), a dedicated aggregator must be built
