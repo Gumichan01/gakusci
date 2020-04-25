@@ -23,16 +23,12 @@ class SearchLauncher(private val services: Set<IService>) {
         val runningCoroutinesCounter: AtomicInt = atomic(nbServices)
         val channel = Channel<ServiceResponse>(capacity = 64)
 
-        // Since the user wants at most rows results, each service will provide at most rows divided by the number of services
-        val serviceQueryParam = if (queryParam.rows > nbServices) {
-            queryParam.copy(rows = queryParam.rows / nbServices)
-        } else queryParam
         // Each coroutine a service is launched in is a producer of search results, as in the Producer/Consumer pattern
         services.forEach { service ->
             CoroutineScope(Dispatchers.Default).launch {
                 try {
                     withTimeoutOrNull(serviceCallTimeout) {
-                        service.search(serviceQueryParam)?.let { channel.send(it) }
+                        service.search(queryParam)?.let { channel.send(it) }
                     }
                 } finally {
                     if (runningCoroutinesCounter.decrementAndGet() == 0) {
