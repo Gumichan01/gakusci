@@ -59,6 +59,8 @@ private fun retrieveAndCheckRestApiQueryParameters(queryParameters: RestApiQuery
             numPerPage == null -> Pair(null, "Bad request: cannot set 'start' with no 'num_per_page'")
             numPerPage < 0 -> Pair(null, "Bad request: negative 'num_per_page' value: $start")
             rows == null -> Pair(null, "Bad request: cannot set 'start' with no 'max_results'")
+            rows > MAX_ENTRIES -> Pair(null, "Bad request: cannot request 'max_results' greater than $MAX_ENTRIES")
+            start > rows -> Pair(null, "Bad request: 'start' is greater than 'max_results'")
             start > rows -> Pair(null, "Bad request: 'start' is greater than 'max_results'")
             numPerPage > rows -> Pair(null, "Bad request: 'num_per_page' is greater than 'max_results'")
             else -> Pair(QueryParam(query, searchType, rows, start, numPerPage), "")

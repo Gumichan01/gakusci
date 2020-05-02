@@ -122,4 +122,17 @@ class RestApiTest {
             }
         }
     }
+
+    @Test
+    fun `test REST Web-service API v1 search, query with max_results greater than the maximum number of entries allowed by the application - return Bad request`() {
+        withTestApplication({ gakusciModule() }) {
+            val bigStartValue = 1 shl 20
+                handleRequest(
+                    HttpMethod.Get,
+                    "/api/v1/researches/?q=a&start=0&max_results=$bigStartValue&num_per_page=2"
+                ).apply {
+                    assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
+                }
+        }
+    }
 }
