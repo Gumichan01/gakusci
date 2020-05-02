@@ -5,13 +5,18 @@ import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.ktor.http.Parameters
 
+private val MAX_ENTRIES = 2000
+
 fun retrieveWebParam(queryParameters: Parameters): Pair<QueryParam?, String> {
     return queryParameters["q"]?.let { query ->
         val defaultRows = 100
         val numPerPage = 10
         val start = queryParameters["start"]?.toInt() ?: 0
-        val rows = if (start + numPerPage > defaultRows) start * 2 else defaultRows
         val searchType: SearchType? = getSearchTypeFrom(queryParameters)
+        // The webapp must limitate the number of maximum entries in the
+        val rows = if (start + numPerPage > defaultRows) {
+            if (start * 2 > MAX_ENTRIES) MAX_ENTRIES else start * 2
+        } else defaultRows
 
         when {
             query.isBlank() -> Pair(null, "Bad request: query parameter 'q' is blank")

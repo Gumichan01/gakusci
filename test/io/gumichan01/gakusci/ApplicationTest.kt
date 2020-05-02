@@ -132,5 +132,15 @@ class ApplicationTest {
             }
         }
     }
+
+    @Test
+    fun `test web application search, query with very big start value - return Bad request`() {
+        withTestApplication({ gakusciModule() }) {
+            val bigStartValue = 1 shl 20
+            handleRequest(HttpMethod.Get, "/search/?q=lorem&stype=research&start=$bigStartValue").apply {
+                assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
+            }
+        }
+    }
 }
 
