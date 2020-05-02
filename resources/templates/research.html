@@ -15,7 +15,7 @@
         <input id="type_all" type="radio" name="stype" value="research" th:checked="${research}"/>
         Research papers/articles
         <input id="type_books" type="radio" name="stype" value="books" th:checked="${books}"/>
-        Books (experimental)
+        Books
     </form>
 
     <br>
@@ -24,7 +24,7 @@
         <p>No document found for <strong th:text="${query}"></strong></p>
     </div>
 
-    <p class="result" th:if="${not emptyEntries}" th:text="${numFound + ' results'}"></p>
+    <p class="result" th:if="${not emptyEntries}" th:text="${numFound + ' results. Only the first 2000 entries at most are reachable.'}"></p>
 
     <div class="container" th:each="entry : ${entries}">
         <p class="entry_label" th:text="${entry.label()}"></p>
