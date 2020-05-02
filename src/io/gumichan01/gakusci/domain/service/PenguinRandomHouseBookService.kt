@@ -13,7 +13,7 @@ import io.gumichan01.gakusci.domain.search.cache.SearchCache
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class PenguinRandomHouseIsbnService(private val isbnClient: IClient<PenguinRandomHouseIsbnResponse>) : IService {
+class PenguinRandomHouseBookService(private val isbnClient: IClient<PenguinRandomHouseIsbnResponse>) : IService {
 
     private val bookLink = "https://penguinrandomhouse.com/search/site?q="
     private val thumbnailLink = "https://images1.penguinrandomhouse.com/cover/"
