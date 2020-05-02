@@ -1,6 +1,6 @@
 package io.gumichan01.gakusci.domain.service
 
-import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseIsbnClient
+import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseBookClient
 import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseIsbnResponse
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
@@ -14,7 +14,7 @@ import kotlin.test.Test
 
 class PenguinRandomHouseBookServiceTest {
 
-    private val penguinIsbnClient: PenguinRandomHouseIsbnClient = mockk {
+    private val penguinBookClient: PenguinRandomHouseBookClient = mockk {
         coEvery {
             retrieveResults(
                 QueryParam(
@@ -29,14 +29,14 @@ class PenguinRandomHouseBookServiceTest {
 
     @Test
     fun `penguin random house services, valid ISBN search on fake client - return results`() {
-        val service = PenguinRandomHouseBookService(penguinIsbnClient)
+        val service = PenguinRandomHouseBookService(penguinBookClient)
         val response: ServiceResponse? = runBlocking { service.search(QueryParam("9780140439212", SearchType.BOOKS)) }
         Assertions.assertThat(response).isNotNull
     }
 
     @Test
     fun `penguin random house services, invalid ISBN search on fake client - return null`() {
-        val service = PenguinRandomHouseBookService(penguinIsbnClient)
+        val service = PenguinRandomHouseBookService(penguinBookClient)
         val response: ServiceResponse? = runBlocking { service.search(QueryParam("dfnkusfk", SearchType.BOOKS)) }
         Assertions.assertThat(response).isNull()
     }
