@@ -44,7 +44,7 @@ class SearchLauncher(private val services: Set<IService>) {
     }
 
     private fun optimizeQuery(queryParam: QueryParam, nbServices: Int): QueryParam {
-        val maxLoad = 99
+        val maxLoad = 100
         return if (queryParam.rows >= maxLoad)
             queryParam.copy(rows = queryParam.rows / nbServices)
         else queryParam

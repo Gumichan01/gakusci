@@ -12,12 +12,12 @@ Gakusci is a web aggregator that can be used to search for any document/informat
 Gakusci directly retrieves data from some platforms dedicated to a search domain.  
 For the moment, this application can only deal with research papers/articles. Some other domains will be dealt with in the future (not exhaustive):
 
-- Anime
+- Anime (WIP)
 - Books
-- Music
+- Music (WIP)
 - Open Data (?)
-- Images/Photos
-- Research papers/articles (WIP)
+- Images/Photos (WIP)
+- Research papers/articles
 
 Gakusci only interacts with services that expose a public API and do not require authentication.
 Their API can be REST(-like/-ful) or based on ATOM/RSS syndication.
