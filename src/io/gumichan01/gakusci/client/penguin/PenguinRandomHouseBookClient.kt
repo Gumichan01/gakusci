@@ -11,12 +11,12 @@ import io.ktor.client.request.get
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class PenguinRandomHouseBookClient : IClient<PenguinRandomHouseIsbnResponse> {
+class PenguinRandomHouseBookClient : IClient<PenguinRandomHouseBookResponse> {
 
     private val logger: Logger = LoggerFactory.getLogger(PenguinRandomHouseBookClient::class.java)
     private val penguinIsbnUrl = "https://reststop.randomhouse.com/resources/titles/%s"
 
-    override suspend fun retrieveResults(queryParam: QueryParam): PenguinRandomHouseIsbnResponse? {
+    override suspend fun retrieveResults(queryParam: QueryParam): PenguinRandomHouseBookResponse? {
         val url: String = penguinIsbnUrl.format(queryParam.query)
         val client = HttpClient(Apache) {
             install(JsonFeature) {

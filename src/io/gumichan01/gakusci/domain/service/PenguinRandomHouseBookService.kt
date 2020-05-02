@@ -1,7 +1,7 @@
 package io.gumichan01.gakusci.domain.service
 
 import io.gumichan01.gakusci.client.IClient
-import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseIsbnResponse
+import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseBookResponse
 import io.gumichan01.gakusci.client.utils.BookNumberType
 import io.gumichan01.gakusci.client.utils.generateBookNumberFromText
 import io.gumichan01.gakusci.client.utils.isValidISBN13
@@ -13,7 +13,7 @@ import io.gumichan01.gakusci.domain.search.cache.SearchCache
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class PenguinRandomHouseBookService(private val isbnClient: IClient<PenguinRandomHouseIsbnResponse>) : IService {
+class PenguinRandomHouseBookService(private val bookClient: IClient<PenguinRandomHouseBookResponse>) : IService {
 
     private val bookLink = "https://penguinrandomhouse.com/search/site?q="
     private val thumbnailLink = "https://images1.penguinrandomhouse.com/cover/"
@@ -23,7 +23,7 @@ class PenguinRandomHouseBookService(private val isbnClient: IClient<PenguinRando
         return cache.getOrUpdateCache(queryParam) {
             generateBookNumberFromText(queryParam.query)?.let { bookNumber ->
                 if (bookNumber.type == BookNumberType.ISBN && isValidISBN13(bookNumber.value)) {
-                    isbnClient.retrieveResults(queryParam.copy(query = bookNumber.value))?.let { response ->
+                    bookClient.retrieveResults(queryParam.copy(query = bookNumber.value))?.let { response ->
                         ServiceResponse(1, listOf(BookEntry(label(response), link(response), thumbnail(response))))
                     }
                 } else null
@@ -31,17 +31,17 @@ class PenguinRandomHouseBookService(private val isbnClient: IClient<PenguinRando
         }
     }
 
-    private fun label(isbnResponse: PenguinRandomHouseIsbnResponse): String {
+    private fun label(bookResponse: PenguinRandomHouseBookResponse): String {
         val pattern: DateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
-        val date: LocalDate = LocalDate.parse(isbnResponse.publishDate, pattern)
-        return isbnResponse.run { "$title, $author, ${date.year}" }
+        val date: LocalDate = LocalDate.parse(bookResponse.publishDate, pattern)
+        return bookResponse.run { "$title, $author, ${date.year}" }
     }
 
-    private fun thumbnail(isbnResponse: PenguinRandomHouseIsbnResponse): String {
-        return thumbnailLink + isbnResponse.isbn
+    private fun thumbnail(bookResponse: PenguinRandomHouseBookResponse): String {
+        return thumbnailLink + bookResponse.isbn
     }
 
-    private fun link(isbnResponse: PenguinRandomHouseIsbnResponse): String {
-        return bookLink + isbnResponse.isbn
+    private fun link(bookResponse: PenguinRandomHouseBookResponse): String {
+        return bookLink + bookResponse.isbn
     }
 }
