@@ -29,7 +29,7 @@
     <div class="container" th:each="entry : ${entries}">
         <p class="entry_label" th:text="${entry.label()}"></p>
         <p><a th:href="${entry.link()}" th:text="${entry.link()}"></a></p>
-        <hr />
+        <hr/>
     </div>
 
     <br>
