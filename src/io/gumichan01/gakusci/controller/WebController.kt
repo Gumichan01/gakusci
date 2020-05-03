@@ -1,5 +1,6 @@
 package io.gumichan01.gakusci.controller
 
+import io.gumichan01.gakusci.controller.utils.MAX_ENTRIES
 import io.gumichan01.gakusci.controller.utils.retrieveWebParam
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
@@ -38,7 +39,7 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
             else -> throw IllegalStateException("Cannot create HTML template for ${queryParam.searchType}")
         }
         val numPerPage: Int = queryParam.numPerPage!!
-        val pageOffset: Int = response.totalResults % numPerPage
+        val pageOffset: Int = MAX_ENTRIES % numPerPage
 
         return ThymeleafContent(
             template, mapOf(
@@ -50,7 +51,7 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
                 "pstart" to queryParam.start - numPerPage,
                 "start" to queryParam.start,
                 "nstart" to queryParam.start + numPerPage,
-                "lastStart" to response.totalResults - (if (pageOffset == 0) 10 else pageOffset),
+                "lastStart" to MAX_ENTRIES - (if (pageOffset == 0) 10 else pageOffset),
                 "numPerPage" to numPerPage,
                 SearchType.RESEARCH.value to (queryParam.searchType == SearchType.RESEARCH),
                 SearchType.BOOKS.value to (queryParam.searchType == SearchType.BOOKS)

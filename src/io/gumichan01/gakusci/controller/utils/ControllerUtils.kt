@@ -5,7 +5,7 @@ import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.ktor.http.Parameters
 
-private val MAX_ENTRIES = 2000
+const val MAX_ENTRIES = 2000
 
 fun retrieveWebParam(queryParameters: Parameters): Pair<QueryParam?, String> {
     return queryParameters["q"]?.let { query ->
