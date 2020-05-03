@@ -29,14 +29,13 @@ class PenguinRandomHouseSearchService(
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
         return cache.getOrUpdateCache(queryParam) {
             searchClient.retrieveResults(queryParam)?.let { response ->
-                response.isbnEntries.asSequence().distinct().take(queryParam.rows)
-                    .map { isbn -> QueryParam(isbn, SearchType.BOOKS) }.toList().run {
-                        when {
-                            isEmpty() -> ServiceResponse(0, emptyList())
-                            size == 1 -> searchService.search(first())
-                            else -> retrieveResultsFromExternalService(this)
-                        }
+                response.isbnEntries.distinct().map { isbn -> QueryParam(isbn, SearchType.BOOKS) }.toList().run {
+                    when {
+                        isEmpty() -> ServiceResponse(0, emptyList())
+                        size == 1 -> searchService.search(first())
+                        else -> retrieveResultsFromExternalService(this)
                     }
+                }
             }
         }
     }

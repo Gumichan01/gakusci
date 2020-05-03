@@ -9,10 +9,12 @@ import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions
 import kotlin.test.Test
 
+@ExperimentalCoroutinesApi
 class PenguinRandomHouseSearchServiceTest {
 
     private val searchClientMock: IClient<PenguinRandomHouseSearchResponse> = mockk {
