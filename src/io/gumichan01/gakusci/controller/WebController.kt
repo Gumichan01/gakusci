@@ -14,6 +14,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import kotlin.math.min
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -39,7 +40,8 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
             else -> throw IllegalStateException("Cannot create HTML template for ${queryParam.searchType}")
         }
         val numPerPage: Int = queryParam.numPerPage!!
-        val pageOffset: Int = MAX_ENTRIES % numPerPage
+        val numberOfPaginatedResults = min(MAX_ENTRIES, response.totalResults)
+        val pageOffset: Int = numberOfPaginatedResults % numPerPage
 
         return ThymeleafContent(
             template, mapOf(
@@ -51,7 +53,7 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
                 "pstart" to queryParam.start - numPerPage,
                 "start" to queryParam.start,
                 "nstart" to queryParam.start + numPerPage,
-                "lastStart" to MAX_ENTRIES - (if (pageOffset == 0) 10 else pageOffset),
+                "lastStart" to numberOfPaginatedResults - (if (pageOffset == 0) 10 else pageOffset),
                 "numPerPage" to numPerPage,
                 SearchType.RESEARCH.value to (queryParam.searchType == SearchType.RESEARCH),
                 SearchType.BOOKS.value to (queryParam.searchType == SearchType.BOOKS)

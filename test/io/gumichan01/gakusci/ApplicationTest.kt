@@ -1,5 +1,6 @@
 package io.gumichan01.gakusci
 
+import io.gumichan01.gakusci.controller.utils.MAX_ENTRIES
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
@@ -139,6 +140,28 @@ class ApplicationTest {
             val bigStartValue = 1 shl 20
             handleRequest(HttpMethod.Get, "/search/?q=lorem&stype=research&start=$bigStartValue").apply {
                 assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
+            }
+        }
+    }
+
+    @Test
+    fun `test webapp search, query that returns more than 2000 results - return OK with good start value of the last page (HTML)`() {
+        withTestApplication({ gakusciModule() }) {
+            handleRequest(HttpMethod.Get, "/search/?q=fruit&stype=research&start=0").apply {
+                assertThat(response.status()).isEqualTo(HttpStatusCode.OK)
+                assertThat(response.content?.substringAfterLast("start=")?.substringBefore("\"")?.toInt())
+                    .isEqualTo(MAX_ENTRIES - 10)
+            }
+        }
+    }
+
+    @Test
+    fun `test webapp search, query that returns less than 2000 results - return OK with good start value of the last page (HTML)`() {
+        withTestApplication({ gakusciModule() }) {
+            handleRequest(HttpMethod.Get, "/search/?q=ipsum&stype=research&start=0").apply {
+                assertThat(response.status()).isEqualTo(HttpStatusCode.OK)
+                assertThat(response.content?.substringAfterLast("start=")?.substringBefore("\"")?.toInt())
+                    .isLessThan(MAX_ENTRIES - 10)
             }
         }
     }
