@@ -22,7 +22,7 @@ class PenguinRandomHouseSearchClient : IClient<PenguinRandomHouseSearchResponse>
         val url: String = searchUrl.format(queryParam.rows, queryParam.query)
         return try {
             val xmlText = HttpClient(Apache).use { it.get<String>(url) }
-            PenguinRandomHouseSearchResponse(extractIsbnsFromXml(xmlText))
+            PenguinRandomHouseSearchResponse(extractIsbnsFromXml(xmlText).take(queryParam.rows))
         } catch (e: Exception) {
             trace(logger, e)
             null
@@ -36,10 +36,10 @@ class PenguinRandomHouseSearchClient : IClient<PenguinRandomHouseSearchResponse>
             .apply { this.normalize() }
             .getElementsByTagName("isbn")
 
-        val isbns: MutableList<String?> = mutableListOf()
+        val isbns: MutableList<String> = mutableListOf()
         for (i in 0..elementsByTagName.length) {
-            isbns.add(elementsByTagName.item(i)?.textContent)
+            elementsByTagName.item(i)?.textContent?.let { isbns.add(it) }
         }
-        return isbns.filterNotNull()
+        return isbns
     }
 }

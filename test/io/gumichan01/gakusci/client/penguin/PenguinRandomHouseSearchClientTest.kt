@@ -10,12 +10,20 @@ import kotlin.test.Test
 class PenguinRandomHouseSearchClientTest {
 
 //    @Test
-    fun `check valid request to external service - must return result`() {
+    fun `check valid request to PRH - must return something`() {
         val client: IClient<PenguinRandomHouseSearchResponse> = PenguinRandomHouseSearchClient()
-        val queryParam = QueryParam("marx", SearchType.BOOKS)
+        val queryParam = QueryParam("lorem", SearchType.BOOKS)
         val response: PenguinRandomHouseSearchResponse? =
             runBlocking { client.retrieveResults(queryParam) }
         Assertions.assertThat(response).isNotNull
-        Assertions.assertThat(response?.isbnEntries).isNotEmpty
+    }
+
+//    @Test
+    fun `check valid request to PRH with "marx" and retrieve at most 100 entries - must return at most 100 entries`() {
+        val client: IClient<PenguinRandomHouseSearchResponse> = PenguinRandomHouseSearchClient()
+        val queryParam = QueryParam("marx", SearchType.BOOKS, rows = 100)
+        val response: PenguinRandomHouseSearchResponse? =
+            runBlocking { client.retrieveResults(queryParam) }
+        Assertions.assertThat(response?.isbnEntries?.size).isLessThanOrEqualTo(100)
     }
 }
