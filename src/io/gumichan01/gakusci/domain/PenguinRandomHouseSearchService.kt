@@ -5,6 +5,7 @@ import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseSearchResponse
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.model.entry.IResultEntry
+import io.gumichan01.gakusci.domain.search.IntermediateCache
 import io.gumichan01.gakusci.domain.search.cache.CacheHandler
 import io.gumichan01.gakusci.domain.search.cache.SearchCache
 import io.gumichan01.gakusci.domain.service.IService
@@ -24,17 +25,18 @@ class PenguinRandomHouseSearchService(
     private val searchService: IService
 ) : IService {
 
-    private val cache: SearchCache = CacheHandler().createFreshCache()
+    private val bookCache: SearchCache = CacheHandler().createFreshCache()
+    private val searchCache: IntermediateCache = IntermediateCache()
 
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
-        return cache.getOrUpdateCache(queryParam) {
-            searchClient.retrieveResults(queryParam)?.let { response ->
-                response.isbnEntries.distinct().map { isbn -> QueryParam(isbn, SearchType.BOOKS) }.toList().run {
-                    when {
-                        isEmpty() -> ServiceResponse(0, emptyList())
-                        size == 1 -> searchService.search(first())
-                        else -> retrieveResultsFromExternalService(this)
-                    }
+        return bookCache.getOrUpdateCache(queryParam) {
+            searchCache.getOrUpdateCache(queryParam.query) {
+                searchClient.retrieveResults(queryParam)?.isbnEntries?.distinct() ?: emptyList()
+            }.map { isbn -> QueryParam(isbn, SearchType.BOOKS) }.toList().run {
+                when {
+                    isEmpty() -> ServiceResponse(0, emptyList())
+                    size == 1 -> searchService.search(first())
+                    else -> retrieveResultsFromExternalService(this)
                 }
             }
         }
