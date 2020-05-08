@@ -24,8 +24,4 @@ class SearchCache(cache: Cache<String, ServiceResponse?>) :
             } else f()?.also { put(param.query, it) }
         }
     }
-
-    private fun ServiceResponse.isEmpty(): Boolean {
-        return totalResults == 0 && entries.isEmpty()
-    }
 }
