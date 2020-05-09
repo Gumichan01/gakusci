@@ -5,8 +5,8 @@ import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseSearchResponse
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.model.entry.IResultEntry
-import io.gumichan01.gakusci.domain.search.IntermediateCache
 import io.gumichan01.gakusci.domain.search.cache.CacheHandler
+import io.gumichan01.gakusci.domain.search.cache.IntermediateCache
 import io.gumichan01.gakusci.domain.search.cache.SearchCache
 import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.utils.SearchType

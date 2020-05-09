@@ -1,4 +1,4 @@
-package io.gumichan01.gakusci.domain.search
+package io.gumichan01.gakusci.domain.search.cache
 
 import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
