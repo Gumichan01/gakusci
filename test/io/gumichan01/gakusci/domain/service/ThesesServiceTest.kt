@@ -1,6 +1,9 @@
 package io.gumichan01.gakusci.domain.service
 
-import io.gumichan01.gakusci.client.IClient
+import io.gumichan01.gakusci.client.theses.ThesesClient
+import io.gumichan01.gakusci.client.theses.ThesesResponse
+import io.gumichan01.gakusci.client.theses.ThesesResponseBody
+import io.gumichan01.gakusci.client.theses.ThesesResultEntry
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.utils.SearchType
@@ -8,13 +11,28 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions
+import java.util.*
 import kotlin.test.Test
 
 class ThesesServiceTest {
 
-    private val clientMock: IClient<String> = mockk {
-        coEvery { retrieveResults(QueryParam("lorem", SearchType.RESEARCH)) } returns "ipsum"
-        coEvery { retrieveResults(QueryParam("ipsum", SearchType.RESEARCH)) } returns "para bellum"
+    private val clientMock: ThesesClient = mockk {
+        coEvery { retrieveResults(QueryParam("lorem", SearchType.RESEARCH)) } returns ThesesResponse(
+            ThesesResponseBody(
+                3, 0, listOf(
+                    ThesesResultEntry("ipsum", "", "soutenue", "oui", Date(0L)),
+                    ThesesResultEntry("ipsum2", "", "soutenue", "non", Date(0L)),
+                    ThesesResultEntry("ipsum3", "", "enCours", "non", Date(0L))
+                )
+            )
+        )
+        coEvery { retrieveResults(QueryParam("ipsum", SearchType.RESEARCH)) } returns ThesesResponse(
+            ThesesResponseBody(
+                1, 0, listOf(
+                    ThesesResultEntry("para bellum", "", "soutenue", "non", Date(0L))
+                )
+            )
+        )
     }
 
     @Test
@@ -38,5 +56,13 @@ class ThesesServiceTest {
         val result1: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH)) }
         val result2: ServiceResponse? = runBlocking { service.search(QueryParam("ipsum", SearchType.RESEARCH)) }
         Assertions.assertThat(result1).isNotEqualTo(result2)
+    }
+
+    @Test
+    fun `Theses service, search for presented and available theses - return requested results`() {
+        val service = ThesesService(clientMock)
+        val result: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH)) }
+        Assertions.assertThat(result?.totalResults).isEqualTo(1)
+        Assertions.assertThat(result?.entries?.size).isEqualTo(1)
     }
 }
