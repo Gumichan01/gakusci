@@ -6,6 +6,7 @@ import io.gumichan01.gakusci.client.openlib.OpenLibraryBookClient
 import io.gumichan01.gakusci.client.openlib.OpenLibrarySearchClient
 import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseBookClient
 import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseSearchClient
+import io.gumichan01.gakusci.client.theses.ThesesClient
 import io.gumichan01.gakusci.domain.PenguinRandomHouseSearchService
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
@@ -46,7 +47,9 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
     private object DomainSearchType {
         private val penguinIsbnService = PenguinRandomHouseBookService(PenguinRandomHouseBookClient())
 
-        val RESEARCH: Set<IService> by lazy { setOf(HalService(HalClient()), ArxivService(ArxivClient())) }
+        val RESEARCH: Set<IService> by lazy {
+            setOf(HalService(HalClient()), ArxivService(ArxivClient()), ThesesService(ThesesClient()))
+        }
         val BOOKS: Set<IService> by lazy {
             setOf(
                 OpenLibrarySearchService(OpenLibrarySearchClient()),

@@ -7,6 +7,7 @@ import java.util.*
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ThesesResultEntry(
+    @JsonProperty("num") val num: String,
     @JsonProperty("titre") val title: String,
     @JsonProperty("auteur") val author: String,
     @JsonProperty("status") val status: String,
@@ -26,6 +27,10 @@ data class ThesesResultEntry(
 
     fun isPresented(): Boolean {
         return status.toLowerCase() == "soutenue"
+    }
+
+    fun link(): String {
+        return "https://www.theses.fr/$id"
     }
 
 }

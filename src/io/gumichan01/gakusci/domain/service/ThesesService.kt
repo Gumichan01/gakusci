@@ -16,7 +16,7 @@ class ThesesService(private val thesesClient: IClient<ThesesResponse>) : IServic
         return cache.getOrUpdateCache(queryParam) {
             thesesClient.retrieveResults(queryParam)?.body?.let {
                 val entries = it.docs.asSequence().filter { d -> d.isPresented() }.filter { d -> d.hasAccess() }
-                    .map { doc -> SimpleResultEntry(doc.label(), "TODO") }.toList()
+                    .map { doc -> SimpleResultEntry(doc.label(), doc.link()) }.toList()
                 ServiceResponse(entries.size, entries)
             }
         }

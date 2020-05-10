@@ -20,16 +20,16 @@ class ThesesServiceTest {
         coEvery { retrieveResults(QueryParam("lorem", SearchType.RESEARCH)) } returns ThesesResponse(
             ThesesResponseBody(
                 3, 0, listOf(
-                    ThesesResultEntry("ipsum", "", "soutenue", "oui", Date(0L)),
-                    ThesesResultEntry("ipsum2", "", "soutenue", "non", Date(0L)),
-                    ThesesResultEntry("ipsum3", "", "enCours", "non", Date(0L))
+                    ThesesResultEntry("1","ipsum", "", "soutenue", "oui", Date(0L)),
+                    ThesesResultEntry("2","ipsum2", "", "soutenue", "non", Date(0L)),
+                    ThesesResultEntry("3","ipsum3", "", "enCours", "non", Date(0L))
                 )
             )
         )
         coEvery { retrieveResults(QueryParam("ipsum", SearchType.RESEARCH)) } returns ThesesResponse(
             ThesesResponseBody(
                 1, 0, listOf(
-                    ThesesResultEntry("para bellum", "", "soutenue", "non", Date(0L))
+                    ThesesResultEntry("4","para bellum", "", "soutenue", "non", Date(0L))
                 )
             )
         )
