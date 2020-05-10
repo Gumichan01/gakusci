@@ -12,12 +12,12 @@ data class ThesesResultEntry(
     @JsonProperty("auteur") val author: String,
     @JsonProperty("status") val status: String,
     @JsonProperty("accessible") val available: String,
-    @JsonProperty("dateSoutenance") val date: Date
+    @JsonProperty("dateSoutenance") val date: Date?
 ) {
 
     fun label(): String {
         val pattern = "yyyy-MM-dd"
-        val formattedDate: String = SimpleDateFormat(pattern).format(date)
+        val formattedDate: String = SimpleDateFormat(pattern).format(date!!)
         return "$author. $title. $formattedDate"
     }
 
@@ -30,7 +30,7 @@ data class ThesesResultEntry(
     }
 
     fun link(): String {
-        return "https://www.theses.fr/$id"
+        return "https://www.theses.fr/$num"
     }
 
 }
