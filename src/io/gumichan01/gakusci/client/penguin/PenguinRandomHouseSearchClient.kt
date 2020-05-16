@@ -8,6 +8,7 @@ import io.ktor.client.engine.apache.Apache
 import io.ktor.client.request.get
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.w3c.dom.Node
 import org.w3c.dom.NodeList
 import java.io.ByteArrayInputStream
 import java.nio.charset.Charset
@@ -29,17 +30,51 @@ class PenguinRandomHouseSearchClient : IClient<PenguinRandomHouseSearchResponse>
         }
     }
 
-    private fun extractIsbnsFromXml(xmlText: String): List<String> {
+    private fun extractIsbnsFromXml(xmlText: String): List<Pair<String, Set<String>>> {
+        val nodes: NodeList = extractNodesFromXmlText(xmlText)
+        return retrieveEntries(nodes)
+    }
+
+    private fun extractNodesFromXmlText(xmlText: String): NodeList {
         val input = ByteArrayInputStream(xmlText.toByteArray(Charset.forName("UTF-8")))
-        val elementsByTagName: NodeList = DocumentBuilderFactory.newInstance()
+        return DocumentBuilderFactory.newInstance()
             .newDocumentBuilder().parse(input).documentElement
             .apply { this.normalize() }
-            .getElementsByTagName("isbn")
+            .getElementsByTagName("title")
+    }
 
-        val isbns: MutableList<String> = mutableListOf()
-        for (i in 0..elementsByTagName.length) {
-            elementsByTagName.item(i)?.textContent?.let { isbns.add(it) }
+    /*
+        Takes a list of *title* nodes containing an URI and a set of related ISBN and returns a list of pairs (URI, ISBNs).
+        Each title node has this following structure (irrelevant children not showed):
+
+        ```
+         <title uri="some-uri-value">
+            ...
+            <relatedisbns>
+                <isbn>some-isbn-value</isbn>
+            </relatedisbns>
+            ...
+        </title>
+        ```
+    */
+    private fun retrieveEntries(nodes: NodeList): List<Pair<String, Set<String>>> {
+        return nodes.toList().map { titleNode ->    // <title uri ="..."> Node in the XML document
+            Pair(
+                titleNode.attributes!!.getNamedItem("uri")!!.nodeValue,
+                titleNode.childNodes.toList()
+                    .first { childNode -> childNode.nodeName == "relatedisbns" }   // <relatedisbn> Node in the XML document
+                    .childNodes.toList().asSequence()
+                    .filter { child -> child.nodeName == "isbn" }
+                    .map { n -> n.firstChild.nodeValue }.toSet()
+            )
         }
-        return isbns
+    }
+
+    private fun NodeList.toList(): List<Node> {
+        val nodes: MutableList<Node> = mutableListOf()
+        for (i in 0..length) {
+            this.item(i)?.let { nodes.add(it) }
+        }
+        return nodes
     }
 }

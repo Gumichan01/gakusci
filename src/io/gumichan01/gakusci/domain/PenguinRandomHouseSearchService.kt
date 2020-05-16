@@ -26,13 +26,13 @@ class PenguinRandomHouseSearchService(
 ) : IService {
 
     private val bookCache: SearchCache = CacheHandler().createFreshCache()
-    private val searchCache: IntermediateCache = IntermediateCache()
+    private val searchCache: IntermediateCache<List<String>> = IntermediateCache()
 
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
         return bookCache.getOrUpdateCache(queryParam) {
             searchCache.getOrUpdateCache(queryParam.query) {
-                searchClient.retrieveResults(queryParam)?.isbnEntries?.distinct() ?: emptyList()
-            }.map { isbn -> QueryParam(isbn, SearchType.BOOKS) }.toList().run {
+                searchClient.retrieveResults(queryParam)?.entries?.retrieveDistinctIsbns() ?: emptyList()
+            }.map { entry -> QueryParam(entry, SearchType.BOOKS) }.run {
                 when {
                     isEmpty() -> ServiceResponse(0, emptyList())
                     size == 1 -> searchService.search(first())
@@ -40,6 +40,15 @@ class PenguinRandomHouseSearchService(
                 }
             }
         }
+    }
+
+    private fun List<Pair<String, Set<String>>>.retrieveDistinctIsbns(): List<String> {
+        return map { (_, isbns) -> isbns }.distinct()
+            .asSequence()
+            .filter { s -> s.isNotEmpty() }
+            .map { isbns -> isbns.first() }
+            // In order avoid to many parallel calls to the ISBN service, limitate the number of entries to 10
+            .take(10).toList()
     }
 
     private suspend fun retrieveResultsFromExternalService(isbnEntries: List<QueryParam>): ServiceResponse? {

@@ -6,14 +6,16 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.concurrent.TimeUnit
 
-class IntermediateCache(
-    cache: Cache<String, List<String>> = Caffeine.newBuilder().expireAfterWrite(600, TimeUnit.SECONDS)
-        .maximumSize(100L).build()
-) : Cache<String, List<String>> by cache {
+class IntermediateCache<V>(
+    cache: Cache<String, V> = Caffeine.newBuilder()
+        .expireAfterWrite(600, TimeUnit.SECONDS).maximumSize(100L).build()
+) : Cache<String, V> by cache {
 
     private val mutex = Mutex()
 
-    suspend fun getOrUpdateCache(key: String, f: suspend () -> List<String>): List<String> {
+    suspend fun getOrUpdateCache(
+        key: String, f: suspend () -> V
+    ): V {
         mutex.withLock {
             return getIfPresent(key) ?: f().also { put(key, it) }
         }

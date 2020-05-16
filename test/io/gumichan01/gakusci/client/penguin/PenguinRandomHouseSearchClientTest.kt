@@ -24,6 +24,6 @@ class PenguinRandomHouseSearchClientTest {
         val queryParam = QueryParam("marx", SearchType.BOOKS, rows = 100)
         val response: PenguinRandomHouseSearchResponse? =
             runBlocking { client.retrieveResults(queryParam) }
-        Assertions.assertThat(response?.isbnEntries?.size).isLessThanOrEqualTo(100)
+        Assertions.assertThat(response?.entries?.size).isLessThanOrEqualTo(100)
     }
 }
