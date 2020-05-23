@@ -19,12 +19,12 @@ class PenguinRandomHouseSearchServiceTest {
 
     private val searchClientMock: IClient<PenguinRandomHouseSearchResponse> = mockk {
         coEvery { retrieveResults(QueryParam("marx", SearchType.BOOKS, 1)) } returns
-                PenguinRandomHouseSearchResponse(listOf(Pair("9780140043204", emptySet())))
+                PenguinRandomHouseSearchResponse(listOf(Pair("9780140043204", setOf("9780140043204"))))
         coEvery { retrieveResults(QueryParam("lorem", SearchType.BOOKS)) } returns
                 PenguinRandomHouseSearchResponse(
                     listOf(
-                        Pair("9780140043204", emptySet()),
-                        Pair("9780140150964", emptySet())
+                        Pair("9780140043204", setOf("9780140043204")),
+                        Pair("9780140150964", setOf("9780140150964"))
                     )
                 )
         coEvery {
