@@ -16,7 +16,7 @@ import kotlin.test.Test
 @ExperimentalCoroutinesApi
 class ApplicationTest {
     @Test
-    fun `test static homepage`() {
+    fun `webapp, static homepage - returns OK`() {
         withTestApplication({ gakusciModule() }) {
             handleRequest(HttpMethod.Get, "/").apply {
                 assertThat(response.status()).isEqualTo(HttpStatusCode.OK)
@@ -25,7 +25,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun `test web application, normal case with research - return OK and HTML content`() {
+    fun `webapp, normal case with research - returns OK and HTML content`() {
         withTestApplication({ gakusciModule() }) {
             handleRequest(HttpMethod.Get, "/search/?q=lorem&stype=research").apply {
                 with(response) {
@@ -47,7 +47,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun `test web application, normal case with books - return OK and HTML content`() {
+    fun `webapp, normal case with books - returns OK and HTML content`() {
         withTestApplication({ gakusciModule() }) {
             handleRequest(HttpMethod.Get, "/search/?q=lorem&stype=books").apply {
                 with(response) {
@@ -69,7 +69,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun `test web application, search for a book by ISBN - return OK and HTML content`() {
+    fun `webapp, search for a book by ISBN - returns OK and HTML content`() {
         withTestApplication({ gakusciModule() }) {
             handleRequest(HttpMethod.Get, "/search/?q=ISBN:9784088766829&stype=books").apply {
                 with(response) {
@@ -93,7 +93,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun `test web application search, query with negative start value - return Bad request`() {
+    fun `webapp, query with negative start value - returns Bad request`() {
         withTestApplication({ gakusciModule() }) {
             handleRequest(HttpMethod.Get, "/search/?q=lorem&stype=research&start=-10").apply {
                 assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
@@ -102,7 +102,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun `test web application, empty query - return Bad request`() {
+    fun `webapp, empty query - returns Bad request`() {
         withTestApplication({ gakusciModule() }) {
             handleRequest(HttpMethod.Get, "/search/?q=&stype=research").apply {
                 with(response) {
@@ -113,7 +113,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun `test web application, blank query - return Bad request`() {
+    fun `webapp, blank query - returns Bad request`() {
         withTestApplication({ gakusciModule() }) {
             handleRequest(HttpMethod.Get, "/search/?q=     &stype=research").apply {
                 with(response) {
@@ -124,7 +124,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun `test web application, query but no search type - return Bad request`() {
+    fun `webapp, no search type for a query - returns Bad request`() {
         withTestApplication({ gakusciModule() }) {
             handleRequest(HttpMethod.Get, "/search/?q=science").apply {
                 with(response) {
@@ -135,7 +135,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun `test web application search, query with very big start value - return Bad request`() {
+    fun `test web application search, query with very big start value - returns Bad request`() {
         withTestApplication({ gakusciModule() }) {
             val bigStartValue = 1 shl 20
             handleRequest(HttpMethod.Get, "/search/?q=lorem&stype=research&start=$bigStartValue").apply {
@@ -145,9 +145,9 @@ class ApplicationTest {
     }
 
     @Test
-    fun `test webapp search, query that returns more than 2000 results - return OK with good start value of the last page (HTML)`() {
+    fun `Query 'fruit' returning more than 2000 results (10 entries per page) - returns HTML content with 'start' value of the last page less than 1990`() {
         withTestApplication({ gakusciModule() }) {
-            handleRequest(HttpMethod.Get, "/search/?q=fruit&stype=research&start=0").apply {
+            handleRequest(HttpMethod.Get, "/search/?q=fruit&stype=research").apply {
                 assertThat(response.status()).isEqualTo(HttpStatusCode.OK)
                 assertThat(response.content?.substringAfterLast("start=")?.substringBefore("\"")?.toInt())
                     .isEqualTo(MAX_ENTRIES - 10)
@@ -156,9 +156,9 @@ class ApplicationTest {
     }
 
     @Test
-    fun `test webapp search, query that returns less than 2000 results - return OK with good start value of the last page (HTML)`() {
+    fun `Query 'lorem' that returns less than 2000 results (10 entries per page) - returns HTML content with 'start' value of the last page less than 1990`() {
         withTestApplication({ gakusciModule() }) {
-            handleRequest(HttpMethod.Get, "/search/?q=ipsum&stype=research&start=0").apply {
+            handleRequest(HttpMethod.Get, "/search/?q=ipsum&stype=research").apply {
                 assertThat(response.status()).isEqualTo(HttpStatusCode.OK)
                 assertThat(response.content?.substringAfterLast("start=")?.substringBefore("\"")?.toInt())
                     .isLessThan(MAX_ENTRIES - 10)
