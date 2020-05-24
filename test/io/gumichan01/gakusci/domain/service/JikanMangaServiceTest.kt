@@ -17,7 +17,7 @@ import kotlin.test.Test
 class JikanMangaServiceTest {
 
     private val mockkJikanCLient: IClient<JikanMangaResponse> = mockk {
-        coEvery { retrieveResults(QueryParam("lorem", SearchType.BOOKS)) } returns JikanMangaResponse(
+        coEvery { retrieveResults(QueryParam("lorem", SearchType.MANGAS)) } returns JikanMangaResponse(
             listOf(
                 JikanMangaEntry(
                     title = "lorem ipsum",
