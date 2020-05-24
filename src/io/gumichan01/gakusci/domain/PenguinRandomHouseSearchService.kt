@@ -27,6 +27,7 @@ class PenguinRandomHouseSearchService(
 
     private val bookCache: SearchCache = CacheHandler().createFreshCache()
     private val searchCache: IntermediateCache<List<String>> = IntermediateCache()
+    private val nbMaxEntries = 10
 
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
         return bookCache.getOrUpdateCache(queryParam) {
@@ -47,8 +48,8 @@ class PenguinRandomHouseSearchService(
             .asSequence()
             .filter { s -> s.isNotEmpty() }
             .map { isbns -> isbns.first() }
-            // In order avoid to many parallel calls to the ISBN service, limitate the number of entries to 10
-            .take(10).toList()
+            // In order avoid to many parallel calls to the ISBN service, take only 10 entries
+            .take(nbMaxEntries).toList()
     }
 
     private suspend fun retrieveResultsFromExternalService(isbnEntries: List<QueryParam>): ServiceResponse? {
@@ -60,8 +61,8 @@ class PenguinRandomHouseSearchService(
 
     private suspend fun launchRequests(queries: List<QueryParam>): Channel<ServiceResponse?> {
         val serviceCallTimeout = 15000L
-        val channel = Channel<ServiceResponse?>(queries.size)
-        val runningCoroutinesCounter: AtomicInt = atomic(queries.size)
+        val channel = Channel<ServiceResponse?>(nbMaxEntries)
+        val runningCoroutinesCounter: AtomicInt = atomic(nbMaxEntries)
         queries.forEach { query ->
             CoroutineScope(Dispatchers.Default).launch {
                 try {
