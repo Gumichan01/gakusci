@@ -20,7 +20,8 @@ fun retrieveWebParam(queryParameters: Parameters): Pair<QueryParam?, String> {
 
         when {
             query.isBlank() -> Pair(null, "Bad request: query parameter 'q' is blank")
-            query.isTooShort() -> Pair(null, "Bad request: query parameter 'q' is too short (it must have at least 3 characters)")
+            query.isTooShort() ->
+                Pair(null, "Bad request: query parameter 'q' is too short (it must have at least 3 characters)")
             start < 0 -> Pair(null, "Bad request: negative start value: $start")
             start > rows -> Pair(null, "Bad request: start is greater than max_results")
             searchType == null -> Pair(null, "Bad request: no query parameter 'stype' provided")
@@ -37,6 +38,9 @@ fun retrieveApiParam(queryParameters: Parameters, pathParameters: Parameters): P
             val numPerPage: Int? = queryParameters["num_per_page"]?.toInt()
 
             when {
+                query.isBlank() -> Pair(null, "Bad request: query parameter 'q' is blank")
+                query.isTooShort() ->
+                    Pair(null, "Bad request: query parameter 'q' is too short (it must have at least 3 characters)")
                 rows != null && rows < 0 -> Pair(null, "Bad request: negative max_results value: $rows")
                 start != null -> {
                     RestApiQueryParameters(query, searchType, rows, start, numPerPage).run {
