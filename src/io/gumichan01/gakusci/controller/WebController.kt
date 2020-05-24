@@ -36,7 +36,7 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
 
         val template: String = when (queryParam.searchType) {
             SearchType.RESEARCH -> "research"
-            SearchType.BOOKS -> "books"
+            SearchType.BOOKS, SearchType.MANGAS -> "books"
             else -> throw IllegalStateException("Cannot create HTML template for ${queryParam.searchType}")
         }
         val numPerPage: Int = queryParam.numPerPage!!
