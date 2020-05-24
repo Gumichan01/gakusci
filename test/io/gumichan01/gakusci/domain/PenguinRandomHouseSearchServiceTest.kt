@@ -36,7 +36,6 @@ class PenguinRandomHouseSearchServiceTest {
             )
         } returns PenguinRandomHouseSearchResponse(emptyList())
     }
-
     private val searchServiceMock: IService = mockk {
         coEvery { search(QueryParam("9780140043204", SearchType.BOOKS)) } returns
                 ServiceResponse(
@@ -72,18 +71,7 @@ class PenguinRandomHouseSearchServiceTest {
     }
 
     @Test
-    fun `Send valid search request and get one result - returns response with one entry`() {
-        val service: IService = PenguinRandomHouseSearchService(searchClientMock, searchServiceMock)
-        val result: ServiceResponse? = runBlocking { service.search(QueryParam("marx", SearchType.BOOKS, 1)) }
-        Assertions.assertThat(result).isNotNull
-        Assertions.assertThat(result?.totalResults).isNotZero()
-        Assertions.assertThat(result?.totalResults).isOne()
-        Assertions.assertThat(result?.entries).isNotEmpty()
-        Assertions.assertThat(result?.entries?.size).isOne()
-    }
-
-    @Test
-    fun `Send valid search request and get one result - returns response with one valid entry`() {
+    fun `Send valid search request and get one result - returns response with at least one valid entry`() {
         val service: IService = PenguinRandomHouseSearchService(searchClientMock, searchServiceMock)
         val result: ServiceResponse? = runBlocking { service.search(QueryParam("marx", SearchType.BOOKS, 1)) }
         Assertions.assertThat(result).isNotNull
@@ -92,14 +80,5 @@ class PenguinRandomHouseSearchServiceTest {
         Assertions.assertThat(bookEntry.label).containsIgnoringCase("marx")
         Assertions.assertThat(bookEntry.url).startsWith("https").contains("penguinrandomhouse.com/search/site?q=")
         Assertions.assertThat(bookEntry.thumbnailUrl).startsWith("https").contains("penguinrandomhouse.com/cover/")
-    }
-
-    @Test
-    fun `Send valid search request and get several results - returns response with several entries`() {
-        val service: IService = PenguinRandomHouseSearchService(searchClientMock, searchServiceMock)
-        val result: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.BOOKS)) }
-        Assertions.assertThat(result).isNotNull
-        Assertions.assertThat(result?.entries).hasAtLeastOneElementOfType(BookEntry::class.java)
-        Assertions.assertThat(result?.entries?.size).isGreaterThan(1)
     }
 }
