@@ -55,6 +55,7 @@ repositories {
     mavenLocal()
     jcenter()
     maven { url 'https://kotlin.bintray.com/ktor' }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -69,6 +70,7 @@ dependencies {
     compile "com.github.vladimir-bukhtoyarov:bucket4j-core:$bucket4j_version"
     implementation "com.ouattararomuald:syndication:$syndication_kotlin"
     implementation "com.github.ben-manes.caffeine:caffeine:$caffeine_version"
+    implementation "com.github.GSculerlor:JikanKt:$jikankt_version"
     testCompile "io.mockk:mockk:$mockk_version"
     testCompile "org.assertj:assertj-core:$assertj_version"
     testCompile "io.ktor:ktor-server-tests:$ktor_version"
