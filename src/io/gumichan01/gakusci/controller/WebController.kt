@@ -56,7 +56,8 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
                 "lastStart" to numberOfPaginatedResults - (if (pageOffset == 0) 10 else pageOffset),
                 "numPerPage" to numPerPage,
                 SearchType.RESEARCH.value to (queryParam.searchType == SearchType.RESEARCH),
-                SearchType.BOOKS.value to (queryParam.searchType == SearchType.BOOKS)
+                SearchType.BOOKS.value to (queryParam.searchType == SearchType.BOOKS),
+                SearchType.MANGAS.value to (queryParam.searchType == SearchType.MANGAS)
             )
         )
     }
