@@ -2,6 +2,7 @@ package io.gumichan01.gakusci.domain.search
 
 import io.gumichan01.gakusci.client.arxiv.ArxivClient
 import io.gumichan01.gakusci.client.hal.HalClient
+import io.gumichan01.gakusci.client.jikan.JikanMangaClient
 import io.gumichan01.gakusci.client.openlib.OpenLibraryBookClient
 import io.gumichan01.gakusci.client.openlib.OpenLibrarySearchClient
 import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseBookClient
@@ -54,7 +55,8 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
             setOf(
                 OpenLibrarySearchService(OpenLibrarySearchClient()),
                 OpenLibraryBookService(OpenLibraryBookClient()), penguinIsbnService,
-                PenguinRandomHouseSearchService(PenguinRandomHouseSearchClient(), penguinIsbnService)
+                PenguinRandomHouseSearchService(PenguinRandomHouseSearchClient(), penguinIsbnService),
+                JikanMangaService(JikanMangaClient())
             )
         }
     }
