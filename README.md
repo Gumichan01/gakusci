@@ -10,12 +10,13 @@ Gakusci is a web aggregator that can be used to search for any document/informat
 ## How it works ##
 
 Gakusci directly retrieves data from some platforms dedicated to a search domain.  
-For the moment, this application can only deal with research papers/articles. Some other domains will be dealt with in the future (not exhaustive):
+The application can search for documents from different domains (some of them will be dealt in the future):
 
 - Anime (WIP)
 - Books
 - Music (WIP)
-- Open Data (?)
+- Manga
+- Open Data
 - Images/Photos (WIP)
 - Research papers/articles
 
