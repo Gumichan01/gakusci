@@ -17,7 +17,7 @@ class SearchQueryProcessor {
             when (queryParam.searchType) {
                 SearchType.RESEARCH, SearchType.RESEARCHES -> withResearchServices()
                 SearchType.BOOKS -> withBookServices()
-                SearchType.MANGAS -> TODO("MANGA")
+                SearchType.MANGAS -> withMangaServices()
             }
         }.build().retrieveResults(queryParam)
     }

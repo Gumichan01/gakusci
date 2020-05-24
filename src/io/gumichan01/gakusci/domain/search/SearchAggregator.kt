@@ -39,6 +39,7 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
 
         fun withResearchServices(): Builder = apply { services.addAll(DomainSearchType.RESEARCH) }
         fun withBookServices(): Builder = apply { services.addAll(DomainSearchType.BOOKS) }
+        fun withMangaServices() : Builder = apply {services.addAll(DomainSearchType.MANGAS)}
 
         fun build(): SearchAggregator {
             return SearchAggregator(SearchLauncher(services))
@@ -55,9 +56,9 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
             setOf(
                 OpenLibrarySearchService(OpenLibrarySearchClient()),
                 OpenLibraryBookService(OpenLibraryBookClient()), penguinIsbnService,
-                PenguinRandomHouseSearchService(PenguinRandomHouseSearchClient(), penguinIsbnService),
-                JikanMangaService(JikanMangaClient())
+                PenguinRandomHouseSearchService(PenguinRandomHouseSearchClient(), penguinIsbnService)
             )
         }
+        val MANGAS: Set<IService> by lazy { setOf(JikanMangaService(JikanMangaClient())) }
     }
 }
