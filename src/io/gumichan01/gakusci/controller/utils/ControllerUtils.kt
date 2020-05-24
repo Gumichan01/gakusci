@@ -86,6 +86,7 @@ private fun getSearchTypeFrom(parameters: Parameters): SearchType? {
         when (it) {
             SearchType.RESEARCH.value -> SearchType.RESEARCH
             SearchType.BOOKS.value -> SearchType.BOOKS
+            SearchType.MANGAS.value -> SearchType.MANGAS
             else -> null
         }
     }
