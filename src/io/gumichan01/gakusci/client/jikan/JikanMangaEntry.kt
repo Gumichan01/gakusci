@@ -1,5 +1,9 @@
 package io.gumichan01.gakusci.client.jikan
 
+import java.time.LocalDate
+import java.time.ZoneId
+import java.util.*
+
 class JikanMangaEntry(
     val title: String,
     val url: String,
@@ -7,5 +11,13 @@ class JikanMangaEntry(
     val imageUrl: String? = null
 ) {
 
-    fun label() = "$title (${publicationPeriod.startDate} - ${publicationPeriod.endDate ?: ""})"
+    fun label(): String {
+        val localStartDate: LocalDate = publicationPeriod.startDate.toLocalDate()
+        val localEndDate: LocalDate? = publicationPeriod.endDate?.toLocalDate()
+        return "$title (${localStartDate.year} - ${localEndDate?.year ?: ""})"
+    }
+
+    private fun Date.toLocalDate(): LocalDate {
+        return toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+    }
 }
