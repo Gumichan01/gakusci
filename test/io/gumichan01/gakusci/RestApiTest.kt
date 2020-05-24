@@ -139,22 +139,38 @@ class RestApiTest {
     @Test
     fun `test REST Web-service API v1 search, query with numPerPage greater than max_results - return Bad request`() {
         withTestApplication({ gakusciModule() }) {
-            handleRequest(HttpMethod.Get, "/api/v1/researches/?q=babcd&max_results=10&start=1&num_per_page=100000").apply {
+            handleRequest(
+                HttpMethod.Get,
+                "/api/v1/researches/?q=babcd&max_results=10&start=1&num_per_page=100000"
+            ).apply {
                 assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
             }
         }
     }
 
     @Test
-    fun `test REST Web-service API v1 search, query with max_results greater than the maximum number of entries allowed by the application - return Bad request`() {
+    fun `test REST API v1, max_results greater than the maximum number of entries allowed by the app - Bad request`() {
         withTestApplication({ gakusciModule() }) {
             val bigStartValue = 1 shl 20
-                handleRequest(
-                    HttpMethod.Get,
-                    "/api/v1/researches/?q=aabcd&start=0&max_results=$bigStartValue&num_per_page=2"
-                ).apply {
-                    assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
-                }
+            handleRequest(
+                HttpMethod.Get,
+                "/api/v1/researches/?q=aabcd&start=0&max_results=$bigStartValue&num_per_page=2"
+            ).apply {
+                assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
+            }
+        }
+    }
+
+    @Test
+    fun `test REST API v1, max_results greater than the maximum number of entries allowed by the app (no start param) - Bad request`() {
+        withTestApplication({ gakusciModule() }) {
+            val bigStartValue = 1 shl 20
+            handleRequest(
+                HttpMethod.Get,
+                "/api/v1/researches/?q=aabcd&max_results=$bigStartValue"
+            ).apply {
+                assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
+            }
         }
     }
 }
