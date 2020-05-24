@@ -15,7 +15,8 @@ class JikanMangaService(private val jikanClient: IClient<JikanMangaResponse>) : 
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
         return cache.getOrUpdateCache(queryParam) {
             jikanClient.retrieveResults(queryParam)?.let { response ->
-                val results = response.entries.map { entry -> BookEntry(entry.label(), entry.url, entry.imageUrl) }
+                val results =
+                    response.entries.map { entry -> BookEntry(entry.label(), entry.url, entry.imageUrl ?: "") }
                 ServiceResponse(results.size, results)
             }
         }
