@@ -13,13 +13,14 @@ fun retrieveWebParam(queryParameters: Parameters): Pair<QueryParam?, String> {
         val numPerPage = 10
         val start = queryParameters["start"]?.toInt() ?: 0
         val searchType: SearchType? = getSearchTypeFrom(queryParameters)
-        // The webapp must limitate the number of maximum entries in the
+        // The webapp must not retrieve more than 2000 entries, for the sake of performance
         val rows = if (start + numPerPage > defaultRows) {
             if (start * 2 > MAX_ENTRIES) MAX_ENTRIES else start * 2
         } else defaultRows
 
         when {
             query.isBlank() -> Pair(null, "Bad request: query parameter 'q' is blank")
+            query.isTooShort() -> Pair(null, "Bad request: query parameter 'q' is too short (it must have at least 3 characters)")
             start < 0 -> Pair(null, "Bad request: negative start value: $start")
             start > rows -> Pair(null, "Bad request: start is greater than max_results")
             searchType == null -> Pair(null, "Bad request: no query parameter 'stype' provided")
@@ -94,6 +95,10 @@ private fun getApiSearchTypeFrom(parameters: Parameters): SearchType? {
             else -> null
         }
     }
+}
+
+private fun String.isTooShort(): Boolean {
+    return length < 3
 }
 
 fun SearchResponse.isEmpty(): Boolean {

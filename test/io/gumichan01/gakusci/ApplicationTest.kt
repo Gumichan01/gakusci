@@ -124,6 +124,17 @@ class ApplicationTest {
     }
 
     @Test
+    fun `webapp, query too short (less than 3 characters) - returns Bad request`() {
+        withTestApplication({ gakusciModule() }) {
+            handleRequest(HttpMethod.Get, "/search/?q=a&stype=research").apply {
+                with(response) {
+                    assertThat(status()).isEqualTo(HttpStatusCode.BadRequest)
+                }
+            }
+        }
+    }
+
+    @Test
     fun `webapp, no search type for a query - returns Bad request`() {
         withTestApplication({ gakusciModule() }) {
             handleRequest(HttpMethod.Get, "/search/?q=science").apply {
