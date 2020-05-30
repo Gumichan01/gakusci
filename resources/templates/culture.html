@@ -31,7 +31,7 @@
     <div class="container">
         <div class="entry" th:each="entry : ${entries}">
             <div class="cover">
-                <img th:src="${entry.thumbnailUrl}"/>
+                <img th:src="${entry.cover()}"/>
             </div>
             <div class="content">
                 <p class="entry_label" th:text="${entry.label()}"></p>
