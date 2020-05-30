@@ -11,8 +11,6 @@ import io.gumichan01.gakusci.domain.model.entry.BookEntry
 import io.gumichan01.gakusci.domain.search.cache.CacheHandler
 import io.gumichan01.gakusci.domain.search.cache.SearchCache
 import io.gumichan01.gakusci.domain.service.IService
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class PenguinRandomHouseBookService(private val bookClient: IClient<PenguinRandomHouseBookResponse>) : IService {
 
@@ -24,25 +22,22 @@ class PenguinRandomHouseBookService(private val bookClient: IClient<PenguinRando
         return cache.getOrUpdateCache(queryParam) {
             generateBookNumberFromText(queryParam.query)?.let { bookNumber ->
                 if (bookNumber.type == BookNumberType.ISBN && isValidISBN13(bookNumber.value)) {
-                    bookClient.retrieveResults(queryParam.copy(query = bookNumber.value))?.let { response ->
-                        ServiceResponse(1, listOf(BookEntry(label(response), link(response), thumbnail(response))))
+                    bookClient.retrieveResults(queryParam.copy(query = bookNumber.value))?.let {
+                        ServiceResponse(
+                            1,
+                            listOf(BookEntry(it.author, it.title, it.publishDate, it.isbn, it.link(), it.thumbnail()))
+                        )
                     }
                 } else null
             }
         }
     }
 
-    private fun label(bookResponse: PenguinRandomHouseBookResponse): String {
-        val pattern: DateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
-        val date: LocalDate = LocalDate.parse(bookResponse.publishDate, pattern)
-        return bookResponse.run { "$title, $author, ${date.year}" }
+    private fun PenguinRandomHouseBookResponse.thumbnail(): String {
+        return this@PenguinRandomHouseBookService.thumbnailLink + this.isbn
     }
 
-    private fun thumbnail(bookResponse: PenguinRandomHouseBookResponse): String {
-        return thumbnailLink + bookResponse.isbn
-    }
-
-    private fun link(bookResponse: PenguinRandomHouseBookResponse): String {
-        return bookLink + bookResponse.isbn
+    private fun PenguinRandomHouseBookResponse.link(): String {
+        return this@PenguinRandomHouseBookService.bookLink + this.isbn
     }
 }

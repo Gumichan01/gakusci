@@ -33,8 +33,8 @@ internal class OpenLibraryBookServiceTest {
         assertThat(response?.totalResults).isEqualTo(1)
         assertThat(response?.entries).contains(
             BookEntry(
-                "1421500574", "http://openlibrary.org/books/OL8490428M/Battle_Angel_Alita",
-                "https://covers.openlibrary.org/b/id/764825-S.jpg"
+                bibKey = "1421500574", url = "http://openlibrary.org/books/OL8490428M/Battle_Angel_Alita",
+                thumbnailUrl = "https://covers.openlibrary.org/b/id/764825-S.jpg"
             )
         )
     }

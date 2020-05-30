@@ -12,13 +12,7 @@ data class OpenLibrarySearchEntry(
     @JsonProperty("key") val key: String, // This is the path to the resource from https://openlibrary.org
     @JsonProperty("first_publish_year") val firstPublishYear: Int
 ) {
-    fun label(): String {
-        val author = authors()
-        val date = publishDate()
-        return "$title, $author, $date"
-    }
-
-    private fun authors(): String {
+    fun authors(): String {
         return when {
             authorNames == null || authorNames.isEmpty() -> "Unknown author"
             authorNames.size > 1 -> authorNames[0] + " et al."
@@ -26,7 +20,7 @@ data class OpenLibrarySearchEntry(
         }
     }
 
-    private fun publishDate(): String {
+    fun publishDate(): String {
         return "(${if (firstPublishYear == 0) "n.d" else firstPublishYear.toString()})"
     }
 

@@ -18,8 +18,11 @@ class OpenLibraryBookService(private val openLibBookClient: IClient<OpenLibraryB
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
         return cache.getOrUpdateCache(queryParam) {
             generateBookNumberFromText(queryParam.query)?.let { bookNumber ->
-                openLibBookClient.retrieveResults(queryParam.copy(query = bookNumber.format()))?.let { book ->
-                    ServiceResponse(1, listOf(BookEntry(book.bibKey, book.infoUrl, book.thumbnailUrl ?: "")))
+                openLibBookClient.retrieveResults(queryParam.copy(query = bookNumber.format()))?.let {
+                    ServiceResponse(
+                        1,
+                        listOf(BookEntry(bibKey = it.bibKey, url = it.infoUrl, thumbnailUrl = it.thumbnailUrl ?: ""))
+                    )
                 }
             }
         }

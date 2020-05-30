@@ -42,9 +42,10 @@ class PenguinRandomHouseSearchServiceTest {
                     1,
                     listOf(
                         BookEntry(
-                            "marx",
-                            "https//penguinrandomhouse.com/search/site?q=",
-                            "https://penguinrandomhouse.com/cover/"
+                            author = "marx",
+                            bibKey = "marx",
+                            url = "https//penguinrandomhouse.com/search/site?q=",
+                            thumbnailUrl = "https://penguinrandomhouse.com/cover/"
                         )
                     )
                 )
@@ -53,9 +54,9 @@ class PenguinRandomHouseSearchServiceTest {
                     1,
                     listOf(
                         BookEntry(
-                            "marx2",
-                            "https//penguinrandomhouse.com/search/site?q=",
-                            "https://penguinrandomhouse.com/cover/"
+                            bibKey = "marx2",
+                            url = "https//penguinrandomhouse.com/search/site?q=",
+                            thumbnailUrl = "https://penguinrandomhouse.com/cover/"
                         )
                     )
                 )
@@ -77,7 +78,7 @@ class PenguinRandomHouseSearchServiceTest {
         Assertions.assertThat(result).isNotNull
         Assertions.assertThat(result?.entries?.first()).isInstanceOf(BookEntry::class.java)
         val bookEntry: BookEntry = result?.entries?.first() as BookEntry
-        Assertions.assertThat(bookEntry.label).containsIgnoringCase("marx")
+        Assertions.assertThat(bookEntry.author).containsIgnoringCase("marx")
         Assertions.assertThat(bookEntry.url).startsWith("https").contains("penguinrandomhouse.com/search/site?q=")
         Assertions.assertThat(bookEntry.thumbnailUrl).startsWith("https").contains("penguinrandomhouse.com/cover/")
     }

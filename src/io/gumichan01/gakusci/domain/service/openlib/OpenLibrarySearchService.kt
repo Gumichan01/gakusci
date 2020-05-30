@@ -22,7 +22,13 @@ class OpenLibrarySearchService(private val openLibrarySearchClient: IClient<Open
                 val maxNumFound = 100
                 val numFound = (if (it.numFound < maxNumFound) it.numFound else maxNumFound)
                 val entries: List<IResultEntry> = it.docs?.asSequence()?.map { doc ->
-                    BookEntry(doc.label(), doc.link(), doc.thumbnail())
+                    BookEntry(
+                        doc.authors(),
+                        doc.title,
+                        doc.publishDate(),
+                        url = doc.link(),
+                        thumbnailUrl = doc.thumbnail()
+                    )
                 }?.take(numFound)?.toList() ?: emptyList()
                 ServiceResponse(numFound, entries)
             }
