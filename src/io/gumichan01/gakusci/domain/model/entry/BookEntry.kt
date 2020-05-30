@@ -1,6 +1,5 @@
 package io.gumichan01.gakusci.domain.model.entry
 
-// TODO Redefine the book entry (title, author)
 data class BookEntry(
     val title: String? = null,
     val author: String? = null,
@@ -10,10 +9,16 @@ data class BookEntry(
     val thumbnailUrl: String
 ) : IResultEntry {
     override fun label(): String {
-        return StringBuilder()
-            .append("$title ,")
-            .append(if (author != null) " $author," else "")
-            .append(" $date").toString()
+        return StringBuilder().apply {
+            if (title != null)
+                append("$title")
+            if (author != null)
+                append(", $author")
+            if (date != null)
+                append(", $date")
+            if (bibKey != null)
+                append(" - $bibKey")
+        }.toString()
     }
 
     override fun link(): String = url
