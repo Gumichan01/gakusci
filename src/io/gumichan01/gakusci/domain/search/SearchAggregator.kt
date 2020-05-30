@@ -11,6 +11,14 @@ import io.gumichan01.gakusci.client.theses.ThesesClient
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.service.*
+import io.gumichan01.gakusci.domain.service.arxiv.ArxivService
+import io.gumichan01.gakusci.domain.service.hal.HalService
+import io.gumichan01.gakusci.domain.service.jikan.JikanMangaService
+import io.gumichan01.gakusci.domain.service.openlib.OpenLibraryBookService
+import io.gumichan01.gakusci.domain.service.openlib.OpenLibrarySearchService
+import io.gumichan01.gakusci.domain.service.penguin.PenguinRandomHouseBookService
+import io.gumichan01.gakusci.domain.service.penguin.PenguinRandomHouseSearchService
+import io.gumichan01.gakusci.domain.service.theses.ThesesService
 import io.gumichan01.gakusci.domain.utils.slice
 import io.gumichan01.gakusci.domain.utils.take
 import kotlinx.coroutines.ExperimentalCoroutinesApi

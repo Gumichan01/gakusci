@@ -3,6 +3,7 @@ package io.gumichan01.gakusci.domain.service
 import io.gumichan01.gakusci.client.openlib.OpenLibrarySearchClient
 import io.gumichan01.gakusci.client.openlib.OpenLibrarySearchResponse
 import io.gumichan01.gakusci.domain.model.QueryParam
+import io.gumichan01.gakusci.domain.service.openlib.OpenLibrarySearchService
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.coEvery
 import io.mockk.mockk

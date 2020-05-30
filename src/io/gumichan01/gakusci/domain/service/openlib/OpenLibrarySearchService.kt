@@ -1,4 +1,4 @@
-package io.gumichan01.gakusci.domain.service
+package io.gumichan01.gakusci.domain.service.openlib
 
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.openlib.OpenLibrarySearchResponse
@@ -8,6 +8,7 @@ import io.gumichan01.gakusci.domain.model.entry.BookEntry
 import io.gumichan01.gakusci.domain.model.entry.IResultEntry
 import io.gumichan01.gakusci.domain.search.cache.CacheHandler
 import io.gumichan01.gakusci.domain.search.cache.SearchCache
+import io.gumichan01.gakusci.domain.service.IService
 
 class OpenLibrarySearchService(private val openLibrarySearchClient: IClient<OpenLibrarySearchResponse>) : IService {
 

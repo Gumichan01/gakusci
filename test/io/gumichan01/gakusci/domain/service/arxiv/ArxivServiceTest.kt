@@ -1,10 +1,11 @@
-package io.gumichan01.gakusci.domain.service
+package io.gumichan01.gakusci.domain.service.arxiv
 
 import io.gumichan01.gakusci.client.arxiv.ArxivClient
 import io.gumichan01.gakusci.client.arxiv.ArxivResponse
 import io.gumichan01.gakusci.client.arxiv.ArxivResultEntry
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
+import io.gumichan01.gakusci.domain.service.arxiv.ArxivService
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.coEvery
 import io.mockk.mockk

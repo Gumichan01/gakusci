@@ -6,6 +6,7 @@ import io.gumichan01.gakusci.client.jikan.JikanMangaEntry
 import io.gumichan01.gakusci.client.jikan.JikanMangaResponse
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
+import io.gumichan01.gakusci.domain.service.jikan.JikanMangaService
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.coEvery
 import io.mockk.mockk

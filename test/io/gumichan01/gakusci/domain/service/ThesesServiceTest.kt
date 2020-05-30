@@ -6,6 +6,7 @@ import io.gumichan01.gakusci.client.theses.ThesesResponseBody
 import io.gumichan01.gakusci.client.theses.ThesesResultEntry
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
+import io.gumichan01.gakusci.domain.service.theses.ThesesService
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.coEvery
 import io.mockk.mockk
