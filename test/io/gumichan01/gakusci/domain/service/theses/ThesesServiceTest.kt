@@ -1,4 +1,4 @@
-package io.gumichan01.gakusci.domain.service
+package io.gumichan01.gakusci.domain.service.theses
 
 import io.gumichan01.gakusci.client.theses.ThesesClient
 import io.gumichan01.gakusci.client.theses.ThesesResponse
@@ -6,7 +6,6 @@ import io.gumichan01.gakusci.client.theses.ThesesResponseBody
 import io.gumichan01.gakusci.client.theses.ThesesResultEntry
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
-import io.gumichan01.gakusci.domain.service.theses.ThesesService
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -21,16 +20,16 @@ class ThesesServiceTest {
         coEvery { retrieveResults(QueryParam("lorem", SearchType.RESEARCH)) } returns ThesesResponse(
             ThesesResponseBody(
                 3, 0, listOf(
-                    ThesesResultEntry("1","ipsum", "", "soutenue", "oui", Date(0L)),
-                    ThesesResultEntry("2","ipsum2", "", "soutenue", "non", Date(0L)),
-                    ThesesResultEntry("3","ipsum3", "", "enCours", "non", Date(0L))
+                    ThesesResultEntry("1", "ipsum", "", "soutenue", "oui", Date(0L)),
+                    ThesesResultEntry("2", "ipsum2", "", "soutenue", "non", Date(0L)),
+                    ThesesResultEntry("3", "ipsum3", "", "enCours", "non", Date(0L))
                 )
             )
         )
         coEvery { retrieveResults(QueryParam("ipsum", SearchType.RESEARCH)) } returns ThesesResponse(
             ThesesResponseBody(
                 1, 0, listOf(
-                    ThesesResultEntry("4","para bellum", "", "soutenue", "non", Date(0L))
+                    ThesesResultEntry("4", "para bellum", "", "soutenue", "non", Date(0L))
                 )
             )
         )

@@ -1,10 +1,9 @@
-package io.gumichan01.gakusci.domain.service
+package io.gumichan01.gakusci.domain.service.openlib
 
 import io.gumichan01.gakusci.client.openlib.OpenLibraryBookClient
 import io.gumichan01.gakusci.client.openlib.OpenLibraryBookResponse
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.entry.BookEntry
-import io.gumichan01.gakusci.domain.service.openlib.OpenLibraryBookService
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.coEvery
 import io.mockk.mockk

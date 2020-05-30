@@ -1,4 +1,4 @@
-package io.gumichan01.gakusci.domain.service
+package io.gumichan01.gakusci.domain.service.hal
 
 import io.gumichan01.gakusci.client.hal.HalClient
 import io.gumichan01.gakusci.client.hal.HalResponse
@@ -6,7 +6,6 @@ import io.gumichan01.gakusci.client.hal.HalResponseBody
 import io.gumichan01.gakusci.client.hal.HalResultEntry
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
-import io.gumichan01.gakusci.domain.service.hal.HalService
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.coEvery
 import io.mockk.mockk
