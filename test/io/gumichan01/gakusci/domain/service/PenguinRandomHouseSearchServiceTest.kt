@@ -1,11 +1,10 @@
-package io.gumichan01.gakusci.domain
+package io.gumichan01.gakusci.domain.service
 
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseSearchResponse
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.model.entry.BookEntry
-import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.coEvery
 import io.mockk.mockk

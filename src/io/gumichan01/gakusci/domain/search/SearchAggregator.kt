@@ -8,7 +8,6 @@ import io.gumichan01.gakusci.client.openlib.OpenLibrarySearchClient
 import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseBookClient
 import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseSearchClient
 import io.gumichan01.gakusci.client.theses.ThesesClient
-import io.gumichan01.gakusci.domain.PenguinRandomHouseSearchService
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.service.*
@@ -39,7 +38,7 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
 
         fun withResearchServices(): Builder = apply { services.addAll(DomainSearchType.RESEARCH) }
         fun withBookServices(): Builder = apply { services.addAll(DomainSearchType.BOOKS) }
-        fun withMangaServices() : Builder = apply {services.addAll(DomainSearchType.MANGAS)}
+        fun withMangaServices(): Builder = apply { services.addAll(DomainSearchType.MANGAS) }
 
         fun build(): SearchAggregator {
             return SearchAggregator(SearchLauncher(services))

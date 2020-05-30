@@ -1,4 +1,4 @@
-package io.gumichan01.gakusci.domain
+package io.gumichan01.gakusci.domain.service
 
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseSearchResponse
