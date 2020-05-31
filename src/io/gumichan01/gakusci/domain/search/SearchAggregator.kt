@@ -2,6 +2,7 @@ package io.gumichan01.gakusci.domain.search
 
 import io.gumichan01.gakusci.client.arxiv.ArxivClient
 import io.gumichan01.gakusci.client.hal.HalClient
+import io.gumichan01.gakusci.client.jikan.JikanAnimeClient
 import io.gumichan01.gakusci.client.jikan.JikanMangaClient
 import io.gumichan01.gakusci.client.openlib.OpenLibraryBookClient
 import io.gumichan01.gakusci.client.openlib.OpenLibrarySearchClient
@@ -10,9 +11,10 @@ import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseSearchClient
 import io.gumichan01.gakusci.client.theses.ThesesClient
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
-import io.gumichan01.gakusci.domain.service.*
+import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.service.arxiv.ArxivService
 import io.gumichan01.gakusci.domain.service.hal.HalService
+import io.gumichan01.gakusci.domain.service.jikan.JikanAnimeService
 import io.gumichan01.gakusci.domain.service.jikan.JikanMangaService
 import io.gumichan01.gakusci.domain.service.openlib.OpenLibraryBookService
 import io.gumichan01.gakusci.domain.service.openlib.OpenLibrarySearchService
@@ -47,6 +49,7 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
         fun withResearchServices(): Builder = apply { services.addAll(DomainSearchType.RESEARCH) }
         fun withBookServices(): Builder = apply { services.addAll(DomainSearchType.BOOKS) }
         fun withMangaServices(): Builder = apply { services.addAll(DomainSearchType.MANGAS) }
+        fun withAnimeServices(): Builder = apply { services.addAll((DomainSearchType.ANIME)) }
 
         fun build(): SearchAggregator {
             return SearchAggregator(SearchLauncher(services))
@@ -67,5 +70,6 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
             )
         }
         val MANGAS: Set<IService> by lazy { setOf(JikanMangaService(JikanMangaClient())) }
+        val ANIME: Set<IService> by lazy { setOf(JikanAnimeService(JikanAnimeClient())) }
     }
 }
