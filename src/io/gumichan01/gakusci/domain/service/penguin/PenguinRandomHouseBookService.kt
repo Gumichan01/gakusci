@@ -12,7 +12,6 @@ import io.gumichan01.gakusci.domain.search.cache.CacheHandler
 import io.gumichan01.gakusci.domain.search.cache.SearchCache
 import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.utils.toLocalDate
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class PenguinRandomHouseBookService(private val bookClient: IClient<PenguinRandomHouseBookResponse>) : IService {
@@ -44,11 +43,6 @@ class PenguinRandomHouseBookService(private val bookClient: IClient<PenguinRando
                 } else null
             }
         }
-    }
-
-    @Deprecated("remove it")
-    private fun String.toLocalDate(): LocalDate {
-        return LocalDate.parse(this, DateTimeFormatter.ofPattern("MM/dd/yyyy"))
     }
 
     private fun PenguinRandomHouseBookResponse.thumbnail(): String {
