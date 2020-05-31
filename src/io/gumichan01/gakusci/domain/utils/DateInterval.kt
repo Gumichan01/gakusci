@@ -1,4 +1,4 @@
-package io.gumichan01.gakusci.client.jikan
+package io.gumichan01.gakusci.domain.utils
 
 import java.util.*
 

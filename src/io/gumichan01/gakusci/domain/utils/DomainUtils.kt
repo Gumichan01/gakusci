@@ -1,6 +1,5 @@
 package io.gumichan01.gakusci.domain.utils
 
-import io.gumichan01.gakusci.client.jikan.DateInterval
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import java.time.LocalDate
 import java.time.ZoneId

@@ -6,6 +6,7 @@ import io.github.bucket4j.Refill
 import io.github.bucket4j.local.LocalBucket
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.domain.model.QueryParam
+import io.gumichan01.gakusci.domain.utils.DateInterval
 import moe.ganen.jikankt.JikanKt
 import moe.ganen.jikankt.models.search.MangaSearchQuery
 import java.time.Duration

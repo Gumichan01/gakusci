@@ -1,6 +1,6 @@
 package io.gumichan01.gakusci.domain.model.entry
 
-import io.gumichan01.gakusci.client.jikan.DateInterval
+import io.gumichan01.gakusci.domain.utils.DateInterval
 import io.gumichan01.gakusci.domain.utils.toText
 
 data class MangaEntry(
