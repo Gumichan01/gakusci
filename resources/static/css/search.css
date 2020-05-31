@@ -28,6 +28,10 @@ h1, p, .result, form {
     padding: 1em;
 }
 
+.entry_link {
+    color: green;
+}
+
 img {
     width: 128px;
     height: 180px;

@@ -33,11 +33,11 @@
     <div class="container">
         <div class="entry" th:each="entry : ${entries}">
             <div class="cover">
-                <img th:src="${entry.cover()}"/>
+                <a th:href="${entry.link()}"><img th:src="${entry.cover()}"/></a>
             </div>
             <div class="content">
-                <p class="entry_label" th:text="${entry.label()}"></p>
-                <p><a th:href="${entry.link()}" th:text="${entry.link()}"></a></p>
+                <p><a th:href="${entry.link()}" th:text="${entry.label()}"></a></p>
+                <p><small><a class="entry_link" th:href="${entry.link()}" th:text="${entry.link()}"></a></small></p>
             </div>
         </div>
     </div>
