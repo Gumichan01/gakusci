@@ -11,6 +11,10 @@ import io.gumichan01.gakusci.domain.model.entry.BookEntry
 import io.gumichan01.gakusci.domain.search.cache.CacheHandler
 import io.gumichan01.gakusci.domain.search.cache.SearchCache
 import io.gumichan01.gakusci.domain.service.IService
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class PenguinRandomHouseBookService(private val bookClient: IClient<PenguinRandomHouseBookResponse>) : IService {
 
@@ -25,12 +29,25 @@ class PenguinRandomHouseBookService(private val bookClient: IClient<PenguinRando
                     bookClient.retrieveResults(queryParam.copy(query = bookNumber.value))?.let {
                         ServiceResponse(
                             1,
-                            listOf(BookEntry(it.author, it.title, it.publishDate, it.isbn, it.link(), it.thumbnail()))
+                            listOf(
+                                BookEntry(
+                                    it.author,
+                                    it.title,
+                                    it.publishDate.toLocalDate().year.toString(),
+                                    it.isbn,
+                                    it.link(),
+                                    it.thumbnail()
+                                )
+                            )
                         )
                     }
                 } else null
             }
         }
+    }
+
+    private fun String.toLocalDate(): LocalDate {
+        return LocalDate.parse(this, DateTimeFormatter.ofPattern("dd/MM/yyyy"))
     }
 
     private fun PenguinRandomHouseBookResponse.thumbnail(): String {

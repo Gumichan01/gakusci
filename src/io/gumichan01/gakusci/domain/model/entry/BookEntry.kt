@@ -15,7 +15,7 @@ data class BookEntry(
             if (author != null)
                 append(", $author")
             if (date != null)
-                append(", $date")
+                append(" ($date)")
             if (bibKey != null)
                 append(" - $bibKey")
         }.toString()

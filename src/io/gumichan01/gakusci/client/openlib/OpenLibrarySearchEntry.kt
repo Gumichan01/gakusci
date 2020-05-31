@@ -21,7 +21,7 @@ data class OpenLibrarySearchEntry(
     }
 
     fun publishDate(): String {
-        return "(${if (firstPublishYear == 0) "n.d" else firstPublishYear.toString()})"
+        return if (firstPublishYear == 0) "n.d" else firstPublishYear.toString()
     }
 
     fun link(): String = "https://openlibrary.org$key"

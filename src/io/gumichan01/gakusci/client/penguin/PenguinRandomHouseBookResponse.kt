@@ -2,6 +2,7 @@ package io.gumichan01.gakusci.client.penguin
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.LocalDate
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class PenguinRandomHouseBookResponse(
