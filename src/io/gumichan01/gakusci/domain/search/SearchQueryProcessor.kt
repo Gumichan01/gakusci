@@ -18,6 +18,7 @@ class SearchQueryProcessor {
                 SearchType.RESEARCH, SearchType.RESEARCHES -> withResearchServices()
                 SearchType.BOOKS -> withBookServices()
                 SearchType.MANGAS -> withMangaServices()
+                SearchType.ANIME -> TODO("Not implemented yet")
             }
         }.build().retrieveResults(queryParam)
     }
