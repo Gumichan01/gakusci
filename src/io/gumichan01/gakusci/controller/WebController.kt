@@ -57,7 +57,8 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
                 "numPerPage" to numPerPage,
                 SearchType.RESEARCH.value to (queryParam.searchType == SearchType.RESEARCH),
                 SearchType.BOOKS.value to (queryParam.searchType == SearchType.BOOKS),
-                SearchType.MANGAS.value to (queryParam.searchType == SearchType.MANGAS)
+                SearchType.MANGAS.value to (queryParam.searchType == SearchType.MANGAS),
+                SearchType.ANIME.value to (queryParam.searchType == SearchType.ANIME)
             )
         )
     }
