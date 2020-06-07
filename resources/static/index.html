@@ -11,8 +11,11 @@
     <p>/!\ This webapp is still in development /!\</p>
     <p><strong>DO NOT USE IT IN PRODUCTION</strong></p>
 
-    <form action="/search">
-        <input id="query" type="text" name="q"/>
+    <form autocomplete="off" action="/search">
+        <div class="autocomplete" style="width:300px;">
+            <input id="query" type="text" name="q"/>
+        </div>
+
         <input id="search" type="submit"/><br>
         <input id="type_research" type="radio" name="stype" value="research" checked/>
         Research papers/articles
@@ -23,6 +26,7 @@
         <input id="type_anime" type="radio" name="stype" value="anime"/>
         Anime
     </form>
+    <script src="/js/metasearch.js"></script>
 </div>
 </body>
 </html>

@@ -10,7 +10,9 @@
     <h1>Gakusci</h1>
 
     <form action="/search">
-        <input id="query" type="text" name="q" th:value="${query}"/>
+        <div class="autocomplete" style="width:300px;">
+            <input id="query" type="text" name="q" th:value="${query}"/>
+        </div>
         <input id="search" type="submit"/><br>
         <input id="type_all" type="radio" name="stype" value="research" th:checked="${research}"/>
         Research papers/articles
