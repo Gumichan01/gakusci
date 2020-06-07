@@ -1,8 +1,11 @@
 'use strict';
 
-var services= ["!arxiv", "!hal"]
+var researchServices = ["!arxiv", "!hal"]
+var bookServices = ["!openlib", "!penguin"]
+var mangaServices = ["!manga", "!kitsumangas"]
+var animeServices = ["!anidb", "!kitsuanime"]
 
-function autocomplete(inp, arr) {
+function autocomplete(inp, research, books, mangas, animes) {
   /*the autocomplete function takes two arguments,
   the text field element and an array of possible autocompleted values:*/
   var currentFocus;
@@ -13,6 +16,24 @@ function autocomplete(inp, arr) {
       closeAllLists();
       if (!val) { return false;}
       currentFocus = -1;
+
+      // Select the list of services related to the type of search
+      var tresearch = document.getElementById("type_research")
+      var tbooks = document.getElementById("type_books")
+      var tmanga = document.getElementById("type_manga")
+      var tanime = document.getElementById("type_anime")
+      var arr;
+
+      if (tresearch.checked) {
+        arr = research
+      } else if (tbooks.checked) {
+        arr = books
+      } else if (tmanga.checked) {
+        arr = mangas
+      } else if (tanime.checked) {
+        arr = animes
+      }
+
       /*create a DIV element that will contain the items (values):*/
       a = document.createElement("DIV");
       a.setAttribute("id", this.id + "autocomplete-list");
@@ -97,4 +118,4 @@ document.addEventListener("click", function (e) {
 
 }
 
-autocomplete(document.getElementById("query"), services);
+autocomplete(document.getElementById("query"), researchServices, bookServices, mangaServices, animeServices);
