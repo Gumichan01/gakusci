@@ -5,12 +5,13 @@
     <title th:text="${query + ' - Gakusci'}"></title>
     <link rel="stylesheet" type="text/css" href="/css/search.css">
     <link rel="stylesheet" type="text/css" href="/css/form.css">
+    <script src="/js/metasearch.js" defer></script>
 </head>
 <body>
 <div>
     <h1>Gakusci</h1>
 
-    <form action="/search">
+    <form autocomplete="off" action="/search">
         <div class="autocomplete" style="width:300px;">
             <input id="query" type="text" name="q" th:value="${query}"/>
         </div>
@@ -31,7 +32,8 @@
         <p>No document found for <strong th:text="${query}"></strong></p>
     </div>
 
-    <p class="result" th:if="${not emptyEntries}" th:text="${numFound + ' results. Only the first 2000 entries at most are reachable.'}"></p>
+    <p class="result" th:if="${not emptyEntries}"
+       th:text="${numFound + ' results. Only the first 2000 entries at most are reachable.'}"></p>
 
     <div class="container" th:each="entry : ${entries}">
         <p class="entry_label" th:text="${entry.label()}"></p>
@@ -78,10 +80,8 @@
                 <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=' + lastStart}"> &gt;&gt;| </a>
             </li>
         </ul>
-
     </div>
-
-    <script src="/js/search.js"></script>
+    <script src="/js/search.js" async></script>
 </div>
 </body>
 </html>
