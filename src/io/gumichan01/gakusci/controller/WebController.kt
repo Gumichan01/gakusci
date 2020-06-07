@@ -1,7 +1,6 @@
 package io.gumichan01.gakusci.controller
 
-import io.gumichan01.gakusci.controller.utils.MAX_ENTRIES
-import io.gumichan01.gakusci.controller.utils.retrieveWebParam
+import io.gumichan01.gakusci.controller.utils.*
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.search.SearchQueryProcessor
@@ -23,12 +22,14 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
     private val logger: Logger = LoggerFactory.getLogger(WebController::class.java)
 
     suspend fun handleRequest(call: ApplicationCall) {
-        val (queryParam, message) = retrieveWebParam(call.request.queryParameters)
-        if (queryParam == null) {
-            call.respond(HttpStatusCode.BadRequest, message)
-        } else {
-            logger.trace("$queryParam")
-            call.respond(generateThymeleafContent(queryParam, searchQueryProcessor.proceed(queryParam)))
+        when (val resultParam: IRequestParamResult = retrieveWebParam(call.request.queryParameters)) {
+            is BadRequest -> call.respond(HttpStatusCode.BadRequest, resultParam.message)
+            is BangRequest -> TODO("Set redirection URL") // call.respondRedirect("http://localhost:8080", false)
+            is RequestParam -> {
+                logger.trace(resultParam.query)
+                val queryParam = resultParam.toQueryParam()
+                call.respond(generateThymeleafContent(queryParam, searchQueryProcessor.proceed(queryParam)))
+            }
         }
     }
 

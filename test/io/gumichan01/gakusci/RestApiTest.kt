@@ -173,4 +173,13 @@ class RestApiTest {
             }
         }
     }
+
+    @Test
+    fun `Redirect query in REST API - return bad request`() {
+        withTestApplication({ gakusciModule() }) {
+            handleRequest(HttpMethod.Get, "/search/?q=!hal").apply {
+                assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
+            }
+        }
+    }
 }

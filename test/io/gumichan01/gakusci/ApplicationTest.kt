@@ -176,5 +176,14 @@ class ApplicationTest {
             }
         }
     }
+
+//    @Test
+    fun `Redirect query - return redirect`() {
+        withTestApplication({ gakusciModule() }) {
+            handleRequest(HttpMethod.Get, "/search/?q=!hal").apply {
+                assertThat(response.status()).isEqualTo(HttpStatusCode.Found)
+            }
+        }
+    }
 }
 
