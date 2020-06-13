@@ -44,7 +44,7 @@ fun retrieveApiParam(queryParameters: Parameters, pathParameters: Parameters): I
                 query.isBlank() -> BadRequest("Query parameter 'q' is blank")
                 query.isTooShort() ->
                     BadRequest("Query parameter 'q' is too short (it must have at least 3 characters)")
-                query.startsWith(BANG) -> BangRequest(query)
+                query.startsWith(BANG) -> BadRequest("Bang request is not allowed in the REST API")
                 rows != null && rows < 0 -> BadRequest("Negative 'max_results' value: $rows")
                 rows != null && rows > MAX_ENTRIES ->
                     BadRequest("Cannot request 'max_results' greater than $MAX_ENTRIES")
