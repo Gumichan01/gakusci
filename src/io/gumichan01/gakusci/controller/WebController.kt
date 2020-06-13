@@ -25,7 +25,11 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
     suspend fun handleRequest(call: ApplicationCall) {
         when (val resultParam: IRequestParamResult = retrieveWebParam(call.request.queryParameters)) {
             is BadRequest -> call.respond(HttpStatusCode.BadRequest, resultParam.message)
-            is BangRequest -> call.respondRedirect(retrieveUrlRedirectOfService(resultParam.request), false)
+            is BangRequest -> {
+                retrieveUrlRedirectOfService(resultParam.request)?.let { redirectUrl ->
+                    call.respondRedirect(redirectUrl, false)
+                } ?: call.respond(HttpStatusCode.BadRequest, "Invalid Bang request : ${resultParam.request}")
+            }
             is RequestParam -> {
                 logger.trace(resultParam.query)
                 val queryParam = resultParam.toQueryParam()
@@ -34,7 +38,7 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
         }
     }
 
-    private fun retrieveUrlRedirectOfService(request: String): String {
+    private fun retrieveUrlRedirectOfService(request: String): String? {
         val bangRequest = request.substringBefore(" ")
         val query = request.substringAfter(" ")
         return when (bangRequest) {
@@ -57,8 +61,8 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
             "!anime" -> "https://myanimelist.net/anime.php?q=%s"
             "!anilist" -> "https://anilist.co/search/anime?sort=SEARCH_MATCH&search=%s"
             "!kitsuanime" -> "https://kitsu.io/anime?text=%s"
-            else -> TODO("Not exhaustive")
-        }.format(query)
+            else -> null
+        }?.format(query)
     }
 
     private fun generateThymeleafContent(queryParam: QueryParam, response: SearchResponse): ThymeleafContent {

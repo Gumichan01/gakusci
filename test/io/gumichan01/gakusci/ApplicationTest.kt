@@ -185,5 +185,14 @@ class ApplicationTest {
             }
         }
     }
+
+    @Test
+    fun `Redirect query with bad bang request - return bad request`() {
+        withTestApplication({ gakusciModule() }) {
+            handleRequest(HttpMethod.Get, "/search/?q=!invalidbang").apply {
+                assertThat(response.status()).isEqualTo(HttpStatusCode.BadRequest)
+            }
+        }
+    }
 }
 
