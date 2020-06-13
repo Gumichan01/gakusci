@@ -65,9 +65,13 @@ function autocomplete(inp, research, books, mangas, animes) {
       if (e.keyCode == 40) {    // DOWN key pressed
         currentFocus++;
         addActive(x);
+        inp.value = x[currentFocus].getElementsByTagName("input")[0].value + " "
       } else if (e.keyCode == 38) { // UP key pressed
         currentFocus--;
         addActive(x);
+        inp.value = x[currentFocus].getElementsByTagName("input")[0].value + " "
+      } else if (e.keyCode == 27) { // ESCAPE key pressed
+        closeAllLists();
       }
   });
 
