@@ -1,9 +1,9 @@
 'use strict';
 
-var researchServices = ["!arxiv", "!hal"]
-var bookServices = ["!openlib", "!penguin"]
-var mangaServices = ["!manga", "!kitsumangas"]
-var animeServices = ["!anidb", "!kitsuanime"]
+var researchServices = ["!arxiv", "!hal", "!libgen", "!scihub", "!theses", "!thesis"]
+var bookServices = ["!goodreads", "!openlib", "!penguin"]
+var mangaServices = ["!manga", "!kitsumanga"]
+var animeServices = ["!anidb", "!anime", "!anilist", "!kitsuanime"]
 
 function autocomplete(inp, research, books, mangas, animes) {
   /* The autocomplete function takes:

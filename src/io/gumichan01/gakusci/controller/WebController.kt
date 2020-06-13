@@ -8,6 +8,7 @@ import io.gumichan01.gakusci.domain.utils.SearchType
 import io.ktor.application.ApplicationCall
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
+import io.ktor.response.respondRedirect
 import io.ktor.thymeleaf.ThymeleafContent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -24,13 +25,40 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
     suspend fun handleRequest(call: ApplicationCall) {
         when (val resultParam: IRequestParamResult = retrieveWebParam(call.request.queryParameters)) {
             is BadRequest -> call.respond(HttpStatusCode.BadRequest, resultParam.message)
-            is BangRequest -> TODO("Set redirection URL") // call.respondRedirect("http://localhost:8080", false)
+            is BangRequest -> call.respondRedirect(retrieveUrlRedirectOfService(resultParam.request), false)
             is RequestParam -> {
                 logger.trace(resultParam.query)
                 val queryParam = resultParam.toQueryParam()
                 call.respond(generateThymeleafContent(queryParam, searchQueryProcessor.proceed(queryParam)))
             }
         }
+    }
+
+    private fun retrieveUrlRedirectOfService(request: String): String {
+        val bangRequest = request.substringBefore(" ")
+        val query = request.substringAfter(" ")
+        return when (bangRequest) {
+            // Research
+            "!arxiv" -> "https://arxiv.org/search/?query=%s&searchtype=all"
+            "!hal" -> "https://hal.archives-ouvertes.fr/search/?q=%s"
+            "!libgen" -> "http://93.174.95.27/scimag/?q=%s"
+            "!scihub" -> "https://sci-hub.st/%s"
+            "!theses" -> "https://www.theses.fr/fr/?q=%s"
+            "!thesis" -> "https://www.theses.fr/en/?q=%s"
+            // Book
+            "!goodreads" -> "https://www.goodreads.com/search?query=%s"
+            "!openlib" -> "https://openlibrary.org/search?q=%s&mode=everything"
+            "!penguin" -> "https://www.penguinrandomhouse.com/search/%s?q=%s".format(query, query)
+            // Manga
+            "!manga" -> "https://myanimelist.net/manga.php?q=%s"
+            "!kitsumanga" -> "https://kitsu.io/manga?text=%s"
+            // Anime
+            "!anidb" -> "https://anidb.net/anime/?adb.search=%s"
+            "!anime" -> "https://myanimelist.net/anime.php?q=%s"
+            "!anilist" -> "https://anilist.co/search/anime?sort=SEARCH_MATCH&search=%s"
+            "!kitsuanime" -> "https://kitsu.io/anime?text=%s"
+            else -> TODO("Not exhaustive")
+        }.format(query)
     }
 
     private fun generateThymeleafContent(queryParam: QueryParam, response: SearchResponse): ThymeleafContent {

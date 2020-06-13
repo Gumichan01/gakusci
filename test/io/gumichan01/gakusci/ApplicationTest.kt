@@ -177,7 +177,7 @@ class ApplicationTest {
         }
     }
 
-//    @Test
+    @Test
     fun `Redirect query - return redirect`() {
         withTestApplication({ gakusciModule() }) {
             handleRequest(HttpMethod.Get, "/search/?q=!hal").apply {
