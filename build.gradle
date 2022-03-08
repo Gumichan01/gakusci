@@ -1,6 +1,7 @@
 buildscript {
     repositories {
-        jcenter()
+        jcenter() // Deprecated (Read-only repository)
+        mavenCentral()
     }
 
     dependencies {
@@ -9,7 +10,8 @@ buildscript {
 }
 
 plugins {
-    id 'com.google.cloud.tools.jib' version '1.8.0'
+    id "com.google.cloud.tools.jib" version "3.2.0"
+    id "org.jetbrains.kotlin.jvm" version "$kotlin_version"
 }
 
 apply plugin: 'kotlin'
@@ -21,11 +23,16 @@ mainClassName = 'io.gumichan01.gakusci.ApplicationKt'
 
 // This task will generate the fat JAR and put it in the ./build/libs/ directory
 jar {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     manifest {
         attributes 'Main-Class': mainClassName
     }
+
+    dependsOn configurations.runtimeClasspath
+
     from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }
+                      .collect { it.isDirectory() ? it : zipTree(it) }
      }
 }
 
@@ -53,25 +60,26 @@ sourceSets {
 
 repositories {
     mavenLocal()
-    jcenter()
+    jcenter() // Deprecated (Read-only repository)
+    mavenCentral()
     maven { url 'https://kotlin.bintray.com/ktor' }
     maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    compile "io.ktor:ktor-server-jetty:$ktor_version"
-    compile "ch.qos.logback:logback-classic:$logback_version"
-    compile "io.ktor:ktor-server-core:$ktor_version"
-    compile "io.ktor:ktor-jackson:$ktor_version"
-    compile "io.ktor:ktor-thymeleaf:$ktor_version"
-    compile "io.ktor:ktor-client-apache:$ktor_version"
-    compile "io.ktor:ktor-client-jackson:$ktor_version"
-    compile "com.github.vladimir-bukhtoyarov:bucket4j-core:$bucket4j_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "io.ktor:ktor-server-jetty:$ktor_version"
+    implementation "ch.qos.logback:logback-classic:$logback_version"
+    implementation "io.ktor:ktor-server-core:$ktor_version"
+    implementation "io.ktor:ktor-jackson:$ktor_version"
+    implementation "io.ktor:ktor-thymeleaf:$ktor_version"
+    implementation "io.ktor:ktor-client-apache:$ktor_version"
+    implementation "io.ktor:ktor-client-jackson:$ktor_version"
+    implementation "com.github.vladimir-bukhtoyarov:bucket4j-core:$bucket4j_version"
     implementation "com.ouattararomuald:syndication:$syndication_kotlin"
     implementation "com.github.ben-manes.caffeine:caffeine:$caffeine_version"
     implementation "com.github.GSculerlor:JikanKt:$jikankt_version"
-    testCompile "io.mockk:mockk:$mockk_version"
-    testCompile "org.assertj:assertj-core:$assertj_version"
-    testCompile "io.ktor:ktor-server-tests:$ktor_version"
+    testImplementation "io.mockk:mockk:$mockk_version"
+    testImplementation "org.assertj:assertj-core:$assertj_version"
+    testImplementation "io.ktor:ktor-server-tests:$ktor_version"
 }
