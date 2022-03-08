@@ -31,7 +31,7 @@ Just do this:
 gradle run
 ```
 
-You can create a fat JAR like this: 
+You can create a fat JAR like this:
 
 ```
 gradle build
@@ -63,7 +63,7 @@ gradle jibDockerBuild
 
 It uses [Jib](https://github.com/GoogleContainerTools/jib) in order to automate the creation of a docker image.
 
-If you want to run it "in production", because you want to get your own instance, run this command: 
+If you want to run it "in production", because you want to get your own instance, run this command:
 
 ```
 docker run -it -p 80:80 --rm gakusci -config=/app/resources/application-prod.conf
@@ -75,4 +75,4 @@ docker run -it -p 80:80 --rm gakusci -config=/app/resources/application-prod.con
 
 ## Licence ##
 
-Thsi web application is under [CeCILL](https://cecill.info/licences/Licence_CeCILL_V2.1-en.txt) v2.1.
+This web application is under [CeCILL](https://cecill.info/licences/Licence_CeCILL_V2.1-en.txt) v2.1.
