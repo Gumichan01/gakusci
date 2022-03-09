@@ -1,6 +1,5 @@
 buildscript {
     repositories {
-        jcenter() // Deprecated (Read-only repository)
         mavenCentral()
     }
 
