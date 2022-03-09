@@ -13,13 +13,14 @@ import kotlinx.coroutines.withTimeoutOrNull
 
 class SearchLauncher(private val services: Set<IService>) {
 
+    private val runningCoroutinesCounter: AtomicInt = atomic(services.size)
+
     fun launch(queryParam: QueryParam): Channel<ServiceResponse> {
         if (services.isEmpty()) {
             return Channel<ServiceResponse>(0).run { close(); this }
         }
 
         val serviceCallTimeout = 20000L
-        val runningCoroutinesCounter: AtomicInt = atomic(services.size)
         val channel = Channel<ServiceResponse>(capacity = 8)
 
         // Each coroutine a service is launched in is a producer of search results, as in the Producer/Consumer pattern

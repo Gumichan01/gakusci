@@ -19,7 +19,6 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.thymeleaf.Thymeleaf
-import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
@@ -27,7 +26,6 @@ import java.io.File
 
 
 @FlowPreview
-@KtorExperimentalAPI
 @ExperimentalCoroutinesApi
 fun Application.gakusciModule() {
 
@@ -59,7 +57,6 @@ fun Application.gakusciModule() {
     }
 }
 
-@KtorExperimentalAPI
 private fun Application.environmentKind(): EnvironmentKind {
     return when (val envKind = environment.config.property("ktor.deployment.environment").getString()) {
         "dev", "development" -> EnvironmentKind.DEV

@@ -6,6 +6,7 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlinx:atomicfu-gradle-plugin:$atomicfu_version"
     }
 }
 
@@ -15,6 +16,7 @@ plugins {
 }
 
 apply plugin: 'kotlin'
+apply plugin: 'kotlinx-atomicfu'
 apply plugin: 'application'
 
 group 'io.gumichan01'
