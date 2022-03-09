@@ -52,7 +52,7 @@ fun isValidISBN10(bookNumber: String): Boolean {
 private fun isValidCheckDigitISBN10(bookNumber: String): Boolean {
     val simplifiedIsbn10: String = normalizeIsbn(bookNumber)
     return simplifiedIsbn10.length == 10 &&
-            simplifiedIsbn10.map { c -> c.toInt() }
+            simplifiedIsbn10.map { c -> c.digitToInt() }
                 .mapIndexed { i, v -> v * (10 - i) }
                 .reduce { acc, sum -> acc + sum } % 11 == 0
 }
@@ -67,7 +67,7 @@ fun isValidISBN13(bookNumber: String): Boolean {
 private fun isValidCheckDigitISBN13(bookNumber: String): Boolean {
     val simplifiedIsbn13: String = normalizeIsbn(bookNumber)
     return simplifiedIsbn13.length == 13 &&
-            simplifiedIsbn13.map { c -> c.toInt() }
+            simplifiedIsbn13.map { c -> c.digitToInt() }
                 .mapIndexed { i, v -> v * (if ((i % 2) == 0) 1 else 3) }
                 .reduce { acc, sum -> acc + sum } % 10 == 0
 }

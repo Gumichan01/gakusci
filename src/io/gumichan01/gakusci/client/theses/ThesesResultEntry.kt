@@ -22,11 +22,11 @@ data class ThesesResultEntry(
     }
 
     fun hasAccess(): Boolean {
-        return available.toLowerCase() == "oui"
+        return available.lowercase() == "oui"
     }
 
     fun isPresented(): Boolean {
-        return status.toLowerCase() == "soutenue"
+        return status.lowercase() == "soutenue"
     }
 
     fun link(): String {
