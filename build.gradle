@@ -81,6 +81,7 @@ dependencies {
     implementation "com.ouattararomuald:syndication:$syndication_kotlin"
     implementation "com.github.ben-manes.caffeine:caffeine:$caffeine_version"
     implementation "com.github.GSculerlor:JikanKt:$jikankt_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testImplementation "io.mockk:mockk:$mockk_version"
     testImplementation "org.assertj:assertj-core:$assertj_version"
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"

@@ -4,14 +4,12 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
-import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import org.assertj.core.api.Assertions.assertThat
 import kotlin.test.Test
 
 @FlowPreview
-@KtorExperimentalAPI
 @ExperimentalCoroutinesApi
 class RestApiTest {
     @Test
