@@ -1,7 +1,7 @@
 package io.gumichan01.gakusci.client.jikan
 
 import io.github.bucket4j.Bandwidth
-import io.github.bucket4j.Bucket4j
+import io.github.bucket4j.Bucket
 import io.github.bucket4j.Refill
 import io.github.bucket4j.local.LocalBucket
 import io.gumichan01.gakusci.client.IClient
@@ -14,7 +14,7 @@ import java.time.Duration
 class JikanMangaClient : IClient<JikanMangaResponse> {
 
     private val rateLimiter: LocalBucket by lazy {
-        Bucket4j.builder()
+        Bucket.builder()
             .addLimit(Bandwidth.classic(2, Refill.greedy(1L, Duration.ofMillis(500))))
             .build()
     }

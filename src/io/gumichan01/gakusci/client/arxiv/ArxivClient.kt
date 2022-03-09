@@ -2,7 +2,7 @@ package io.gumichan01.gakusci.client.arxiv
 
 import com.ouattararomuald.syndication.Syndication
 import io.github.bucket4j.Bandwidth
-import io.github.bucket4j.Bucket4j
+import io.github.bucket4j.Bucket
 import io.github.bucket4j.Refill
 import io.github.bucket4j.local.LocalBucket
 import io.gumichan01.gakusci.client.IClient
@@ -22,7 +22,7 @@ class ArxivClient : IClient<ArxivResponse> {
     private val rateLimiter: LocalBucket = createLimiter()
 
     private fun createLimiter(): LocalBucket {
-        return Bucket4j.builder()
+        return Bucket.builder()
             .addLimit(Bandwidth.classic(1, Refill.greedy(1L, Duration.ofSeconds(3))))
             .build()
     }
