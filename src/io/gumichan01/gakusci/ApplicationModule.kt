@@ -15,6 +15,7 @@ import io.ktor.http.content.files
 import io.ktor.http.content.static
 import io.ktor.http.content.staticRootFolder
 import io.ktor.jackson.jackson
+import io.ktor.routing.IgnoreTrailingSlash
 import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.routing
@@ -35,6 +36,8 @@ fun Application.gakusciModule() {
 
     log.info("\n ${getBanner(envKind)}")
     log.info("Application deployed in # ${envKind.kind} #")
+
+    install(IgnoreTrailingSlash)
 
     install(ContentNegotiation) {
         jackson {
