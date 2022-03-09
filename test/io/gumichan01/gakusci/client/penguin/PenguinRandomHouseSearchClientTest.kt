@@ -19,7 +19,7 @@ class PenguinRandomHouseSearchClientTest {
     }
 
 //    @Test
-    fun `check valid request to PRH with "marx" and retrieve at most 100 entries - must return at most 100 entries`() {
+    fun `check valid request to PRH with 'marx' and retrieve at most 100 entries - must return at most 100 entries`() {
         val client: IClient<PenguinRandomHouseSearchResponse> = PenguinRandomHouseSearchClient()
         val queryParam = QueryParam("marx", SearchType.BOOKS, rows = 100)
         val response: PenguinRandomHouseSearchResponse? =
