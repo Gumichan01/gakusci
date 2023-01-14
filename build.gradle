@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-    id "com.google.cloud.tools.jib" version "3.2.0"
+    id "com.google.cloud.tools.jib" version "$jib_version"
     id "org.jetbrains.kotlin.jvm" version "$kotlin_version"
 }
 
