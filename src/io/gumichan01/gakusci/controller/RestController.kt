@@ -2,9 +2,9 @@ package io.gumichan01.gakusci.controller
 
 import io.gumichan01.gakusci.controller.utils.*
 import io.gumichan01.gakusci.domain.search.SearchQueryProcessor
-import io.ktor.application.ApplicationCall
 import io.ktor.http.HttpStatusCode
-import io.ktor.response.respond
+import io.ktor.server.application.*
+import io.ktor.server.response.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import org.slf4j.Logger

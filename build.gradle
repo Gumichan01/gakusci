@@ -43,7 +43,7 @@ jib {
     }
     to {
         image = 'gakusci'
-        tags = [version,'latest']
+        tags = [version, 'latest'] as List<String>
     }
     container {
         mainClass = mainClassName
@@ -71,10 +71,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "io.ktor:ktor-server-jetty:$ktor_version"
     implementation "io.ktor:ktor-server-core:$ktor_version"
-    implementation "io.ktor:ktor-jackson:$ktor_version"
-    implementation "io.ktor:ktor-thymeleaf:$ktor_version"
+    implementation "io.ktor:ktor-server-content-negotiation:$ktor_version"
+    implementation "io.ktor:ktor-serialization-jackson:$ktor_version"
+    implementation "io.ktor:ktor-server-thymeleaf:$ktor_version"
     implementation "io.ktor:ktor-client-apache:$ktor_version"
-    implementation "io.ktor:ktor-client-jackson:$ktor_version"
     implementation "ch.qos.logback:logback-classic:$logback_version"
     implementation "com.github.vladimir-bukhtoyarov:bucket4j-core:$bucket4j_version"
     implementation "com.ouattararomuald:syndication:$syndication_kotlin"

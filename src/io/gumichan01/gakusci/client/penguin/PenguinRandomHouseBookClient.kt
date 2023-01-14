@@ -1,13 +1,14 @@
 package io.gumichan01.gakusci.client.penguin
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.utils.trace
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.ktor.client.HttpClient
+import io.ktor.client.call.*
 import io.ktor.client.engine.apache.Apache
-import io.ktor.client.features.json.JacksonSerializer
-import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.get
+import io.ktor.server.plugins.contentnegotiation.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -19,12 +20,15 @@ class PenguinRandomHouseBookClient : IClient<PenguinRandomHouseBookResponse> {
     override suspend fun retrieveResults(queryParam: QueryParam): PenguinRandomHouseBookResponse? {
         val url: String = penguinIsbnUrl.format(queryParam.query)
         val client = HttpClient(Apache) {
-            install(JsonFeature) {
-                serializer = JacksonSerializer()
+            install(ContentNegotiation.toString()) {
+                jacksonObjectMapper()
             }
+            /*install(JsonFeature) {
+                serializer = JacksonSerializer()
+            }*/
         }
         return try {
-            client.use { it.get(url) }
+            client.use { it.get(url).body() }
         } catch (e: Exception) {
             trace(logger, e)
             null

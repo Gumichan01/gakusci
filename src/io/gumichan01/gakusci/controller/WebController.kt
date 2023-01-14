@@ -5,11 +5,10 @@ import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.search.SearchQueryProcessor
 import io.gumichan01.gakusci.domain.utils.SearchType
-import io.ktor.application.ApplicationCall
 import io.ktor.http.HttpStatusCode
-import io.ktor.response.respond
-import io.ktor.response.respondRedirect
-import io.ktor.thymeleaf.ThymeleafContent
+import io.ktor.server.application.*
+import io.ktor.server.response.*
+import io.ktor.server.thymeleaf.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import org.slf4j.Logger

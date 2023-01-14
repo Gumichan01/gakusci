@@ -8,6 +8,7 @@ import io.gumichan01.gakusci.domain.model.QueryParam
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.request.get
+import io.ktor.client.statement.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -25,7 +26,7 @@ class OpenLibrarySearchClient : IClient<OpenLibrarySearchResponse> {
 
     private suspend fun retrieveData(url: String): OpenLibrarySearchResponse? {
         return try {
-            HttpClient(Apache).use { it.get<String>(url) }.fromJson()
+            HttpClient(Apache).use { it.get(url).bodyAsText() }.fromJson()
         } catch (e: Exception) {
             trace(logger, e)
             null

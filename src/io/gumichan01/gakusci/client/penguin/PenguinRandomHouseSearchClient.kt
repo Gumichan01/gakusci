@@ -6,6 +6,7 @@ import io.gumichan01.gakusci.domain.model.QueryParam
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.request.get
+import io.ktor.client.statement.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.w3c.dom.Node
@@ -22,7 +23,7 @@ class PenguinRandomHouseSearchClient : IClient<PenguinRandomHouseSearchResponse>
     override suspend fun retrieveResults(queryParam: QueryParam): PenguinRandomHouseSearchResponse? {
         val url: String = searchUrl.format(queryParam.rows, queryParam.query)
         return try {
-            val xmlText = HttpClient(Apache).use { it.get<String>(url) }
+            val xmlText: String = HttpClient(Apache).get(url).bodyAsText()
             PenguinRandomHouseSearchResponse(extractIsbnsFromXml(xmlText).take(queryParam.rows))
         } catch (e: Exception) {
             trace(logger, e)

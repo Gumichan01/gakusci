@@ -5,9 +5,10 @@ import io.gumichan01.gakusci.client.utils.trace
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
-import io.ktor.client.features.json.JacksonSerializer
-import io.ktor.client.features.json.JsonFeature
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.ktor.client.call.*
 import io.ktor.client.request.get
+import io.ktor.server.plugins.contentnegotiation.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -23,12 +24,15 @@ class HalClient : IClient<HalResponse> {
 
     private suspend fun retrieveData(url: String): HalResponse? {
         val client = HttpClient(Apache) {
-            install(JsonFeature) {
+               install(ContentNegotiation.toString()) {
+                   jacksonObjectMapper()
+               }
+            /*install(JsonFeature) {
                 serializer = JacksonSerializer()
-            }
+            }*/
         }
         return try {
-            client.use { it.get(url) }
+            client.use { it.get(url).body() }
         } catch (e: Exception) {
             trace(logger, e)
             null

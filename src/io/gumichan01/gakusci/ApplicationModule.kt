@@ -4,22 +4,13 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import io.gumichan01.gakusci.controller.RestController
 import io.gumichan01.gakusci.controller.WebController
 import io.gumichan01.gakusci.domain.search.SearchQueryProcessor
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.application.log
-import io.ktor.config.ApplicationConfigurationException
-import io.ktor.features.ContentNegotiation
-import io.ktor.http.content.default
-import io.ktor.http.content.files
-import io.ktor.http.content.static
-import io.ktor.http.content.staticRootFolder
-import io.ktor.jackson.jackson
-import io.ktor.routing.IgnoreTrailingSlash
-import io.ktor.routing.Routing
-import io.ktor.routing.get
-import io.ktor.routing.routing
-import io.ktor.thymeleaf.Thymeleaf
+import io.ktor.serialization.jackson.*
+import io.ktor.server.application.*
+import io.ktor.server.config.*
+import io.ktor.server.http.content.*
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.routing.*
+import io.ktor.server.thymeleaf.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
@@ -54,7 +45,7 @@ fun Application.gakusciModule() {
     }
 
     routing {
-        staticPage(environmentKind())
+        staticPage(this@gakusciModule.environmentKind())
         restApiSearch(restController)
         webSearch(webController)
     }
@@ -73,7 +64,7 @@ private enum class EnvironmentKind(val kind: String) {
     DEV("dev"), PRODUCTION("production"), TEST("test")
 }
 
-private fun Application.getBanner(env: EnvironmentKind): String {
+private fun getBanner(env: EnvironmentKind): String {
     val pathname = if (env == EnvironmentKind.PRODUCTION) {
         "/app/resources/banner/gakusci.txt"
     } else {
