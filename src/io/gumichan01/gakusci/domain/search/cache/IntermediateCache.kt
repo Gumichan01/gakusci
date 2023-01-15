@@ -6,7 +6,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.concurrent.TimeUnit
 
-class IntermediateCache<V>(
+class IntermediateCache<V : Any>(
     cache: Cache<String, V> = Caffeine.newBuilder()
         .expireAfterWrite(600, TimeUnit.SECONDS).maximumSize(100L).build()
 ) : Cache<String, V> by cache {
