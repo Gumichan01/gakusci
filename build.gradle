@@ -81,7 +81,7 @@ dependencies {
     implementation "com.github.ben-manes.caffeine:caffeine:$caffeine_version"
     implementation "com.github.GSculerlor:JikanKt:$jikankt_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-    testImplementation "io.mockk:mockk:$mockk_version"
+    testImplementation "io.mockk:mockk-jvm:$mockk_version"
     testImplementation "org.assertj:assertj-core:$assertj_version"
     testImplementation "io.ktor:ktor-server-test-host:$ktor_version"
 }
