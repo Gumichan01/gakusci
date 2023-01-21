@@ -5,12 +5,11 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.utils.trace
 import io.gumichan01.gakusci.domain.model.QueryParam
-import io.ktor.client.HttpClient
-import io.ktor.client.call.*
-import io.ktor.client.engine.apache.Apache
-import io.ktor.client.request.get
+import io.ktor.client.*
+import io.ktor.client.engine.apache.*
+import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import io.ktor.utils.io.core.use
+import io.ktor.utils.io.core.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
