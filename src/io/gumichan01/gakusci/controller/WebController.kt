@@ -5,7 +5,7 @@ import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.search.SearchQueryProcessor
 import io.gumichan01.gakusci.domain.utils.SearchType
-import io.ktor.http.HttpStatusCode
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.thymeleaf.*
