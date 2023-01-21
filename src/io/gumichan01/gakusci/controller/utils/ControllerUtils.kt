@@ -3,7 +3,7 @@ package io.gumichan01.gakusci.controller.utils
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.utils.SearchType
-import io.ktor.http.Parameters
+import io.ktor.http.*
 
 const val MAX_ENTRIES = 2000
 const val MINIMUM_QUERY_LENGTH = 3
@@ -56,7 +56,7 @@ fun retrieveApiParam(queryParameters: Parameters, pathParameters: Parameters): I
                 numPerPage != null -> BadRequest("Cannot set 'num_per_page' with no 'start' value")
                 else -> RequestParam(query, searchType, rows ?: 10, 0, numPerPage)
             }
-        } ?: BadRequest("No query parameter 'stype' provided")
+        } ?: BadRequest("Incorrect syntax: absent or incorrect search type")
     } ?: BadRequest("No query parameter 'q' provided")
 }
 
