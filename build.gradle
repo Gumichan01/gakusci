@@ -1,3 +1,4 @@
+
 buildscript {
     repositories {
         mavenCentral()
@@ -12,6 +13,7 @@ buildscript {
 plugins {
     id "com.google.cloud.tools.jib" version "$jib_version"
     id "org.jetbrains.kotlin.jvm" version "$kotlin_version"
+    id 'io.ktor.plugin' version "$ktor_version"
 }
 
 apply plugin: 'kotlin'
@@ -21,6 +23,10 @@ apply plugin: 'application'
 group 'io.gumichan01'
 version '0.0.1-SNAPSHOT'
 mainClassName = 'io.gumichan01.gakusci.ApplicationKt'
+
+kotlin {
+    jvmToolchain(17)
+}
 
 // This task will generate the fat JAR and put it in the ./build/libs/ directory
 jar {
@@ -61,9 +67,7 @@ sourceSets {
 
 repositories {
     mavenLocal()
-    jcenter() // Deprecated (Read-only repository)
     mavenCentral()
-    maven { url 'https://kotlin.bintray.com/ktor' }
     maven { url 'https://jitpack.io' }
 }
 
@@ -77,8 +81,8 @@ dependencies {
     implementation "io.ktor:ktor-serialization-jackson:$ktor_version"
     implementation "io.ktor:ktor-client-apache:$ktor_version"
     implementation "ch.qos.logback:logback-classic:$logback_version"
-    implementation "com.github.vladimir-bukhtoyarov:bucket4j-core:$bucket4j_version"
-    implementation "com.ouattararomuald:syndication:$syndication_kotlin"
+    implementation "com.bucket4j:bucket4j-core:$bucket4j_version"
+    implementation "com.github.ouattararomuald:syndication:$syndication_kotlin"
     implementation "com.github.ben-manes.caffeine:caffeine:$caffeine_version"
     implementation "com.github.GSculerlor:JikanKt:$jikankt_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
