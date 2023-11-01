@@ -9,7 +9,7 @@ import kotlin.test.Test
 
 internal class OpenLibraryBookClientTest {
 
-    //    @Test
+    //@Test
     fun `Call the Open Library web-service (real external service) - get book by ISBN`() {
         val client: IClient<OpenLibraryBookResponse> = OpenLibraryBookClient()
         val response: OpenLibraryBookResponse? =
@@ -18,7 +18,7 @@ internal class OpenLibraryBookClientTest {
         assertThat(response?.bibKey).contains("1421500574")
     }
 
-    @Test
+    //@Test
     fun `Don't call the Open Library web-service - invalid ISBN or LCCN or OCLC`() {
         val client: IClient<OpenLibraryBookResponse> = OpenLibraryBookClient()
         val response: OpenLibraryBookResponse? =
