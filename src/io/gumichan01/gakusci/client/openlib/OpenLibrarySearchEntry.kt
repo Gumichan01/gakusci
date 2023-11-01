@@ -14,7 +14,7 @@ data class OpenLibrarySearchEntry(
 ) {
     fun authors(): String {
         return when {
-            authorNames == null || authorNames.isEmpty() -> "Unknown author"
+            authorNames.isNullOrEmpty() -> "Unknown author"
             authorNames.size > 1 -> authorNames[0] + " et al."
             else -> authorNames[0]
         }
