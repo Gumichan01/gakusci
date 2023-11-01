@@ -12,6 +12,7 @@ import io.ktor.client.statement.*
 import io.ktor.utils.io.core.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.net.URLEncoder
 
 class ThesesClient : IClient<ThesesResponse> {
 
@@ -19,7 +20,7 @@ class ThesesClient : IClient<ThesesResponse> {
     private val thesesUrl = "https://www.theses.fr/?q=%s&format=json"
 
     override suspend fun retrieveResults(queryParam: QueryParam): ThesesResponse? {
-        val url = thesesUrl.format(queryParam.query)
+        val url = thesesUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8))
         return retrieveData(url)
     }
 

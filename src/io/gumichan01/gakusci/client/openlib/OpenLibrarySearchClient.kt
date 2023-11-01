@@ -11,6 +11,7 @@ import io.ktor.client.request.get
 import io.ktor.client.statement.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.net.URLEncoder
 
 class OpenLibrarySearchClient : IClient<OpenLibrarySearchResponse> {
 
@@ -20,7 +21,7 @@ class OpenLibrarySearchClient : IClient<OpenLibrarySearchResponse> {
     private val openLibrarySearchUrl = "https://openlibrary.org/search.json?q=%s"
 
     override suspend fun retrieveResults(queryParam: QueryParam): OpenLibrarySearchResponse? {
-        val url = openLibrarySearchUrl.format(queryParam.query)
+        val url = openLibrarySearchUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8))
         return retrieveData(url)
     }
 

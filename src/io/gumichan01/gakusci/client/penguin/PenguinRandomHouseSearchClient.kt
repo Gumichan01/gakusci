@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory
 import org.w3c.dom.Node
 import org.w3c.dom.NodeList
 import java.io.ByteArrayInputStream
+import java.net.URLEncoder
 import java.nio.charset.Charset
 import javax.xml.parsers.DocumentBuilderFactory
 
@@ -21,7 +22,7 @@ class PenguinRandomHouseSearchClient : IClient<PenguinRandomHouseSearchResponse>
     private val searchUrl = "https://reststop.randomhouse.com/resources/titles?start=0&max=%d&expandLevel=0&search=%s"
 
     override suspend fun retrieveResults(queryParam: QueryParam): PenguinRandomHouseSearchResponse? {
-        val url: String = searchUrl.format(queryParam.rows, queryParam.query)
+        val url: String = searchUrl.format(queryParam.rows, URLEncoder.encode(queryParam.query, Charsets.UTF_8))
         return try {
             val xmlText: String = HttpClient(Apache).get(url).bodyAsText()
             PenguinRandomHouseSearchResponse(extractIsbnsFromXml(xmlText).take(queryParam.rows))

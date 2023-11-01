@@ -5,7 +5,7 @@ import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.utils.SearchType
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions
-import kotlin.test.Test
+import kotlin.test.assertTrue
 
 class PenguinRandomHouseSearchClientTest {
 
@@ -25,5 +25,13 @@ class PenguinRandomHouseSearchClientTest {
         val response: PenguinRandomHouseSearchResponse? =
             runBlocking { client.retrieveResults(queryParam) }
         Assertions.assertThat(response?.entries?.size).isLessThanOrEqualTo(100)
+    }
+
+//    @Test
+    fun `check valid request to PRH with request containing spaces like 'karl marx' - must not fail, entries are not important`() {
+        val client: IClient<PenguinRandomHouseSearchResponse> = PenguinRandomHouseSearchClient()
+        val queryParam = QueryParam("karl marx", SearchType.BOOKS, rows = 1)
+        runBlocking { client.retrieveResults(queryParam) }
+        assertTrue { true }
     }
 }

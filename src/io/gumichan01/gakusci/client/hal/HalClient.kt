@@ -11,6 +11,7 @@ import io.ktor.client.request.*
 import io.ktor.serialization.jackson.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.net.URLEncoder
 
 class HalClient : IClient<HalResponse> {
 
@@ -18,7 +19,7 @@ class HalClient : IClient<HalResponse> {
     private val halUrl = "https://api.archives-ouvertes.fr/search/?q=%s&rows=%d&wt=json"
 
     override suspend fun retrieveResults(queryParam: QueryParam): HalResponse? {
-        val url = halUrl.format(queryParam.query, queryParam.rows)
+        val url = halUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8), queryParam.rows)
         return retrieveData(url)
     }
 
