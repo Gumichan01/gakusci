@@ -75,13 +75,8 @@ private fun getBanner(env: EnvironmentKind): String {
 
 // Routing
 private fun Routing.staticPage(env: EnvironmentKind) {
-    staticFiles("/", File(".")) {
-        staticRootFolder =
-            if (env == EnvironmentKind.PRODUCTION) {
-                File("/app/resources/static")
-            } else {
-                File("resources/static")
-            }
+    val file = if (env == EnvironmentKind.PRODUCTION) { File("/app/resources/static") } else { File("resources/static") }
+    staticFiles("/", file) {
         default("index.html")
     }
 }
