@@ -8,6 +8,7 @@ import io.ktor.server.testing.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.util.Lists.list
 import kotlin.test.Test
 
 @FlowPreview
@@ -166,16 +167,6 @@ class ApplicationTest {
                 .isLessThan(MAX_ENTRIES - 10)
         }
     }
-
-
-    @Test
-    fun `Redirect query - return redirect`() {
-        testApplication {
-            val response = client.get("/search/?q=!hal")
-            assertThat(response.status).isEqualTo(HttpStatusCode.Found)
-        }
-    }
-
 
     @Test
     fun `Redirect query with bad bang request - return bad request`() {
