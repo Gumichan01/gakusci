@@ -27,7 +27,7 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
             is BangRequest -> {
                 retrieveUrlRedirectOfService(resultParam.request)?.let { redirectUrl ->
                     call.respondRedirect(redirectUrl, false)
-                } ?: call.respond(HttpStatusCode.BadRequest, "Invalid Bang request : ${resultParam.request}")
+                } ?: call.respond(HttpStatusCode.BadRequest, "Invalid or incomplete Bang request : ${resultParam.request}")
             }
             is RequestParam -> {
                 logger.trace(resultParam.query)
@@ -38,8 +38,13 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
     }
 
     private fun retrieveUrlRedirectOfService(request: String): String? {
-        val bangRequest = request.substringBefore(" ")
-        val query = request.substringAfter(" ")
+        val nbtokens = 2
+        val tokens = request.split(" ", limit = nbtokens)
+        if (tokens.size != nbtokens) {
+            return null
+        }
+        val bangRequest = tokens[0] //request.substringBefore(" ")
+        val query = tokens[1] //request.substringAfter(" ")
         return when (bangRequest) {
             // Research
             "!arxiv" -> "https://arxiv.org/search/?query=%s&searchtype=all"
