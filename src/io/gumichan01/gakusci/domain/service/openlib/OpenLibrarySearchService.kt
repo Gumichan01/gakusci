@@ -29,7 +29,7 @@ class OpenLibrarySearchService(private val openLibrarySearchClient: IClient<Open
                         url = doc.link(),
                         thumbnailUrl = doc.thumbnail()
                     )
-                }?.take(numFound)?.toList() ?: emptyList()
+                }?.take(numFound)?.sortedByDescending { b -> b.thumbnailUrl }?.toList() ?: emptyList()
                 ServiceResponse(numFound, entries)
             }
         }
