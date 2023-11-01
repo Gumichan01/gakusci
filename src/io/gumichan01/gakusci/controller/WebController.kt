@@ -43,7 +43,7 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
         return when (bangRequest) {
             // Research
             "!arxiv" -> "https://arxiv.org/search/?query=%s&searchtype=all"
-            "!hal" -> "https://hal.archives-ouvertes.fr/search/?q=%s"
+            "!hal" -> "https://hal.science/search/index?q=%s"
             "!libgen" -> "http://93.174.95.27/scimag/?q=%s"
             "!scihub" -> "https://sci-hub.st/%s"
             "!theses" -> "https://www.theses.fr/fr/?q=%s"
