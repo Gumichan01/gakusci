@@ -45,15 +45,15 @@ class SearchLauncherTest {
     fun `launch request with no service - return closed channel`() {
         val searchLauncher = SearchLauncher(emptySet())
         val channel: Channel<ServiceResponse> = searchLauncher.launch(QueryParam("lorem", SearchType.RESEARCH))
-        assertThat(channel.isClosedForReceive).isTrue()
-        assertThat(channel.isClosedForSend).isTrue()
+        assertThat(channel.isClosedForReceive).isTrue
+        assertThat(channel.isClosedForSend).isTrue
     }
 
     @Test
     fun `launch request with one fake service - return non-closed channel`() {
         val searchLauncher = SearchLauncher(setOf(fakeService))
         val channel: Channel<ServiceResponse> = searchLauncher.launch(QueryParam("lorem", SearchType.RESEARCH))
-        assertThat(channel.isClosedForReceive).isFalse()
+        assertThat(channel.isClosedForReceive).isFalse
     }
 
     @Test
