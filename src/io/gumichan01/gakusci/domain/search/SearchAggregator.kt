@@ -57,16 +57,13 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
     }
 
     private object DomainSearchType {
-        private val penguinIsbnService = PenguinRandomHouseBookService(PenguinRandomHouseBookClient())
-
         val RESEARCH: Set<IService> by lazy {
             setOf(HalService(HalClient()), ArxivService(ArxivClient()), ThesesService(ThesesClient()))
         }
         val BOOKS: Set<IService> by lazy {
             setOf(
                 OpenLibrarySearchService(OpenLibrarySearchClient()),
-                OpenLibraryBookService(OpenLibraryBookClient()), penguinIsbnService,
-                PenguinRandomHouseSearchService(PenguinRandomHouseSearchClient(), penguinIsbnService)
+                OpenLibraryBookService(OpenLibraryBookClient())
             )
         }
         val MANGAS: Set<IService> by lazy { setOf(JikanMangaService(JikanMangaClient())) }
