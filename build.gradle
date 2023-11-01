@@ -30,7 +30,7 @@ kotlin {
 
 // This task will generate the fat JAR and put it in the ./build/libs/ directory
 jar {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     manifest {
         attributes 'Main-Class': mainClassName
     }
@@ -44,11 +44,11 @@ jar {
 }
 
 distTar {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 distZip {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 jib {
