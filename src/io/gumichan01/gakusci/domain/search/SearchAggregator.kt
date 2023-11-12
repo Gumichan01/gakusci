@@ -61,10 +61,8 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
             setOf(HalService(HalClient()), ArxivService(ArxivClient()), ThesesService(ThesesClient()))
         }
         val BOOKS: Set<IService> by lazy {
-            setOf(
-                OpenLibrarySearchService(OpenLibrarySearchClient()),
-                OpenLibraryBookService(OpenLibraryBookClient())
-            )
+            setOf(OpenLibrarySearchService(OpenLibrarySearchClient()), OpenLibraryBookService(OpenLibraryBookClient()),
+                    JikanMangaService(JikanMangaClient()))
         }
         val MANGAS: Set<IService> by lazy { setOf(JikanMangaService(JikanMangaClient())) }
         val ANIME: Set<IService> by lazy { setOf(JikanAnimeService(JikanAnimeClient())) }
