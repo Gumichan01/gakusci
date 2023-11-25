@@ -25,7 +25,7 @@ class PenguinRandomHouseBookService(private val bookClient: IClient<PenguinRando
             generateBookNumberFromText(queryParam.query)?.let { bookNumber ->
                 if (bookNumber.type == BookNumberType.ISBN && isValidISBN13(bookNumber.value)) {
                     bookClient.retrieveResults(queryParam.copy(query = bookNumber.value))?.let {
-                        val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+                        val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
                         ServiceResponse(
                             1,
                             listOf(

@@ -19,7 +19,7 @@ class HalClient : IClient<HalResponse> {
     private val halUrl = "https://api.archives-ouvertes.fr/search/?q=%s&rows=%d&wt=json"
 
     override suspend fun retrieveResults(queryParam: QueryParam): HalResponse? {
-        val url = halUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8), queryParam.rows)
+        val url: String = halUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8), queryParam.rows)
         return retrieveData(url)
     }
 

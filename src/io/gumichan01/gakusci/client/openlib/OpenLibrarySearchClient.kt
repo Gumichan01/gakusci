@@ -21,7 +21,7 @@ class OpenLibrarySearchClient : IClient<OpenLibrarySearchResponse> {
     private val openLibrarySearchUrl = "https://openlibrary.org/search.json?q=%s"
 
     override suspend fun retrieveResults(queryParam: QueryParam): OpenLibrarySearchResponse? {
-        val url = openLibrarySearchUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8))
+        val url: String = openLibrarySearchUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8))
         return retrieveData(url)
     }
 

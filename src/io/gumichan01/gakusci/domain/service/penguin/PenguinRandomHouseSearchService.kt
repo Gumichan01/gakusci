@@ -45,7 +45,7 @@ class PenguinRandomHouseSearchService(
     }
 
     private fun List<Pair<String, Set<String>>>.retrieveDistinctIsbns(): List<String> {
-        return map { (_, isbns) -> isbns }.distinct()
+        return map { (_: String, isbns: Set<String>) -> isbns }.distinct()
             .asSequence()
             .filter { s -> s.isNotEmpty() }
             .map { isbns -> isbns.first() }
@@ -62,7 +62,7 @@ class PenguinRandomHouseSearchService(
 
     private suspend fun launchRequests(queries: List<QueryParam>): Channel<ServiceResponse?> {
         val serviceCallTimeout = 15000L
-        val channel = Channel<ServiceResponse?>(nbMaxEntries)
+        val channel: Channel<ServiceResponse?> = Channel(nbMaxEntries)
         queries.forEach { query ->
             CoroutineScope(Dispatchers.Default).launch {
                 try {

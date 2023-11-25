@@ -13,10 +13,10 @@ fun retrieveWebParam(queryParameters: Parameters): IRequestParamResult {
     return queryParameters["q"]?.let { query ->
         val defaultRows = 100
         val numPerPage = 10
-        val start = queryParameters["start"]?.toInt() ?: 0
+        val start : Int = queryParameters["start"]?.toInt() ?: 0
         val searchType: SearchType? = getSearchTypeFrom(queryParameters)
         // The webapp must not retrieve more than 2000 entries, for the sake of performance
-        val rows = if (start + numPerPage > defaultRows) {
+        val rows : Int = if (start + numPerPage > defaultRows) {
             if (start * 2 > MAX_ENTRIES) MAX_ENTRIES else start * 2
         } else defaultRows
 
@@ -54,7 +54,7 @@ fun retrieveApiParam(queryParameters: Parameters, pathParameters: Parameters): I
                     }
                 }
                 numPerPage != null -> BadRequest("Cannot set 'num_per_page' with no 'start' value")
-                else -> RequestParam(query, searchType, rows ?: 10, 0, numPerPage)
+                else -> RequestParam(query, searchType, rows ?: 10, 0, null)
             }
         } ?: BadRequest("Incorrect syntax: absent or incorrect search type")
     } ?: BadRequest("No query parameter 'q' provided")

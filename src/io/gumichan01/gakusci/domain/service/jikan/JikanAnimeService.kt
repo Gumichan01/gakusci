@@ -16,7 +16,7 @@ class JikanAnimeService(val jikanClient: IClient<JikanAnimeResponse>) : IService
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
         return cache.getOrUpdateCache(queryParam) {
             jikanClient.retrieveResults(queryParam)?.let { response ->
-                val results = response.entries.map { entry ->
+                val results: List<AnimeEntry> = response.entries.map { entry ->
                     AnimeEntry(entry.title, entry.episodes, entry.url, entry.imageUrl ?: "")
                 }
                 ServiceResponse(results.size, results)

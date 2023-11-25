@@ -11,6 +11,7 @@ import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseSearchClient
 import io.gumichan01.gakusci.client.theses.ThesesClient
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
+import io.gumichan01.gakusci.domain.model.entry.IResultEntry
 import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.service.arxiv.ArxivService
 import io.gumichan01.gakusci.domain.service.hal.HalService
@@ -37,7 +38,7 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
 
     suspend fun retrieveResults(queryParam: QueryParam): SearchResponse {
         val start: Int = queryParam.start
-        val (total, entries) = searchResultConsumer.consume(searchLauncher.launch(queryParam))
+        val (total: Int, entries: List<IResultEntry>) = searchResultConsumer.consume(searchLauncher.launch(queryParam))
         return SearchResponse(total, start, entries).take(queryParam.rows)
             .slice(start, queryParam.numPerPage)
             .also { logger.trace("${queryParam.query} - Total: ${it.totalResults}, number of entries: ${it.entries.size}") }

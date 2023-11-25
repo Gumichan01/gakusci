@@ -31,7 +31,7 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
             }
             is RequestParam -> {
                 logger.trace(resultParam.query)
-                val queryParam = resultParam.toQueryParam()
+                val queryParam: QueryParam = resultParam.toQueryParam()
                 call.respond(generateThymeleafContent(queryParam, searchQueryProcessor.proceed(queryParam)))
             }
         }
@@ -39,12 +39,12 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
 
     private fun retrieveUrlRedirectOfService(request: String): String? {
         val nbtokens = 2
-        val tokens = request.split(" ", limit = nbtokens)
-        if (tokens.size != nbtokens) {
+        val tokens: List<String> = request.split(" ", limit = 2)
+        if (tokens.size < nbtokens) {
             return null
         }
-        val bangRequest = tokens[0] //request.substringBefore(" ")
-        val query = tokens[1] //request.substringAfter(" ")
+        val bangRequest: String = tokens[0] //request.substringBefore(" ")
+        val query: String = tokens[1] //request.substringAfter(" ")
         return when (bangRequest) {
             // Research
             "!arxiv" -> "https://arxiv.org/search/?query=%s&searchtype=all"
@@ -77,7 +77,7 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
             else -> throw IllegalStateException("Cannot create HTML template for ${queryParam.searchType}")
         }
         val numPerPage: Int = queryParam.numPerPage!!
-        val numberOfPaginatedResults = min(MAX_ENTRIES, response.totalResults)
+        val numberOfPaginatedResults: Int = min(MAX_ENTRIES, response.totalResults)
         val pageOffset: Int = numberOfPaginatedResults % numPerPage
 
         return ThymeleafContent(
