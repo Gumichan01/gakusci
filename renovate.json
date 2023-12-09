@@ -2,6 +2,10 @@
   "extends": [
     "config:base",":rebaseStalePrs"
   ],
+
+  "assignees": ["Gumichan01"],
+  "prHourlyLimit": 8,
+
   "schedule": [
     "every weekend"
   ]
