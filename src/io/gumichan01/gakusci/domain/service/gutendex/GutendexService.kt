@@ -9,9 +9,9 @@ import io.gumichan01.gakusci.domain.model.entry.IResultEntry
 import io.gumichan01.gakusci.domain.service.IService
 
 class GutendexService(private val client: IClient<GutendexResponse>) : IService {
+
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
-        val response: GutendexResponse? = client.retrieveResults(queryParam)
-        return response?.let {
+        return client.retrieveResults(queryParam)?.let {
             val count: Int = it.count
             val entries: List<IResultEntry> = it.results
                     .filter { e -> e.isAccessible() }
