@@ -16,7 +16,7 @@ import java.net.URLEncoder
 class GutendexClient: IClient<GutendexResponse> {
 
     private val logger: Logger = LoggerFactory.getLogger(GutendexClient::class.java)
-    private val gutendexUrl = "https://gutendex.com/books?search=%s"
+    private val gutendexUrl = "https://gutendex.com/books?search=%s&mime_type=text/html"
 
     override suspend fun retrieveResults(queryParam: QueryParam): GutendexResponse? {
         val url: String = gutendexUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8))
