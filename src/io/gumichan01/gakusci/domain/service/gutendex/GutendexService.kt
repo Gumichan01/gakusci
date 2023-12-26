@@ -13,9 +13,9 @@ class GutendexService(private val client: IClient<GutendexResponse>) : IService 
         val response: GutendexResponse? = client.retrieveResults(queryParam)
         return response?.let {
             val count: Int = it.count
-            val entries: List<IResultEntry> = it.results.map { e ->
-                BookEntry(e.title, e.authors.map { a -> a.name }.toString(), date = null, url = "", thumbnailUrl = "")
-            }
+            val entries: List<IResultEntry> = it.results
+                    .filter { e -> e.isAccessible() }
+                    .map { e -> BookEntry(e.title, e.authors.map { a -> a.name }.toString(), url = e.link(), thumbnailUrl = e.thumbnail()) }
             ServiceResponse(count, entries)
         }
     }
