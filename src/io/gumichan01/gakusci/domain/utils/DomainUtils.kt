@@ -37,3 +37,5 @@ fun Date.toLocalDate(): LocalDate {
 fun String.toLocalDate(formatter: DateTimeFormatter): LocalDate {
     return LocalDate.parse(this, formatter)
 }
+
+fun defaultThumbnailLink(): String = "/image/not-found.jpg"

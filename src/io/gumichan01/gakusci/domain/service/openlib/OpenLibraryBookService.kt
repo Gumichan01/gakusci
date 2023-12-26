@@ -10,6 +10,7 @@ import io.gumichan01.gakusci.domain.model.entry.BookEntry
 import io.gumichan01.gakusci.domain.search.cache.CacheHandler
 import io.gumichan01.gakusci.domain.search.cache.SearchCache
 import io.gumichan01.gakusci.domain.service.IService
+import io.gumichan01.gakusci.domain.utils.defaultThumbnailLink
 
 class OpenLibraryBookService(private val openLibBookClient: IClient<OpenLibraryBookResponse>) : IService {
 
@@ -21,7 +22,7 @@ class OpenLibraryBookService(private val openLibBookClient: IClient<OpenLibraryB
                 openLibBookClient.retrieveResults(queryParam.copy(query = bookNumber.format()))?.let {
                     ServiceResponse(
                         1,
-                        listOf(BookEntry(bibKey = it.bibKey, url = it.infoUrl, thumbnailUrl = it.thumbnailUrl ?: ""))
+                        listOf(BookEntry(bibKey = it.bibKey, url = it.infoUrl, thumbnailUrl = it.thumbnailUrl ?: defaultThumbnailLink()))
                     )
                 }
             }

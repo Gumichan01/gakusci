@@ -2,6 +2,7 @@ package io.gumichan01.gakusci.client.openlib
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import io.gumichan01.gakusci.domain.utils.defaultThumbnailLink
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class OpenLibrarySearchEntry(
@@ -28,7 +29,7 @@ data class OpenLibrarySearchEntry(
 
     fun thumbnail(): String {
         return if (coverIndex == 0) {
-            "/image/not-found.jpg"
+            defaultThumbnailLink()
         } else {
             "https://covers.openlibrary.org/b/id/${coverIndex}-M.jpg"
         }
