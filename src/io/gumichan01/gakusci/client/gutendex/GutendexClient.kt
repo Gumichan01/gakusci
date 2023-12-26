@@ -13,13 +13,18 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URLEncoder
 
-class GutendexClient: IClient<GutendexResponse> {
+class GutendexClient : IClient<GutendexResponse> {
 
     private val logger: Logger = LoggerFactory.getLogger(GutendexClient::class.java)
-    private val gutendexUrl = "https://gutendex.com/books?search=%s&mime_type=text/html"
+    private val gutendexUrl = "https://gutendex.com/books?search=%s&mime_type=text/html&page=%d"
+    private val nbEntriesPerPage = 32
+
+    private fun calculatePageToSearchFor(index: Int): Int {
+        return if (index < nbEntriesPerPage) 1 else index / nbEntriesPerPage + 1
+    }
 
     override suspend fun retrieveResults(queryParam: QueryParam): GutendexResponse? {
-        val url: String = gutendexUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8))
+        val url: String = gutendexUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8), calculatePageToSearchFor(queryParam.start))
         val client = HttpClient(Apache) {
             install(ContentNegotiation) {
                 jackson()
