@@ -1,5 +1,11 @@
 package io.gumichan01.gakusci.client.utils
 
+enum class BookNumberType(val value: String) {
+    ISBN("ISBN"), LCCN("LCCN"), OCLC("OCLC")
+}
+
+data class BookNumber(val type: BookNumberType, val value: String)
+
 fun generateBookNumberFromText(text: String): BookNumber? {
     val rawBookNumber = text.substringAfter(':')
     return when {
@@ -89,3 +95,4 @@ fun isValidLCCN(bookNumber: String): Boolean {
 fun isValidOCLC(bookNumber: String): Boolean {
     return bookNumber.matches(Regex("[0-9]+"))
 }
+
