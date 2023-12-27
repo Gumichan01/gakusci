@@ -3,4 +3,4 @@ package io.gumichan01.gakusci.client.gutendex
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class GutendexAuthor(val name: String)
+data class GutendexAuthor(val name: String)
