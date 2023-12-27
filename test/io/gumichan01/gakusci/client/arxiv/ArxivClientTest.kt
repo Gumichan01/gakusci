@@ -4,6 +4,7 @@ import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.utils.SearchType
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Test
 
 class ArxivClientTest {
 
@@ -11,7 +12,8 @@ class ArxivClientTest {
     fun `Call the Arxiv service - get results`() {
         val response = runBlocking { ArxivClient().retrieveResults(QueryParam("science", SearchType.RESEARCH)) }
         assertThat(response).isNotNull
-        assertThat(response?.numFound).isGreaterThan(0)
+        assertThat(response!!.docs.size).isGreaterThan(0)
+        assertThat(response.numFound).isGreaterThan(0)
     }
 
     //@Test
