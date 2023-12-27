@@ -18,7 +18,7 @@ import java.time.Duration
 class ArxivClient : IClient<ArxivResponse> {
 
     private val logger: Logger = LoggerFactory.getLogger(ArxivClient::class.java)
-    private val arxivUrl = "https://export.arxiv.org/api/query?search_query=%s&max_results=%d"
+    private val arxivUrl = "http://export.arxiv.org/api/query?search_query=all:%s&id_list=&start=0&max_results=%d"
     private val rateLimiter: LocalBucket = createLimiter()
 
     private fun createLimiter(): LocalBucket {
