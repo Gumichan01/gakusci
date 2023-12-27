@@ -3,6 +3,7 @@ package io.gumichan01.gakusci.client.openlib
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.gumichan01.gakusci.client.IClient
+import io.gumichan01.gakusci.client.utils.calculatePageToSearchFor
 import io.gumichan01.gakusci.client.utils.trace
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.ktor.client.HttpClient
@@ -22,7 +23,7 @@ class OpenLibrarySearchClient : IClient<OpenLibrarySearchResponse> {
     private val openLibrarySearchUrl = "https://openlibrary.org/search.json?q=%s&page=%d&limit=10"
 
     override suspend fun retrieveResults(queryParam: QueryParam): OpenLibrarySearchResponse? {
-        val page: Int = calculatePageToSearchFor(queryParam.start)
+        val page: Int = calculatePageToSearchFor(queryParam.start, nbEntriesPerPage)
         val url: String = openLibrarySearchUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8), page)
         return retrieveData(url)
     }
@@ -34,10 +35,6 @@ class OpenLibrarySearchClient : IClient<OpenLibrarySearchResponse> {
             trace(logger, e)
             null
         }
-    }
-
-    private fun calculatePageToSearchFor(index: Int): Int {
-        return if (index < nbEntriesPerPage) 1 else index / nbEntriesPerPage + 1
     }
 
     private fun String.fromJson(): OpenLibrarySearchResponse = jacksonObjectMapper().readValue(this)

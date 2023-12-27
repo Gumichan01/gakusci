@@ -1,6 +1,7 @@
 package io.gumichan01.gakusci.client.gutendex
 
 import io.gumichan01.gakusci.client.IClient
+import io.gumichan01.gakusci.client.utils.calculatePageToSearchFor
 import io.gumichan01.gakusci.client.utils.trace
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.ktor.client.*
@@ -20,12 +21,8 @@ class GutendexClient : IClient<GutendexResponse> {
     private val gutendexUrlOnPage = "https://gutendex.com/books?search=%s&page=%d"
     private val nbEntriesPerPage = 32
 
-    private fun calculatePageToSearchFor(index: Int): Int {
-        return if (index < nbEntriesPerPage) 1 else index / nbEntriesPerPage + 1
-    }
-
     override suspend fun retrieveResults(queryParam: QueryParam): GutendexResponse? {
-        val page: Int = calculatePageToSearchFor(queryParam.start)
+        val page: Int = calculatePageToSearchFor(queryParam.start, nbEntriesPerPage)
         val url: String = if (page > 1) {
             gutendexUrlOnPage.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8), page)
         } else {
