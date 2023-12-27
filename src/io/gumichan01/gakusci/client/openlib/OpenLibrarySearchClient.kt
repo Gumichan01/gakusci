@@ -18,10 +18,12 @@ class OpenLibrarySearchClient : IClient<OpenLibrarySearchResponse> {
     private val logger: Logger = LoggerFactory.getLogger(OpenLibrarySearchClient::class.java)
 
     // NOTE This URL refers to an experimental Open Library API, so this class must be considered experimental
-    private val openLibrarySearchUrl = "https://openlibrary.org/search.json?q=%s"
+    private val nbEntriesPerPage = 10
+    private val openLibrarySearchUrl = "https://openlibrary.org/search.json?q=%s&page=%d&limit=10"
 
     override suspend fun retrieveResults(queryParam: QueryParam): OpenLibrarySearchResponse? {
-        val url: String = openLibrarySearchUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8))
+        val page: Int = calculatePageToSearchFor(queryParam.start)
+        val url: String = openLibrarySearchUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8), page)
         return retrieveData(url)
     }
 
@@ -32,6 +34,10 @@ class OpenLibrarySearchClient : IClient<OpenLibrarySearchResponse> {
             trace(logger, e)
             null
         }
+    }
+
+    private fun calculatePageToSearchFor(index: Int): Int {
+        return if (index < nbEntriesPerPage) 1 else index / nbEntriesPerPage + 1
     }
 
     private fun String.fromJson(): OpenLibrarySearchResponse = jacksonObjectMapper().readValue(this)

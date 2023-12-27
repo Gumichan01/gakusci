@@ -17,10 +17,7 @@ class OpenLibrarySearchService(private val openLibrarySearchClient: IClient<Open
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
         return cache.getOrUpdateCache(queryParam) {
             openLibrarySearchClient.retrieveResults(queryParam)?.let {
-                // Since the API is experimental and returns by default at most 100 results per page (even the first page)
-                // The service will take 100 results
-                val maxNumFound = 100
-                val numFound: Int = (if (it.numFound < maxNumFound) it.numFound else maxNumFound)
+                val nbEntries: Int = it.numFound
                 val entries: List<IResultEntry> = it.docs?.asSequence()?.map { doc ->
                     BookEntry(
                         doc.authors(),
@@ -29,8 +26,8 @@ class OpenLibrarySearchService(private val openLibrarySearchClient: IClient<Open
                         url = doc.link(),
                         thumbnailUrl = doc.thumbnail()
                     )
-                }?.take(numFound)?.sortedByDescending { b -> b.thumbnailUrl }?.toList() ?: emptyList()
-                ServiceResponse(numFound, entries)
+                }?.sortedByDescending { b -> b.thumbnailUrl }?.toList() ?: emptyList()
+                ServiceResponse(nbEntries, entries)
             }
         }
     }
