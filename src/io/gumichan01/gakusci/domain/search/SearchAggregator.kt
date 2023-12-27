@@ -1,26 +1,24 @@
 package io.gumichan01.gakusci.domain.search
 
 import io.gumichan01.gakusci.client.arxiv.ArxivClient
+import io.gumichan01.gakusci.client.gutendex.GutendexClient
 import io.gumichan01.gakusci.client.hal.HalClient
 import io.gumichan01.gakusci.client.jikan.JikanAnimeClient
 import io.gumichan01.gakusci.client.jikan.JikanMangaClient
 import io.gumichan01.gakusci.client.openlib.OpenLibraryBookClient
 import io.gumichan01.gakusci.client.openlib.OpenLibrarySearchClient
-import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseBookClient
-import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseSearchClient
 import io.gumichan01.gakusci.client.theses.ThesesClient
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.model.entry.IResultEntry
 import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.service.arxiv.ArxivService
+import io.gumichan01.gakusci.domain.service.gutendex.GutendexService
 import io.gumichan01.gakusci.domain.service.hal.HalService
 import io.gumichan01.gakusci.domain.service.jikan.JikanAnimeService
 import io.gumichan01.gakusci.domain.service.jikan.JikanMangaService
 import io.gumichan01.gakusci.domain.service.openlib.OpenLibraryBookService
 import io.gumichan01.gakusci.domain.service.openlib.OpenLibrarySearchService
-import io.gumichan01.gakusci.domain.service.penguin.PenguinRandomHouseBookService
-import io.gumichan01.gakusci.domain.service.penguin.PenguinRandomHouseSearchService
 import io.gumichan01.gakusci.domain.service.theses.ThesesService
 import io.gumichan01.gakusci.domain.utils.slice
 import io.gumichan01.gakusci.domain.utils.take
@@ -40,8 +38,8 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
         val start: Int = queryParam.start
         val (total: Int, entries: List<IResultEntry>) = searchResultConsumer.consume(searchLauncher.launch(queryParam))
         return SearchResponse(total, start, entries).take(queryParam.rows)
-            .slice(start, queryParam.numPerPage)
-            .also { logger.trace("${queryParam.query} - Total: ${it.totalResults}, number of entries: ${it.entries.size}") }
+                .slice(start, queryParam.numPerPage)
+                .also { logger.trace("${queryParam.query} - Total: ${it.totalResults}, number of entries: ${it.entries.size}") }
     }
 
     // Depending on the type of the search domain (research papers, books), a dedicated aggregator must be built
@@ -63,7 +61,7 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
         }
         val BOOKS: Set<IService> by lazy {
             setOf(OpenLibrarySearchService(OpenLibrarySearchClient()), OpenLibraryBookService(OpenLibraryBookClient()),
-                    JikanMangaService(JikanMangaClient()))
+                    JikanMangaService(JikanMangaClient()), GutendexService(GutendexClient()))
         }
         val MANGAS: Set<IService> by lazy { setOf(JikanMangaService(JikanMangaClient())) }
         val ANIME: Set<IService> by lazy { setOf(JikanAnimeService(JikanAnimeClient())) }
