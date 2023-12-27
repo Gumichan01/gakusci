@@ -9,10 +9,10 @@ import kotlin.test.Test
 
 class JikanMangaClientTest {
 
-//    @Test
+    //@Test
     fun `Jikan Client, test manga search - return results`() {
         val client: IClient<JikanMangaResponse> = JikanMangaClient()
-        val response = runBlocking { client.retrieveResults(QueryParam("soul eater", SearchType.MANGAS)) }
+        val response: JikanMangaResponse? = runBlocking { client.retrieveResults(QueryParam("soul eater", SearchType.MANGAS)) }
         Assertions.assertThat(response).isNotNull
         Assertions.assertThat(response!!.entries.size).isGreaterThan(0)
     }
