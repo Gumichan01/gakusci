@@ -17,7 +17,7 @@ import java.net.URLEncoder
 class HalClient : IClient<HalResponse> {
 
     private val logger: Logger = LoggerFactory.getLogger(HalClient::class.java)
-    private val halUrl = "https://api.archives-ouvertes.fr/search/?q=%s&rows=%d&wt=json"
+    private val halUrl = "https://api.archives-ouvertes.fr/search/?q=%s&start=%d&rows=%d&wt=json"
     private val client = HttpClient(Apache) {
         install(HttpCache)
         install(ContentNegotiation) {
@@ -26,7 +26,7 @@ class HalClient : IClient<HalResponse> {
     }
 
     override suspend fun retrieveResults(queryParam: QueryParam): HalResponse? {
-        val url: String = halUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8), queryParam.rows)
+        val url: String = halUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8), queryParam.start, queryParam.rows)
         return retrieveData(url)
     }
 
