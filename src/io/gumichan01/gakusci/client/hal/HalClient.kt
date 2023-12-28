@@ -6,6 +6,7 @@ import io.gumichan01.gakusci.domain.model.QueryParam
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.apache.*
+import io.ktor.client.plugins.cache.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.serialization.jackson.*
@@ -17,6 +18,12 @@ class HalClient : IClient<HalResponse> {
 
     private val logger: Logger = LoggerFactory.getLogger(HalClient::class.java)
     private val halUrl = "https://api.archives-ouvertes.fr/search/?q=%s&rows=%d&wt=json"
+    private val client = HttpClient(Apache) {
+        install(HttpCache)
+        install(ContentNegotiation) {
+            jackson()
+        }
+    }
 
     override suspend fun retrieveResults(queryParam: QueryParam): HalResponse? {
         val url: String = halUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8), queryParam.rows)
@@ -24,13 +31,8 @@ class HalClient : IClient<HalResponse> {
     }
 
     private suspend fun retrieveData(url: String): HalResponse? {
-        val client = HttpClient(Apache) {
-            install(ContentNegotiation) {
-                jackson()
-            }
-        }
         return try {
-            client.use { it.get(url).body() }
+            client.get(url).body()
         } catch (e: Exception) {
             trace(logger, e)
             null

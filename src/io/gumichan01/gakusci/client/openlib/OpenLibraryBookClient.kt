@@ -7,6 +7,7 @@ import io.gumichan01.gakusci.client.utils.trace
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
+import io.ktor.client.plugins.cache.*
 import io.ktor.client.request.get
 import io.ktor.client.statement.*
 import org.slf4j.Logger
@@ -16,10 +17,11 @@ class OpenLibraryBookClient : IClient<OpenLibraryBookResponse> {
 
     private val logger: Logger = LoggerFactory.getLogger(OpenLibraryBookClient::class.java)
     private val openLibrarySearchUrl = "http://openlibrary.org/api/books?bibkeys=%s&format=json"
+    private val client = HttpClient(Apache) { install(HttpCache) }
 
     override suspend fun retrieveResults(queryParam: QueryParam): OpenLibraryBookResponse? {
         return try {
-            HttpClient(Apache).use { it.get(openLibrarySearchUrl.format(queryParam.query)).bodyAsText() }.fromJson()
+            client.get(openLibrarySearchUrl.format(queryParam.query)).bodyAsText().fromJson()
         } catch (e: Exception) {
             trace(logger, e)
             null

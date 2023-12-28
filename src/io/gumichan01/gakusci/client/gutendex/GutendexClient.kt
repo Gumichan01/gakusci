@@ -7,6 +7,7 @@ import io.gumichan01.gakusci.domain.model.QueryParam
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.apache.*
+import io.ktor.client.plugins.cache.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.serialization.jackson.*
@@ -20,6 +21,12 @@ class GutendexClient : IClient<GutendexResponse> {
     private val gutendexUrl = "https://gutendex.com/books?search=%s"
     private val gutendexUrlOnPage = "https://gutendex.com/books?search=%s&page=%d"
     private val nbEntriesPerPage = 32
+    private val client = HttpClient(Apache) {
+        install(HttpCache)
+        install(ContentNegotiation) {
+            jackson()
+        }
+    }
 
     override suspend fun retrieveResults(queryParam: QueryParam): GutendexResponse? {
         val page: Int = calculatePageToSearchFor(queryParam.start, nbEntriesPerPage)
@@ -28,13 +35,9 @@ class GutendexClient : IClient<GutendexResponse> {
         } else {
             gutendexUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8))
         }
-        val client = HttpClient(Apache) {
-            install(ContentNegotiation) {
-                jackson()
-            }
-        }
+
         return try {
-            client.use { it.get(url).body() }
+            client.get(url).body()
         } catch (e: Exception) {
             trace(logger, e)
             null

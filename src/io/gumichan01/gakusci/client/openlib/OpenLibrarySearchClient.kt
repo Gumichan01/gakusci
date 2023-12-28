@@ -8,6 +8,7 @@ import io.gumichan01.gakusci.client.utils.trace
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
+import io.ktor.client.plugins.cache.*
 import io.ktor.client.request.get
 import io.ktor.client.statement.*
 import org.slf4j.Logger
@@ -21,6 +22,7 @@ class OpenLibrarySearchClient : IClient<OpenLibrarySearchResponse> {
     // NOTE This URL refers to an experimental Open Library API, so this class must be considered experimental
     private val nbEntriesPerPage = 10
     private val openLibrarySearchUrl = "https://openlibrary.org/search.json?q=%s&page=%d&limit=10"
+    private val client = HttpClient(Apache) { install(HttpCache) }
 
     override suspend fun retrieveResults(queryParam: QueryParam): OpenLibrarySearchResponse? {
         val page: Int = calculatePageToSearchFor(queryParam.start, nbEntriesPerPage)
@@ -30,7 +32,7 @@ class OpenLibrarySearchClient : IClient<OpenLibrarySearchResponse> {
 
     private suspend fun retrieveData(url: String): OpenLibrarySearchResponse? {
         return try {
-            HttpClient(Apache).use { it.get(url).bodyAsText() }.fromJson()
+            client.get(url).bodyAsText().fromJson()
         } catch (e: Exception) {
             trace(logger, e)
             null
