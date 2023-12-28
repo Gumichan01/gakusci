@@ -25,7 +25,8 @@ class JikanAnimeClient : IClient<JikanAnimeResponse> {
                 .addLimit(Bandwidth.classic(2, Refill.greedy(1L, 500.milliseconds.toJavaDuration())))
                 .build()
     }
-
+    // TODO Rebuild the implementation of the Jikan client
+    // The Jaikan implementation of the Jikan API does not properly support pagination
     override suspend fun retrieveResults(queryParam: QueryParam): JikanAnimeResponse? {
         val requestTimeout: Duration = 5.seconds
         return if (rateLimiter.tryConsume(1L)) {
@@ -38,7 +39,7 @@ class JikanAnimeClient : IClient<JikanAnimeResponse> {
                                     .filter { e -> e.url != null }
                                     .map { entry ->
                                         JikanAnimeEntry(entry.title!!, entry.url!!, entry.episodes, entry.images.firstDefault())
-                                    }.take(queryParam.rows).toList()
+                                    }.toList()
                         }.get(requestTimeout.inWholeSeconds, TimeUnit.SECONDS)
             }
             JikanAnimeResponse(entries)

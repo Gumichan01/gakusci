@@ -8,7 +8,7 @@ class ArxivCache(cache: Cache<String, ArxivResponse> = defaultArxivCache()) :
         Cache<String, ArxivResponse> by cache {
 
     companion object {
-        fun defaultArxivCache() : Cache<String, ArxivResponse> {
+        fun defaultArxivCache(): Cache<String, ArxivResponse> {
             return Caffeine.newBuilder().expireAfterWrite(600, TimeUnit.SECONDS).maximumSize(100L).build()
         }
     }

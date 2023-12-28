@@ -23,8 +23,8 @@ class ArxivClient(private val cache: ArxivCache = ArxivCache()) : IClient<ArxivR
 
     private fun createLimiter(): LocalBucket {
         return Bucket.builder()
-                .addLimit(Bandwidth.classic(1, Refill.greedy(1L, Duration.ofSeconds(3))))
-                .build()
+            .addLimit(Bandwidth.classic(1, Refill.greedy(1L, Duration.ofSeconds(3))))
+            .build()
     }
 
     override suspend fun retrieveResults(queryParam: QueryParam): ArxivResponse? {
@@ -45,10 +45,10 @@ class ArxivClient(private val cache: ArxivCache = ArxivCache()) : IClient<ArxivR
     private fun ArxivFeed.results(): List<ArxivResultEntry> {
         return entries?.map { e ->
             ArxivResultEntry(
-                    e.authors.map { a -> ArxivAuthor(a.name) },
-                    e.title,
-                    ArxivUtils.toDate(e.published),
-                    ArxivUtils.getWebsiteLink(e.links).href
+                e.authors.map { a -> ArxivAuthor(a.name) },
+                e.title,
+                ArxivUtils.toDate(e.published),
+                ArxivUtils.getWebsiteLink(e.links).href
             )
         } ?: emptyList()
     }
