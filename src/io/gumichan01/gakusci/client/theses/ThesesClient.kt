@@ -18,11 +18,11 @@ import java.net.URLEncoder
 class ThesesClient : IClient<ThesesResponse> {
 
     private val logger: Logger = LoggerFactory.getLogger(ThesesClient::class.java)
-    private val thesesUrl = "https://www.theses.fr/?q=%s&format=json"
+    private val thesesUrl = "https://www.theses.fr/?q=%s&start=%d&format=json"
     private val client = HttpClient(Apache) { install(HttpCache) }
 
     override suspend fun retrieveResults(queryParam: QueryParam): ThesesResponse? {
-        val url: String = thesesUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8))
+        val url: String = thesesUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8), queryParam.start)
         return retrieveData(url)
     }
 
