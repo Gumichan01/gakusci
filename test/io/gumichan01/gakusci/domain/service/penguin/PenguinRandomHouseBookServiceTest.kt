@@ -24,20 +24,20 @@ class PenguinRandomHouseBookServiceTest {
             )
         } returns PenguinRandomHouseBookResponse("9780140439212", "marc", "ipsum", "01/01/2020")
 
-        coEvery { retrieveResults(QueryParam("dfnkusfk", SearchType.BOOKS, )) } returns null
+        coEvery { retrieveResults(QueryParam("dfnkusfk", SearchType.BOOKS)) } returns null
     }
 
     @Test
     fun `penguin random house services, valid ISBN search on fake client - return results`() {
         val service = PenguinRandomHouseBookService(penguinBookClient)
-        val response: ServiceResponse? = runBlocking { service.search(QueryParam("9780140439212", SearchType.BOOKS, )) }
+        val response: ServiceResponse? = runBlocking { service.search(QueryParam("9780140439212", SearchType.BOOKS)) }
         Assertions.assertThat(response).isNotNull
     }
 
     @Test
     fun `penguin random house services, invalid ISBN search on fake client - return null`() {
         val service = PenguinRandomHouseBookService(penguinBookClient)
-        val response: ServiceResponse? = runBlocking { service.search(QueryParam("dfnkusfk", SearchType.BOOKS, )) }
+        val response: ServiceResponse? = runBlocking { service.search(QueryParam("dfnkusfk", SearchType.BOOKS)) }
         Assertions.assertThat(response).isNull()
     }
 }

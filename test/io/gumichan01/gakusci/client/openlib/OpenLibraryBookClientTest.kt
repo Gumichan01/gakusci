@@ -12,7 +12,7 @@ internal class OpenLibraryBookClientTest {
     fun `Call the Open Library web-service (real external service) - get book by ISBN`() {
         val client: IClient<OpenLibraryBookResponse> = OpenLibraryBookClient()
         val response: OpenLibraryBookResponse? =
-            runBlocking { client.retrieveResults(QueryParam("1421500574", SearchType.BOOKS, )) }
+            runBlocking { client.retrieveResults(QueryParam("1421500574", SearchType.BOOKS)) }
         assertThat(response).isNotNull
         assertThat(response?.bibKey).contains("1421500574")
     }
@@ -21,7 +21,7 @@ internal class OpenLibraryBookClientTest {
     fun `Don't call the Open Library web-service - invalid ISBN or LCCN or OCLC`() {
         val client: IClient<OpenLibraryBookResponse> = OpenLibraryBookClient()
         val response: OpenLibraryBookResponse? =
-            runBlocking { client.retrieveResults(QueryParam("1$9367e7", SearchType.BOOKS, )) }
+            runBlocking { client.retrieveResults(QueryParam("1$9367e7", SearchType.BOOKS)) }
         assertThat(response).isNull()
     }
 }

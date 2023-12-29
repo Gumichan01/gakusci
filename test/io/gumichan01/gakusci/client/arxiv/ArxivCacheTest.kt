@@ -14,7 +14,7 @@ internal class ArxivCacheTest {
     private val fakeDate = Date.valueOf("2023-01-01")
     private val expectedResponse = ArxivResponse(1, listOf(ArxivResultEntry(emptyList(), "test-arxiv", fakeDate, "///fake/path")))
     private val arxivClientMock: ArxivClient = mockk {
-        coEvery { retrieveResults(QueryParam("loremi", SearchType.RESEARCH, )) } returns expectedResponse
+        coEvery { retrieveResults(QueryParam("loremi", SearchType.RESEARCH)) } returns expectedResponse
     }
 
     @Test

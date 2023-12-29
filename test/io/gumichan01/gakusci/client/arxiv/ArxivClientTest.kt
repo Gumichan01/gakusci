@@ -9,7 +9,7 @@ class ArxivClientTest {
 
     //@Test
     fun `Call the Arxiv service - get results`() {
-        val response = runBlocking { ArxivClient().retrieveResults(QueryParam("science", SearchType.RESEARCH, )) }
+        val response = runBlocking { ArxivClient().retrieveResults(QueryParam("science", SearchType.RESEARCH)) }
         assertThat(response).isNotNull
         assertThat(response!!.docs.size).isGreaterThan(0)
         assertThat(response.numFound).isGreaterThan(0)
@@ -18,7 +18,7 @@ class ArxivClientTest {
     //@Test
     fun `Call the Arxiv service to ge the 4 first entries`() {
         val response = runBlocking {
-            ArxivClient().retrieveResults(QueryParam("science", SearchType.RESEARCH, rows = 4, ))
+            ArxivClient().retrieveResults(QueryParam("science", SearchType.RESEARCH, rows = 4))
         }
         assertThat(response).isNotNull
         assertThat(response?.numFound).isGreaterThan(0)
@@ -27,7 +27,7 @@ class ArxivClientTest {
 
     //@Test
     fun `Call the Arxiv service with request that returns no result`() {
-        val response = runBlocking { ArxivClient().retrieveResults(QueryParam("azertyu", SearchType.RESEARCH, )) }
+        val response = runBlocking { ArxivClient().retrieveResults(QueryParam("azertyu", SearchType.RESEARCH)) }
         assertThat(response).isNotNull
         assertThat(response?.numFound).isEqualTo(0)
         assertThat(response?.docs).isEmpty()

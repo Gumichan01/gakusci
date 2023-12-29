@@ -28,7 +28,7 @@ class PenguinRandomHouseSearchService(
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
         return (searchClient.retrieveResults(queryParam)?.entries?.retrieveDistinctIsbns()
             ?: emptyList()).map { entry ->
-            QueryParam(entry, SearchType.BOOKS, )
+            QueryParam(entry, SearchType.BOOKS)
         }.run {
             when {
                 isEmpty() -> ServiceResponse(0, emptyList())
