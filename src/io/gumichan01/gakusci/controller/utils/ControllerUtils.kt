@@ -112,6 +112,6 @@ fun SearchResponse.isEmpty(): Boolean {
     return totalResults == 0 && entries.isEmpty()
 }
 
-fun RequestParam.toQueryParam(): QueryParam {
-    return QueryParam(query, searchType, rows, start, numPerPage)
+fun RequestParam.toQueryParam(uri: String): QueryParam {
+    return QueryParam(query, searchType, rows, start, numPerPage, uri)
 }

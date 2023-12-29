@@ -14,7 +14,7 @@ internal class ArxivCacheTest {
     private val fakeDate = Date.valueOf("2023-01-01")
     private val expectedResponse = ArxivResponse(1, listOf(ArxivResultEntry(emptyList(), "test-arxiv", fakeDate, "///fake/path")))
     private val arxivClientMock: ArxivClient = mockk {
-        coEvery { retrieveResults(QueryParam("loremi", SearchType.RESEARCH)) } returns expectedResponse
+        coEvery { retrieveResults(QueryParam("loremi", SearchType.RESEARCH, )) } returns expectedResponse
     }
 
     @Test
@@ -35,10 +35,10 @@ internal class ArxivCacheTest {
     fun `Arxiv Cache - Retrieve data, cache it, retrieve it again, expect cached same data`() {
         val cache = ArxivCache()
         val resp01: ArxivResponse = cache.get("loremi") {
-            runBlocking { arxivClientMock.retrieveResults(QueryParam("loremi", SearchType.RESEARCH)) }
+            runBlocking { arxivClientMock.retrieveResults(QueryParam("loremi", SearchType.RESEARCH, )) }
         }
         val resp02: ArxivResponse = cache.get("loremi") {
-            runBlocking { arxivClientMock.retrieveResults(QueryParam("loremi", SearchType.RESEARCH)) }
+            runBlocking { arxivClientMock.retrieveResults(QueryParam("loremi", SearchType.RESEARCH, )) }
         }
         val value: ArxivResponse = cache.get("loremi") {
             ArxivResponse(1, listOf(ArxivResultEntry(emptyList(), "FAIL TEST", fakeDate, "")))

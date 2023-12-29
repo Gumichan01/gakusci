@@ -1,9 +1,12 @@
 package io.gumichan01.gakusci.controller
 
 import io.gumichan01.gakusci.controller.utils.*
+import io.gumichan01.gakusci.domain.model.QueryParam
+import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.search.SearchQueryProcessor
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -20,15 +23,16 @@ class RestController(private val searchQueryProcessor: SearchQueryProcessor) {
         when (val resultParam: IRequestParamResult = retrieveApiParam(call.request.queryParameters, call.parameters)) {
             is BadRequest -> call.respond(HttpStatusCode.BadRequest, resultParam.message)
             is RequestParam -> {
-                logger.trace(resultParam.query)
-                val queryParam = resultParam.toQueryParam()
-                val searchResponse = searchQueryProcessor.proceed(queryParam)
-                if (searchResponse.isEmpty()) {
+                logger.trace(call.request.uri)
+                val query: QueryParam = resultParam.toQueryParam(call.request.uri)
+                val response: SearchResponse = searchQueryProcessor.proceed(query)
+                if (response.isEmpty()) {
                     call.respond(HttpStatusCode.NoContent)
                 } else {
-                    call.respond(HttpStatusCode.OK, searchResponse)
+                    call.respond(HttpStatusCode.OK, response)
                 }
             }
+
             is BangRequest -> call.respond(
                 HttpStatusCode.BadRequest,
                 "Bang request not handled by the REST API: ${resultParam.request}"

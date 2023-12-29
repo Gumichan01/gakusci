@@ -16,7 +16,7 @@ import kotlin.test.Test
 class ArxivServiceTest {
 
     private val arxivClientMock: ArxivClient = mockk {
-        coEvery { retrieveResults(QueryParam("lorem", SearchType.RESEARCH)) } returns ArxivResponse(
+        coEvery { retrieveResults(QueryParam("lorem", SearchType.RESEARCH, )) } returns ArxivResponse(
             1, listOf(
                 ArxivResultEntry(
                     emptyList(),
@@ -27,20 +27,20 @@ class ArxivServiceTest {
             )
         )
 
-        coEvery { retrieveResults(QueryParam("dfnkusfk", SearchType.RESEARCH)) } returns null
+        coEvery { retrieveResults(QueryParam("dfnkusfk", SearchType.RESEARCH, )) } returns null
     }
 
     @Test
     fun `arXiv services, valid search on fake client - return results`() {
         val service = ArxivService(arxivClientMock)
-        val response: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH)) }
+        val response: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH, )) }
         assertThat(response).isNotNull
     }
 
     @Test
     fun `arXiv services, invalid search on fake client - return nothing`() {
         val service = ArxivService(arxivClientMock)
-        val response: ServiceResponse? = runBlocking { service.search(QueryParam("dfnkusfk", SearchType.RESEARCH)) }
+        val response: ServiceResponse? = runBlocking { service.search(QueryParam("dfnkusfk", SearchType.RESEARCH, )) }
         assertThat(response).isNull()
     }
 }

@@ -18,7 +18,7 @@ import kotlin.test.Test
 class JikanMangaServiceTest {
 
     private val mockkJikanCLient: IClient<JikanMangaResponse> = mockk {
-        coEvery { retrieveResults(QueryParam("lorem", SearchType.MANGAS)) } returns JikanMangaResponse(
+        coEvery { retrieveResults(QueryParam("lorem", SearchType.MANGAS, )) } returns JikanMangaResponse(
             listOf(
                 JikanMangaEntry(
                     title = "lorem ipsum",
@@ -33,7 +33,7 @@ class JikanMangaServiceTest {
     @Test
     fun `Jikan Manga Service, launch simple request - must return something`() {
         val jikan: IService = JikanMangaService(mockkJikanCLient)
-        val response: ServiceResponse? = runBlocking { jikan.search(QueryParam("lorem", SearchType.MANGAS)) }
+        val response: ServiceResponse? = runBlocking { jikan.search(QueryParam("lorem", SearchType.MANGAS, )) }
         Assertions.assertThat(response).isNotNull
         Assertions.assertThat(response!!.totalResults).isEqualTo(1)
         Assertions.assertThat(response.entries[0].label()).containsIgnoringCase("lorem ipsum")

@@ -17,13 +17,13 @@ internal class OpenLibrarySearchServiceTest {
         coEvery { docs } returns emptyList()
     }
     private val openLibSearchMock: OpenLibrarySearchClient = mockk {
-        coEvery { retrieveResults(QueryParam("gunnm", SearchType.BOOKS)) } returns openLibResponseMock
+        coEvery { retrieveResults(QueryParam("gunnm", SearchType.BOOKS, )) } returns openLibResponseMock
     }
 
     @Test
     fun `OpenLibrary service - valid search on fake client, get results`() {
         val service = OpenLibrarySearchService(openLibSearchMock)
-        val response = runBlocking { service.search(QueryParam("gunnm", SearchType.BOOKS)) }
+        val response = runBlocking { service.search(QueryParam("gunnm", SearchType.BOOKS, )) }
         assertThat(response).isNotNull
     }
 }

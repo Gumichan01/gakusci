@@ -7,6 +7,7 @@ import io.gumichan01.gakusci.domain.search.SearchQueryProcessor
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.thymeleaf.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,8 +31,8 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
                 } ?: call.respond(HttpStatusCode.BadRequest, "Invalid or incomplete Bang request : ${resultParam.request}")
             }
             is RequestParam -> {
-                logger.trace(resultParam.query)
-                val queryParam: QueryParam = resultParam.toQueryParam()
+                logger.trace(call.request.uri)
+                val queryParam: QueryParam = resultParam.toQueryParam(call.request.uri)
                 call.respond(generateThymeleafContent(queryParam, searchQueryProcessor.proceed(queryParam)))
             }
         }

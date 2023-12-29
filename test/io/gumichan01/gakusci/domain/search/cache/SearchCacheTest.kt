@@ -20,7 +20,7 @@ class SearchCacheTest {
     @Test
     fun `Get or update cache - new value - must returns the calculated value`() {
         val cache = SearchCache(builder.build<String, ServiceResponse>())
-        val result = runBlocking { cache.getOrUpdateCache(QueryParam("lorem", SearchType.RESEARCH), f1) }
+        val result = runBlocking { cache.getOrUpdateCache(QueryParam("lorem", SearchType.RESEARCH, ), f1) }
         Assertions.assertThat(result).isEqualTo(expectedResponse1)
     }
 
@@ -28,8 +28,8 @@ class SearchCacheTest {
     fun `Get or update cache - make the same query twice - must returns the cached value`() {
         val cache = SearchCache(builder.build<String, ServiceResponse>())
         val result = runBlocking {
-            cache.getOrUpdateCache(QueryParam("lorem", SearchType.RESEARCH), f1)
-            cache.getOrUpdateCache(QueryParam("lorem", SearchType.RESEARCH), f1)
+            cache.getOrUpdateCache(QueryParam("lorem", SearchType.RESEARCH, ), f1)
+            cache.getOrUpdateCache(QueryParam("lorem", SearchType.RESEARCH, ), f1)
         }
         Assertions.assertThat(result).isEqualTo(expectedResponse1)
     }
@@ -38,8 +38,8 @@ class SearchCacheTest {
     fun `Get or update cache - more entries requested - return the calculated value`() {
         val cache = SearchCache(builder.build<String, ServiceResponse>())
         val result = runBlocking {
-            cache.getOrUpdateCache(QueryParam("lorem", SearchType.RESEARCH), f1)
-            cache.getOrUpdateCache(QueryParam("lorem", SearchType.RESEARCH, rows = 10), f2)
+            cache.getOrUpdateCache(QueryParam("lorem", SearchType.RESEARCH, ), f1)
+            cache.getOrUpdateCache(QueryParam("lorem", SearchType.RESEARCH, rows = 10, ), f2)
         }
         Assertions.assertThat(result).isEqualTo(expectedResponse2)
     }

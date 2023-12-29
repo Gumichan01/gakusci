@@ -20,7 +20,7 @@ import kotlin.test.Test
 class SearchAggregatorTest {
 
     private val fakeLauncher: SearchLauncher = mockk {
-        every { launch(QueryParam("lorem", SearchType.RESEARCH)) } returns Channel<ServiceResponse>(4).run {
+        every { launch(QueryParam("lorem", SearchType.RESEARCH, )) } returns Channel<ServiceResponse>(4).run {
             runBlocking {
                 send(
                     ServiceResponse(
@@ -41,7 +41,7 @@ class SearchAggregatorTest {
     fun `aggregate result entries - return results`() {
         val aggregator = SearchAggregator(fakeLauncher)
         val results: SearchResponse =
-            runBlocking { aggregator.retrieveResults(QueryParam("lorem", SearchType.RESEARCH)) }
+            runBlocking { aggregator.retrieveResults(QueryParam("lorem", SearchType.RESEARCH, )) }
         assertThat(results.totalResults).isEqualTo(1)
         assertThat(results.entries).containsAnyOf(
             SimpleResultEntry(

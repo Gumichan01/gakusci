@@ -18,9 +18,9 @@ import kotlin.test.Test
 class PenguinRandomHouseSearchServiceTest {
 
     private val searchClientMock: IClient<PenguinRandomHouseSearchResponse> = mockk {
-        coEvery { retrieveResults(QueryParam("marx", SearchType.BOOKS, 1)) } returns
+        coEvery { retrieveResults(QueryParam("marx", SearchType.BOOKS, 1, )) } returns
                 PenguinRandomHouseSearchResponse(listOf(Pair("9780140043204", setOf("9780140043204"))))
-        coEvery { retrieveResults(QueryParam("lorem", SearchType.BOOKS)) } returns
+        coEvery { retrieveResults(QueryParam("lorem", SearchType.BOOKS, )) } returns
                 PenguinRandomHouseSearchResponse(
                     listOf(
                         Pair("9780140043204", setOf("9780140043204")),
@@ -31,13 +31,13 @@ class PenguinRandomHouseSearchServiceTest {
             retrieveResults(
                 QueryParam(
                     "9780140043204",
-                    SearchType.BOOKS
+                    SearchType.BOOKS,
                 )
             )
         } returns PenguinRandomHouseSearchResponse(emptyList())
     }
     private val searchServiceMock: IService = mockk {
-        coEvery { search(QueryParam("9780140043204", SearchType.BOOKS)) } returns
+        coEvery { search(QueryParam("9780140043204", SearchType.BOOKS, )) } returns
                 ServiceResponse(
                     1,
                     listOf(
@@ -49,7 +49,7 @@ class PenguinRandomHouseSearchServiceTest {
                         )
                     )
                 )
-        coEvery { search(QueryParam("9780140150964", SearchType.BOOKS)) } returns
+        coEvery { search(QueryParam("9780140150964", SearchType.BOOKS, )) } returns
                 ServiceResponse(
                     1,
                     listOf(
@@ -65,7 +65,7 @@ class PenguinRandomHouseSearchServiceTest {
     @Test
     fun `Send valid search request but get no result - returns response with no entry`() {
         val service: IService = PenguinRandomHouseSearchService(searchClientMock, searchServiceMock)
-        val result: ServiceResponse? = runBlocking { service.search(QueryParam("9780140043204", SearchType.BOOKS)) }
+        val result: ServiceResponse? = runBlocking { service.search(QueryParam("9780140043204", SearchType.BOOKS, )) }
         Assertions.assertThat(result).isNotNull
         Assertions.assertThat(result?.totalResults).isZero()
         Assertions.assertThat(result?.entries).isEmpty()
@@ -74,7 +74,7 @@ class PenguinRandomHouseSearchServiceTest {
     @Test
     fun `Send valid search request and get one result - returns response with at least one valid entry`() {
         val service: IService = PenguinRandomHouseSearchService(searchClientMock, searchServiceMock)
-        val result: ServiceResponse? = runBlocking { service.search(QueryParam("marx", SearchType.BOOKS, 1)) }
+        val result: ServiceResponse? = runBlocking { service.search(QueryParam("marx", SearchType.BOOKS, 1, )) }
         Assertions.assertThat(result).isNotNull
         Assertions.assertThat(result?.entries?.first()).isInstanceOf(BookEntry::class.java)
         val bookEntry: BookEntry = result?.entries?.first() as BookEntry

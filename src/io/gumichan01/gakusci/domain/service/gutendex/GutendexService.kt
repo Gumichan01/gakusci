@@ -7,16 +7,21 @@ import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.model.entry.BookEntry
 import io.gumichan01.gakusci.domain.model.entry.IResultEntry
 import io.gumichan01.gakusci.domain.service.IService
+import io.gumichan01.gakusci.domain.utils.ServiceRequestCache
 
 class GutendexService(private val client: IClient<GutendexResponse>) : IService {
 
+    private val cache = ServiceRequestCache()
+
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
-        return client.retrieveResults(queryParam)?.let {
-            val count: Int = it.count
-            val entries: List<IResultEntry> = it.results
+        return cache.coget(queryParam.query) {
+            client.retrieveResults(queryParam)?.let {
+                val count: Int = it.count
+                val entries: List<IResultEntry> = it.results
                     .filter { e -> e.isAccessible() }
                     .map { e -> BookEntry(e.title, e.authors.map { a -> a.name }.toString(), url = e.link(), thumbnailUrl = e.thumbnail()) }
-            ServiceResponse(count, entries)
+                ServiceResponse(count, entries)
+            }
         }
     }
 }

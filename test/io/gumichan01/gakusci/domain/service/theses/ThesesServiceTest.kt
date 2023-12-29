@@ -17,7 +17,7 @@ import kotlin.test.Test
 class ThesesServiceTest {
 
     private val clientMock: ThesesClient = mockk {
-        coEvery { retrieveResults(QueryParam("lorem", SearchType.RESEARCH)) } returns ThesesResponse(
+        coEvery { retrieveResults(QueryParam("lorem", SearchType.RESEARCH, )) } returns ThesesResponse(
             ThesesResponseBody(
                 3, 0, listOf(
                     ThesesResultEntry("1", "ipsum", "", "soutenue", "oui", Date(0L)),
@@ -26,7 +26,7 @@ class ThesesServiceTest {
                 )
             )
         )
-        coEvery { retrieveResults(QueryParam("ipsum", SearchType.RESEARCH)) } returns ThesesResponse(
+        coEvery { retrieveResults(QueryParam("ipsum", SearchType.RESEARCH, )) } returns ThesesResponse(
             ThesesResponseBody(
                 1, 0, listOf(
                     ThesesResultEntry("4", "para bellum", "", "soutenue", "non", Date(0L))
@@ -38,30 +38,30 @@ class ThesesServiceTest {
     @Test
     fun `Theses service, valid search with a client - return results`() {
         val service = ThesesService(clientMock)
-        val results: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH)) }
+        val results: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH, )) }
         Assertions.assertThat(results).isNotNull
     }
 
     @Test
     fun `Theses service, double search for same value - return same result twice`() {
         val service = ThesesService(clientMock)
-        val result1: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH)) }
-        val result2: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH)) }
+        val result1: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH, )) }
+        val result2: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH, )) }
         Assertions.assertThat(result1).isEqualTo(result2)
     }
 
     @Test
     fun `Theses service, two different searches - return different results`() {
         val service = ThesesService(clientMock)
-        val result1: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH)) }
-        val result2: ServiceResponse? = runBlocking { service.search(QueryParam("ipsum", SearchType.RESEARCH)) }
+        val result1: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH, )) }
+        val result2: ServiceResponse? = runBlocking { service.search(QueryParam("ipsum", SearchType.RESEARCH, )) }
         Assertions.assertThat(result1).isNotEqualTo(result2)
     }
 
     @Test
     fun `Theses service, search for presented and available theses - return requested results`() {
         val service = ThesesService(clientMock)
-        val result: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH)) }
+        val result: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH, )) }
         Assertions.assertThat(result?.totalResults).isEqualTo(1)
         Assertions.assertThat(result?.entries?.size).isEqualTo(1)
     }
