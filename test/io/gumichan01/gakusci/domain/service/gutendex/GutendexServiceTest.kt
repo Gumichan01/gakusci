@@ -23,7 +23,7 @@ internal class GutendexServiceTest {
     @Test
     fun `Gutendex services, invalid search - return nothing`() {
         val service = GutendexService(gutendexClientMock)
-        val response: ServiceResponse = runBlocking { service.search(QueryParam("dfnkusfk", SearchType.BOOKS)) }!!
+        val response: ServiceResponse = runBlocking { service.search(QueryParam("dfnkusfk", SearchType.BOOKS)) }
         Assertions.assertThat(response.totalResults).isZero
         Assertions.assertThat(response.entries).isEmpty()
     }
@@ -31,7 +31,7 @@ internal class GutendexServiceTest {
     @Test
     fun `Gutendex services, valid search - return results`() {
         val service = GutendexService(gutendexClientMock)
-        val results: ServiceResponse = runBlocking { service.search(QueryParam("lorem", SearchType.BOOKS)) }!!
+        val results: ServiceResponse = runBlocking { service.search(QueryParam("lorem", SearchType.BOOKS)) }
         Assertions.assertThat(results.totalResults).isPositive
         Assertions.assertThat(results.entries).isNotEmpty
     }

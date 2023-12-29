@@ -15,7 +15,7 @@ class OpenLibraryBookService(private val openLibBookClient: IClient<OpenLibraryB
 
     private val cache = ServiceRequestCache()
 
-    override suspend fun search(queryParam: QueryParam): ServiceResponse? {
+    override suspend fun search(queryParam: QueryParam): ServiceResponse {
         return cache.coget(queryParam.uri) {
             generateBookNumberFromText(queryParam.query)?.let { bookNumber ->
                 openLibBookClient.retrieveResults(queryParam.copy(query = bookNumber.format()))?.let {

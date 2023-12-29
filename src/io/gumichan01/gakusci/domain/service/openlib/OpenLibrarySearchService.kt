@@ -13,7 +13,7 @@ class OpenLibrarySearchService(private val openLibrarySearchClient: IClient<Open
 
     private val cache = ServiceRequestCache()
 
-    override suspend fun search(queryParam: QueryParam): ServiceResponse? {
+    override suspend fun search(queryParam: QueryParam): ServiceResponse {
         return cache.coget(queryParam.uri) {
             openLibrarySearchClient.retrieveResults(queryParam)?.let {
                 val nbEntries: Int = it.numFound
@@ -27,7 +27,7 @@ class OpenLibrarySearchService(private val openLibrarySearchClient: IClient<Open
                     )
                 }?.sortedByDescending { b -> b.thumbnailUrl }?.toList() ?: emptyList()
                 ServiceResponse(nbEntries, entries)
-            }
+            } ?: ServiceResponse(0, emptyList())
         }
     }
 }

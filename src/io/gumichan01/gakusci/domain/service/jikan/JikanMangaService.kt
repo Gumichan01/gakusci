@@ -12,14 +12,14 @@ class JikanMangaService(private val jikanClient: IClient<JikanMangaResponse>) : 
 
     private val cache = ServiceRequestCache()
 
-    override suspend fun search(queryParam: QueryParam): ServiceResponse? {
+    override suspend fun search(queryParam: QueryParam): ServiceResponse {
         return cache.coget(queryParam.uri) {
             jikanClient.retrieveResults(queryParam)?.let { response ->
                 val results: List<MangaEntry> = response.entries.map { entry ->
                     MangaEntry(entry.title, entry.publicationPeriod, entry.url, entry.imageUrl ?: "")
                 }
                 ServiceResponse(results.size, results)
-            }
+            } ?: ServiceResponse(0, emptyList())
         }
     }
 }

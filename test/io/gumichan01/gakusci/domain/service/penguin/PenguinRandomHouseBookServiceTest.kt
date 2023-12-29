@@ -30,7 +30,7 @@ class PenguinRandomHouseBookServiceTest {
     @Test
     fun `penguin random house services, valid ISBN search on fake client - return results`() {
         val service = PenguinRandomHouseBookService(penguinBookClient)
-        val response: ServiceResponse = runBlocking { service.search(QueryParam("9780140439212", SearchType.BOOKS)) }!!
+        val response: ServiceResponse = runBlocking { service.search(QueryParam("9780140439212", SearchType.BOOKS)) }
         Assertions.assertThat(response.totalResults).isPositive
         Assertions.assertThat(response.entries).isNotEmpty
     }
@@ -38,7 +38,7 @@ class PenguinRandomHouseBookServiceTest {
     @Test
     fun `penguin random house services, invalid ISBN search on fake client - return null`() {
         val service = PenguinRandomHouseBookService(penguinBookClient)
-        val response: ServiceResponse = runBlocking { service.search(QueryParam("dfnkusfk", SearchType.BOOKS)) }!!
+        val response: ServiceResponse = runBlocking { service.search(QueryParam("dfnkusfk", SearchType.BOOKS)) }
         Assertions.assertThat(response.totalResults).isZero
         Assertions.assertThat(response.entries).isEmpty()
     }

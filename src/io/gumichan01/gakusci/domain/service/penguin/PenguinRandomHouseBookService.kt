@@ -17,7 +17,7 @@ class PenguinRandomHouseBookService(private val bookClient: IClient<PenguinRando
     private val bookLink = "https://penguinrandomhouse.com/search/site?q="
     private val thumbnailLink = "https://images1.penguinrandomhouse.com/cover/"
 
-    override suspend fun search(queryParam: QueryParam): ServiceResponse? {
+    override suspend fun search(queryParam: QueryParam): ServiceResponse {
         return generateBookNumberFromText(queryParam.query)?.let { bookNumber ->
             if (bookNumber.type == BookNumberType.ISBN && isValidISBN13(bookNumber.value)) {
                 bookClient.retrieveResults(queryParam.copy(query = bookNumber.value))?.let {

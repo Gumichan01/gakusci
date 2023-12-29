@@ -12,15 +12,13 @@ class ServiceRequestCache(cache: Cache<String, ServiceResponse> = defaultCache()
     /**
      * This is basically the same thing as get(), but for suspended functions
      */
-    suspend fun coget(query: String, f: suspend () -> ServiceResponse?): ServiceResponse? {
+    suspend fun coget(query: String, f: suspend () -> ServiceResponse): ServiceResponse {
         val hashmap: ConcurrentMap<String, ServiceResponse> = asMap()
         return if (hashmap.containsKey(query) && hashmap[query] != null) {
             hashmap[query]!!
         } else {
-            val value: ServiceResponse? = f()
-            if (value != null) {
-                hashmap[query] = value
-            }
+            val value: ServiceResponse = f()
+            hashmap[query] = value
             value
         }
     }

@@ -8,18 +8,18 @@ import io.gumichan01.gakusci.domain.model.entry.AnimeEntry
 import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.utils.ServiceRequestCache
 
-class JikanAnimeService(val jikanClient: IClient<JikanAnimeResponse>) : IService {
+class JikanAnimeService(private val jikanClient: IClient<JikanAnimeResponse>) : IService {
 
     private val cache = ServiceRequestCache()
 
-    override suspend fun search(queryParam: QueryParam): ServiceResponse? {
+    override suspend fun search(queryParam: QueryParam): ServiceResponse {
         return cache.coget(queryParam.uri) {
             jikanClient.retrieveResults(queryParam)?.let { response ->
                 val results: List<AnimeEntry> = response.entries.map { entry ->
                     AnimeEntry(entry.title, entry.episodes, entry.url, entry.imageUrl ?: "")
                 }
                 ServiceResponse(results.size, results)
-            }
+            } ?: ServiceResponse(0, emptyList())
         }
     }
 }

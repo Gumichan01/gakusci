@@ -29,7 +29,7 @@ internal class OpenLibraryBookServiceTest {
     @Test
     fun `OpenLibrary book service - valid search on fake client, get results`() {
         val service = OpenLibraryBookService(openLibBookMock)
-        val response: ServiceResponse = runBlocking { service.search(QueryParam("1421500574", SearchType.BOOKS)) }!!
+        val response: ServiceResponse = runBlocking { service.search(QueryParam("1421500574", SearchType.BOOKS)) }
         assertThat(response.totalResults).isEqualTo(1)
         assertThat(response.entries).contains(
             BookEntry(
@@ -42,7 +42,7 @@ internal class OpenLibraryBookServiceTest {
     @Test
     fun `OpenLibrary book service - invalid search on fake client, get no result`() {
         val service = OpenLibraryBookService(openLibBookMock)
-        val response: ServiceResponse = runBlocking { service.search(QueryParam("invalid-isbn", SearchType.BOOKS)) }!!
+        val response: ServiceResponse = runBlocking { service.search(QueryParam("invalid-isbn", SearchType.BOOKS)) }
         assertThat(response.totalResults).isZero
         assertThat(response.entries).isEmpty()
     }

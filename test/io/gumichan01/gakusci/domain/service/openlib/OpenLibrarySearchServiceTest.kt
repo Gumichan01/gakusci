@@ -24,7 +24,7 @@ internal class OpenLibrarySearchServiceTest {
     @Test
     fun `OpenLibrary service - valid search on fake client, get results`() {
         val service = OpenLibrarySearchService(openLibSearchMock)
-        val response: ServiceResponse = runBlocking { service.search(QueryParam("gunnm", SearchType.BOOKS)) }!!
+        val response: ServiceResponse = runBlocking { service.search(QueryParam("gunnm", SearchType.BOOKS)) }
         assertThat(response.totalResults).isZero
     }
 }

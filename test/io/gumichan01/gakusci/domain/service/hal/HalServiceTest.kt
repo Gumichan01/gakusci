@@ -24,7 +24,7 @@ class HalServiceTest {
     @Test
     fun `HAL services, invalid search on real client - return nothing`() {
         val service = HalService(halClientMock)
-        val response: ServiceResponse = runBlocking { service.search(QueryParam("dfnkusfk", SearchType.RESEARCH)) }!!
+        val response: ServiceResponse = runBlocking { service.search(QueryParam("dfnkusfk", SearchType.RESEARCH)) }
         assertThat(response.totalResults).isZero
         assertThat(response.entries).isEmpty()
     }
@@ -32,7 +32,7 @@ class HalServiceTest {
     @Test
     fun `HAL services, valid search on fake client - return results`() {
         val service = HalService(halClientMock)
-        val results: ServiceResponse = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH)) }!!
+        val results: ServiceResponse = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH)) }
         assertThat(results.totalResults).isPositive
         assertThat(results.entries).isNotEmpty
     }

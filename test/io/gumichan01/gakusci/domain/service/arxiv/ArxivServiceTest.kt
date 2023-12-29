@@ -33,14 +33,14 @@ class ArxivServiceTest {
     @Test
     fun `arXiv services, valid search on fake client - return results`() {
         val service = ArxivService(arxivClientMock)
-        val response: ServiceResponse = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH)) }!!
+        val response: ServiceResponse = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH)) }
         assertThat(response.totalResults).isPositive
     }
 
     @Test
     fun `arXiv services, invalid search on fake client - return nothing`() {
         val service = ArxivService(arxivClientMock)
-        val response: ServiceResponse = runBlocking { service.search(QueryParam("dfnkusfk", SearchType.RESEARCH)) }!!
+        val response: ServiceResponse = runBlocking { service.search(QueryParam("dfnkusfk", SearchType.RESEARCH)) }
         assertThat(response.totalResults).isZero
         assertThat(response.entries).isEmpty()
     }

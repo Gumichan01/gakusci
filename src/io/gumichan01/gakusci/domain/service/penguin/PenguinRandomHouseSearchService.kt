@@ -25,7 +25,7 @@ class PenguinRandomHouseSearchService(
     private val nbMaxEntries = 10
     private val runningCoroutinesCounter: AtomicInt = atomic(nbMaxEntries)
 
-    override suspend fun search(queryParam: QueryParam): ServiceResponse? {
+    override suspend fun search(queryParam: QueryParam): ServiceResponse {
         return (searchClient.retrieveResults(queryParam)?.entries?.retrieveDistinctIsbns()
             ?: emptyList()).map { entry ->
             QueryParam(entry, SearchType.BOOKS)
@@ -47,21 +47,21 @@ class PenguinRandomHouseSearchService(
             .take(nbMaxEntries).toList()
     }
 
-    private suspend fun retrieveResultsFromExternalService(isbnEntries: List<QueryParam>): ServiceResponse? {
+    private suspend fun retrieveResultsFromExternalService(isbnEntries: List<QueryParam>): ServiceResponse {
         return launchRequests(isbnEntries)
             .consumeAsFlow().filterNotNull().map { response -> response.entries }
             .fold(mutableListOf<IResultEntry>()) { currentList, entries -> currentList.addAll(entries); currentList }
             .toList().let { entries -> ServiceResponse(entries.size, entries) }
     }
 
-    private suspend fun launchRequests(queries: List<QueryParam>): Channel<ServiceResponse?> {
-        val serviceCallTimeout = 15000L
-        val channel: Channel<ServiceResponse?> = Channel(nbMaxEntries)
+    private suspend fun launchRequests(queries: List<QueryParam>): Channel<ServiceResponse> {
+        val serviceCallTimeout = 10000L
+        val channel: Channel<ServiceResponse> = Channel(nbMaxEntries)
         queries.forEach { query ->
             CoroutineScope(Dispatchers.Default).launch {
                 try {
                     withTimeoutOrNull(serviceCallTimeout) {
-                        searchService.search(query)?.let { response -> channel.send(response) }
+                        searchService.search(query).let { response -> channel.send(response) }
                     }
                 } finally {
                     if (runningCoroutinesCounter.decrementAndGet() == 0) {
