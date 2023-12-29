@@ -11,8 +11,6 @@ import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.OrderWith
-import org.simpleframework.xml.Order
 
 
 internal class ServiceRequestCacheTest() {
