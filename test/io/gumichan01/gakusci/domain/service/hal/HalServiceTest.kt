@@ -18,20 +18,22 @@ class HalServiceTest {
     private val halClientMock: HalClient = mockk {
         coEvery { retrieveResults(QueryParam("lorem", SearchType.RESEARCH)) } returns
             HalResponse(HalResponseBody(1, 0, listOf(HalResultEntry(0, "", ""))))
-        coEvery { retrieveResults(QueryParam("dfnkusfk", SearchType.RESEARCH)) } returns null
+        coEvery { retrieveResults(QueryParam("dfnkusfk", SearchType.RESEARCH)) } returns HalResponse(HalResponseBody(0,0, emptyList()))
     }
 
     @Test
     fun `HAL services, invalid search on real client - return nothing`() {
         val service = HalService(halClientMock)
-        val response: ServiceResponse? = runBlocking { service.search(QueryParam("dfnkusfk", SearchType.RESEARCH)) }
-        assertThat(response).isNull()
+        val response: ServiceResponse = runBlocking { service.search(QueryParam("dfnkusfk", SearchType.RESEARCH)) }!!
+        assertThat(response.totalResults).isZero
+        assertThat(response.entries).isEmpty()
     }
 
     @Test
     fun `HAL services, valid search on fake client - return results`() {
         val service = HalService(halClientMock)
-        val results: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH)) }
-        assertThat(results).isNotNull
+        val results: ServiceResponse = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH)) }!!
+        assertThat(results.totalResults).isPositive
+        assertThat(results.entries).isNotEmpty
     }
 }

@@ -27,20 +27,21 @@ class ArxivServiceTest {
         )
         )
 
-        coEvery { retrieveResults(QueryParam("dfnkusfk", SearchType.RESEARCH)) } returns null
+        coEvery { retrieveResults(QueryParam("dfnkusfk", SearchType.RESEARCH)) } returns ArxivResponse(0, emptyList())
     }
 
     @Test
     fun `arXiv services, valid search on fake client - return results`() {
         val service = ArxivService(arxivClientMock)
-        val response: ServiceResponse? = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH)) }
-        assertThat(response).isNotNull
+        val response: ServiceResponse = runBlocking { service.search(QueryParam("lorem", SearchType.RESEARCH)) }!!
+        assertThat(response.totalResults).isPositive
     }
 
     @Test
     fun `arXiv services, invalid search on fake client - return nothing`() {
         val service = ArxivService(arxivClientMock)
-        val response: ServiceResponse? = runBlocking { service.search(QueryParam("dfnkusfk", SearchType.RESEARCH)) }
-        assertThat(response).isNull()
+        val response: ServiceResponse = runBlocking { service.search(QueryParam("dfnkusfk", SearchType.RESEARCH)) }!!
+        assertThat(response.totalResults).isZero
+        assertThat(response.entries).isEmpty()
     }
 }
