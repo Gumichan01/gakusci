@@ -5,9 +5,6 @@ import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseSearchResponse
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.model.entry.IResultEntry
-import io.gumichan01.gakusci.domain.search.cache.CacheHandler
-import io.gumichan01.gakusci.domain.search.cache.IntermediateCache
-import io.gumichan01.gakusci.domain.search.cache.SearchCache
 import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.utils.SearchType
 import kotlinx.atomicfu.AtomicInt
@@ -25,21 +22,18 @@ class PenguinRandomHouseSearchService(
     private val searchService: IService
 ) : IService {
 
-    private val bookCache: SearchCache = CacheHandler().createFreshCache()
-    private val searchCache: IntermediateCache<List<String>> = IntermediateCache()
     private val nbMaxEntries = 10
     private val runningCoroutinesCounter: AtomicInt = atomic(nbMaxEntries)
 
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
-        return bookCache.getOrUpdateCache(queryParam) {
-            searchCache.getOrUpdateCache(queryParam.query) {
-                searchClient.retrieveResults(queryParam)?.entries?.retrieveDistinctIsbns() ?: emptyList()
-            }.map { entry -> QueryParam(entry, SearchType.BOOKS) }.run {
-                when {
-                    isEmpty() -> ServiceResponse(0, emptyList())
-                    size == 1 -> searchService.search(first())
-                    else -> retrieveResultsFromExternalService(this)
-                }
+        return (searchClient.retrieveResults(queryParam)?.entries?.retrieveDistinctIsbns()
+            ?: emptyList()).map { entry ->
+            QueryParam(entry, SearchType.BOOKS)
+        }.run {
+            when {
+                isEmpty() -> ServiceResponse(0, emptyList())
+                size == 1 -> searchService.search(first())
+                else -> retrieveResultsFromExternalService(this)
             }
         }
     }

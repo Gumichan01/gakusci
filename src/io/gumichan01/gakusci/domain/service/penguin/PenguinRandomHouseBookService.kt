@@ -8,8 +8,6 @@ import io.gumichan01.gakusci.client.utils.isValidISBN13
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.model.entry.BookEntry
-import io.gumichan01.gakusci.domain.search.cache.CacheHandler
-import io.gumichan01.gakusci.domain.search.cache.SearchCache
 import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.utils.toLocalDate
 import java.time.format.DateTimeFormatter
@@ -18,30 +16,27 @@ class PenguinRandomHouseBookService(private val bookClient: IClient<PenguinRando
 
     private val bookLink = "https://penguinrandomhouse.com/search/site?q="
     private val thumbnailLink = "https://images1.penguinrandomhouse.com/cover/"
-    private val cache: SearchCache = CacheHandler().createFreshCache()
 
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
-        return cache.getOrUpdateCache(queryParam) {
-            generateBookNumberFromText(queryParam.query)?.let { bookNumber ->
-                if (bookNumber.type == BookNumberType.ISBN && isValidISBN13(bookNumber.value)) {
-                    bookClient.retrieveResults(queryParam.copy(query = bookNumber.value))?.let {
-                        val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
-                        ServiceResponse(
-                            1,
-                            listOf(
-                                BookEntry(
-                                    it.author,
-                                    it.title,
-                                    it.publishDate.toLocalDate(dateFormatter).year.toString(),
-                                    it.isbn,
-                                    it.link(),
-                                    it.thumbnail()
-                                )
+        return generateBookNumberFromText(queryParam.query)?.let { bookNumber ->
+            if (bookNumber.type == BookNumberType.ISBN && isValidISBN13(bookNumber.value)) {
+                bookClient.retrieveResults(queryParam.copy(query = bookNumber.value))?.let {
+                    val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+                    ServiceResponse(
+                        1,
+                        listOf(
+                            BookEntry(
+                                it.author,
+                                it.title,
+                                it.publishDate.toLocalDate(dateFormatter).year.toString(),
+                                it.isbn,
+                                it.link(),
+                                it.thumbnail()
                             )
                         )
-                    }
-                } else null
-            }
+                    )
+                }
+            } else null
         }
     }
 
