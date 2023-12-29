@@ -1,13 +1,8 @@
 package io.gumichan01.gakusci.client.arxiv
 
-import com.github.benmanes.caffeine.cache.Cache
-import com.github.benmanes.caffeine.cache.Caffeine
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.utils.SearchType
-import io.mockk.EqMatcher
 import io.mockk.coEvery
-import io.mockk.core.ValueClassSupport.boxedValue
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
@@ -30,6 +25,7 @@ internal class ArxivCacheTest {
         val value: ArxivResponse = cache.get("lorem") {
             ArxivResponse(1, listOf(ArxivResultEntry(emptyList(), "FAIL TEST", fakeDate, "")))
         }
+        assertThat(cache.getIfPresent("lorem")).isNotNull
         assertThat(value).isEqualTo(expectedValue)
         assertThat(value.numFound).isZero
         assertThat(value.docs).isEmpty()
@@ -47,6 +43,7 @@ internal class ArxivCacheTest {
         val value: ArxivResponse = cache.get("loremi") {
             ArxivResponse(1, listOf(ArxivResultEntry(emptyList(), "FAIL TEST", fakeDate, "")))
         }
+        assertThat(cache.getIfPresent("loremi")).isNotNull
         assertThat(value).isEqualTo(expectedResponse)
         assertThat(value).isEqualTo(resp01)
         assertThat(value).isEqualTo(resp02)
