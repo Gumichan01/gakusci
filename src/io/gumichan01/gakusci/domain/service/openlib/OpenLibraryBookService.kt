@@ -25,7 +25,7 @@ class OpenLibraryBookService(private val openLibBookClient: IClient<OpenLibraryB
                             ?: defaultThumbnailLink()))
                     )
                 }
-            }
+            } ?: ServiceResponse(0, emptyList())
         }
     }
 

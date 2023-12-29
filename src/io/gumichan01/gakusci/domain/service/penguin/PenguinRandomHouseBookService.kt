@@ -36,8 +36,8 @@ class PenguinRandomHouseBookService(private val bookClient: IClient<PenguinRando
                         )
                     )
                 }
-            } else null
-        }
+            } else ServiceResponse(0, emptyList())
+        } ?: ServiceResponse(0, emptyList())
     }
 
     private fun PenguinRandomHouseBookResponse.thumbnail(): String {
