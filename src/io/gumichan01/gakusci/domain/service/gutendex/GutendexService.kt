@@ -14,7 +14,7 @@ class GutendexService(private val client: IClient<GutendexResponse>) : IService 
     private val cache = ServiceRequestCache()
 
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
-        return cache.coget(queryParam.query) {
+        return cache.coget(queryParam.uri) {
             client.retrieveResults(queryParam)?.let {
                 val count: Int = it.count
                 val entries: List<IResultEntry> = it.results

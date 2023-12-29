@@ -14,7 +14,7 @@ class HalService(private val halClient: IClient<HalResponse>) : IService {
     private val cache = ServiceRequestCache()
 
     override suspend fun search(queryParam: QueryParam): ServiceResponse? {
-        return cache.coget(queryParam.query) {
+        return cache.coget(queryParam.uri) {
             halClient.retrieveResults(queryParam)?.let {
                 val (totalResults: Int, _: Int, results: List<HalResultEntry>?) = it.body
                 val entries: List<SimpleResultEntry> = results?.map { e ->
