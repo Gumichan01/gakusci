@@ -1,3 +1,3 @@
 package io.gumichan01.gakusci.client.jikan
 
-class JikanMangaResponse(val entries: List<JikanMangaEntry>)
+data class JikanMangaResponse(val entries: List<JikanMangaEntry>)
