@@ -7,7 +7,7 @@ enum class BookNumberType(val value: String) {
 data class BookNumber(val type: BookNumberType, val value: String)
 
 fun generateBookNumberFromText(text: String): BookNumber? {
-    val rawBookNumber = text.substringAfter(':')
+    val rawBookNumber: String = text.substringAfter(':')
     return when {
         text.startsWith("ISBN:") -> {
             if (isValidISBN(rawBookNumber)) BookNumber(BookNumberType.ISBN, normalizeIsbn(rawBookNumber)) else null
