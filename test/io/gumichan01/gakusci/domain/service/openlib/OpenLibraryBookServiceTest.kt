@@ -38,4 +38,12 @@ internal class OpenLibraryBookServiceTest {
             )
         )
     }
+
+    @Test
+    fun `OpenLibrary book service - invalid search on fake client, get no result`() {
+        val service = OpenLibraryBookService(openLibBookMock)
+        val response: ServiceResponse = runBlocking { service.search(QueryParam("invalid-isbn", SearchType.BOOKS)) }!!
+        assertThat(response.totalResults).isZero
+        assertThat(response.entries).isEmpty()
+    }
 }
