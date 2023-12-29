@@ -43,19 +43,21 @@ internal class ServiceRequestCacheTest() {
 
     @Test
     fun `Send a request to a service and cache it, check its value - expect same data`() {
-        val service: IService = serviceMockk
-        val cache = ServiceRequestCache(delegatedCache)
-        val resp01: ServiceResponse = cache.get("loremi") {
-            runBlocking { service.search(QueryParam("loremi", SearchType.RESEARCH)) }
+        runBlocking {
+            val service: IService = serviceMockk
+            val cache = ServiceRequestCache(delegatedCache)
+            val resp01: ServiceResponse = cache.coget("loremi") {
+                service.search(QueryParam("loremi", SearchType.RESEARCH))
+            }!!
+            val resp02: ServiceResponse = cache.coget("loremi") {
+                ServiceResponse(421, emptyList())
+            }!!
+            val value: ServiceResponse = cache.coget("loremi") {
+                ServiceResponse(42, emptyList())
+            }!!
+            assertThat(cache.getIfPresent("loremi")).isNotNull
+            assertThat(value).isEqualTo(resp01)
+            assertThat(value).isEqualTo(resp02)
         }
-        val resp02: ServiceResponse = cache.get("loremi") {
-            ServiceResponse(421, emptyList())
-        }
-        val value: ServiceResponse = cache.get("loremi") {
-            ServiceResponse(42, emptyList())
-        }
-        assertThat(cache.getIfPresent("loremi")).isNotNull
-        assertThat(value).isEqualTo(resp01)
-        assertThat(value).isEqualTo(resp02)
     }
 }
