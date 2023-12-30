@@ -33,7 +33,7 @@
     </div>
 
     <p class="result" th:if="${not emptyEntries}"
-       th:text="${numFound + ' results. Only the first 2000 entries at most are reachable.'}"></p>
+       th:text="${numFound + ' results. Only 1000 entries at most are reachable.'}"></p>
 
     <div class="container" th:each="entry : ${entries}">
         <p class="entry_label" th:text="${entry.label()}"></p>
@@ -60,7 +60,7 @@
         <ul>
             <!--/* First */-->
             <li th:if="${pstart} >= 0">
-                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=0'}"> |&lt;&lt; </a>
+                <a th:href="${'/search?q=' + query + '&stype=' + stype}"> |&lt;&lt; </a>
             </li>
             <!--/* Previous page */-->
             <li th:if="${pstart} >= 0 and ${pstart} < ${numFound}">

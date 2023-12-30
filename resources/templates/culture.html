@@ -64,7 +64,7 @@
         <ul>
             <!--/* First */-->
             <li th:if="${pstart} >= 0">
-                <a th:href="${'/search?q=' + query + '&stype=' + stype + '&start=0'}"> |&lt;&lt; </a>
+                <a th:href="${'/search?q=' + query + '&stype=' + stype}"> |&lt;&lt; </a>
             </li>
             <!--/* Previous page */-->
             <li th:if="${pstart} >= 0 and ${pstart} < ${numFound}">
