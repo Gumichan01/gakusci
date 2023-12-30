@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory
 @FlowPreview
 @ExperimentalCoroutinesApi
 class SearchAggregator(private val searchLauncher: SearchLauncher,
-                       private val cache: SearchAggregatorCache = SearchAggregatorCacheBuilder().generateAggregatorCache()) {
+                       private val cache: SearchAggregatorCache = SearchAggregatorCacheBuilder().build()) {
 
     private val logger: Logger = LoggerFactory.getLogger(SearchAggregator::class.java)
     private val searchResultConsumer = SearchResultConsumer()

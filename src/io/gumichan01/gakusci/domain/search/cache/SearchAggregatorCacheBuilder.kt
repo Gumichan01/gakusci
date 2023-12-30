@@ -9,7 +9,7 @@ class SearchAggregatorCacheBuilder {
         Caffeine.newBuilder().expireAfterWrite(600, TimeUnit.SECONDS).maximumSize(100L)
     }
 
-    fun generateAggregatorCache(): SearchAggregatorCache {
+    fun build(): SearchAggregatorCache {
         return SearchAggregatorCache(builder.build())
     }
 }
