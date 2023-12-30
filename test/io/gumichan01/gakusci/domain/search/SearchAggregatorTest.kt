@@ -6,7 +6,7 @@ import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.model.entry.SimpleResultEntry
-import io.gumichan01.gakusci.domain.search.cache.SearchCache
+import io.gumichan01.gakusci.domain.search.cache.SearchAggregatorCache
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.mockk.every
 import io.mockk.mockk
@@ -15,7 +15,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
-import java.util.concurrent.TimeUnit
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
@@ -48,7 +47,7 @@ class SearchAggregatorTest {
 
     @Test
     fun `aggregate result entries - return results`() {
-        val aggregator = SearchAggregator(fakeLauncher, SearchCache(cache))
+        val aggregator = SearchAggregator(fakeLauncher, SearchAggregatorCache(cache))
         val results: SearchResponse =
             runBlocking { aggregator.retrieveResults(QueryParam("lorem", SearchType.RESEARCH, )) }
         assertThat(results.totalResults).isEqualTo(1)

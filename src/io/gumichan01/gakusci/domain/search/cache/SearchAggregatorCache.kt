@@ -4,7 +4,7 @@ import com.github.benmanes.caffeine.cache.Cache
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import java.util.concurrent.ConcurrentMap
 
-class SearchCache(cache: Cache<String, ServiceResponse>) :
+class SearchAggregatorCache(cache: Cache<String, ServiceResponse>) :
     Cache<String, ServiceResponse> by cache {
 
     suspend fun coget(query: String, f: suspend () -> ServiceResponse): ServiceResponse {

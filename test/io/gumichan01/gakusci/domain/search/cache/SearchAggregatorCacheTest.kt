@@ -1,15 +1,13 @@
 package io.gumichan01.gakusci.domain.search.cache
 
 import com.github.benmanes.caffeine.cache.Caffeine
-import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.model.entry.SimpleResultEntry
-import io.gumichan01.gakusci.domain.utils.SearchType
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions
 import kotlin.test.Test
 
-class SearchCacheTest {
+class SearchAggregatorCacheTest {
 
     private val builder = Caffeine.newBuilder().maximumSize(8L)
     private val expectedResponse1 = ServiceResponse(1, listOf(SimpleResultEntry("l1", "url1")))
@@ -19,14 +17,14 @@ class SearchCacheTest {
 
     @Test
     fun `Get or update cache - new value - must returns the calculated value`() {
-        val cache = SearchCache(builder.build())
+        val cache = SearchAggregatorCache(builder.build())
         val result: ServiceResponse = runBlocking { cache.coget("lorem", f1) }
         Assertions.assertThat(result).isEqualTo(expectedResponse1)
     }
 
     @Test
     fun `Get or update cache - make the same query twice - must returns the cached value`() {
-        val cache = SearchCache(builder.build())
+        val cache = SearchAggregatorCache(builder.build())
         val result: ServiceResponse = runBlocking {
             cache.coget("lorem", f1)
             cache.coget("lorem", f1)
@@ -36,7 +34,7 @@ class SearchCacheTest {
 
     @Test
     fun `Get or update cache - more entries requested - return the calculated value`() {
-        val cache = SearchCache(builder.build())
+        val cache = SearchAggregatorCache(builder.build())
         val result: ServiceResponse = runBlocking {
             cache.coget("lorem", f2)
             cache.coget("lorem", f1)
