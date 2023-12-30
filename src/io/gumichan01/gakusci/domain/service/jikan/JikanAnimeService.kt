@@ -14,7 +14,7 @@ class JikanAnimeService(private val jikanClient: IClient<JikanAnimeResponse>) : 
     private val cache = ServiceRequestCache()
 
     override suspend fun search(queryParam: QueryParam): ServiceResponse {
-        return cache.coget(queryParam.uri) {
+        return cache.coget(queryParam.query) {
             jikanClient.retrieveResults(queryParam)?.let { response ->
                 val results: List<AnimeEntry> = response.entries.map { entry ->
                     AnimeEntry(entry.title, entry.episodes, entry.url, entry.imageUrl ?: defaultThumbnailLink())

@@ -14,7 +14,7 @@ class ArxivService(private val arxivClient: IClient<ArxivResponse>) : IService {
     private val cache = ServiceRequestCache()
 
     override suspend fun search(queryParam: QueryParam): ServiceResponse {
-        return cache.coget(queryParam.uri) {
+        return cache.coget(queryParam.query) {
             arxivClient.retrieveResults(queryParam)?.let { arxivResponse ->
                 val results: List<ArxivResultEntry> = arxivResponse.docs
                 val entries: List<SimpleResultEntry> = results.map { r -> SimpleResultEntry(r.label(), r.link) }
