@@ -20,13 +20,13 @@ class OpenLibrarySearchClient : IClient<OpenLibrarySearchResponse> {
     private val logger: Logger = LoggerFactory.getLogger(OpenLibrarySearchClient::class.java)
 
     // NOTE This URL refers to an experimental Open Library API, so this class must be considered experimental
-    private val nbEntriesPerPage = 10
-    private val openLibrarySearchUrl = "https://openlibrary.org/search.json?q=%s&page=%d&limit=10"
+    // In order to avoid performance results are limited to 10 entries
+    private val openLibMaxCount = 10
+    private val openLibrarySearchUrl = "https://openlibrary.org/search.json?q=%s&limit=$openLibMaxCount"
     private val client = HttpClient(Apache) { install(HttpCache) }
 
     override suspend fun retrieveResults(queryParam: QueryParam): OpenLibrarySearchResponse? {
-        val page: Int = calculatePageToSearchFor(queryParam.start, nbEntriesPerPage)
-        val url: String = openLibrarySearchUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8), page)
+        val url: String = openLibrarySearchUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8))
         return retrieveData(url)
     }
 

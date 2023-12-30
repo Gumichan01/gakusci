@@ -39,7 +39,7 @@ class JikanAnimeClient : IClient<JikanAnimeResponse> {
                                     .filter { e -> e.url != null }
                                     .map { entry ->
                                         JikanAnimeEntry(entry.title!!, entry.url!!, entry.episodes, entry.images.firstDefault())
-                                    }.toList()
+                                    }.take(queryParam.rows).toList()
                         }.get(requestTimeout.inWholeSeconds, TimeUnit.SECONDS)
             }
             JikanAnimeResponse(entries)
