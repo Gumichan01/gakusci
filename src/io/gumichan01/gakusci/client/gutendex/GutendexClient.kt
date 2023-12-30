@@ -20,7 +20,7 @@ class GutendexClient : IClient<GutendexResponse> {
     private val logger: Logger = LoggerFactory.getLogger(GutendexClient::class.java)
     private val gutendexUrl = "https://gutendex.com/books?search=%s"
     private val gutendexUrlOnPage = "https://gutendex.com/books?search=%s&page=%d"
-    private val nbEntriesPerPage = 32
+    private val nbEntriesPerPage = 32 // See https://gutendex.com/#docs
     private val client = HttpClient(Apache) {
         install(HttpCache)
         install(ContentNegotiation) {
