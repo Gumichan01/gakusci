@@ -15,10 +15,10 @@ class ArxivService(private val arxivClient: IClient<ArxivResponse>) : IService {
 
     override suspend fun search(queryParam: QueryParam): ServiceResponse {
         return cache.coget(queryParam.uri) {
-            arxivClient.retrieveResults(queryParam)?.let {
-                val (totalResults: Int, results: List<ArxivResultEntry>) = it
+            arxivClient.retrieveResults(queryParam)?.let { arxivResponse ->
+                val results: List<ArxivResultEntry> = arxivResponse.docs
                 val entries: List<SimpleResultEntry> = results.map { r -> SimpleResultEntry(r.label(), r.link) }
-                ServiceResponse(totalResults, entries)
+                ServiceResponse(entries.size, entries)
             } ?: ServiceResponse(0, emptyList())
         }
     }

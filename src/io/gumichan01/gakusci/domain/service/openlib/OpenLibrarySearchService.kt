@@ -15,9 +15,8 @@ class OpenLibrarySearchService(private val openLibrarySearchClient: IClient<Open
 
     override suspend fun search(queryParam: QueryParam): ServiceResponse {
         return cache.coget(queryParam.uri) {
-            openLibrarySearchClient.retrieveResults(queryParam)?.let {
-                val nbEntries: Int = it.numFound
-                val entries: List<IResultEntry> = it.docs?.asSequence()?.map { doc ->
+            openLibrarySearchClient.retrieveResults(queryParam)?.let { response ->
+                val entries: List<IResultEntry> = response.docs?.asSequence()?.map { doc ->
                     BookEntry(
                         doc.authors(),
                         doc.title,
@@ -26,7 +25,7 @@ class OpenLibrarySearchService(private val openLibrarySearchClient: IClient<Open
                         thumbnailUrl = doc.thumbnail()
                     )
                 }?.sortedByDescending { b -> b.thumbnailUrl }?.toList() ?: emptyList()
-                ServiceResponse(nbEntries, entries)
+                ServiceResponse(entries.size, entries)
             } ?: ServiceResponse(0, emptyList())
         }
     }

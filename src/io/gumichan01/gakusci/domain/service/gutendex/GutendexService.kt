@@ -15,12 +15,11 @@ class GutendexService(private val client: IClient<GutendexResponse>) : IService 
 
     override suspend fun search(queryParam: QueryParam): ServiceResponse {
         return cache.coget(queryParam.uri) {
-            client.retrieveResults(queryParam)?.let {
-                val count: Int = it.count
-                val entries: List<IResultEntry> = it.results
+            client.retrieveResults(queryParam)?.let { gutendexResponse ->
+                val entries: List<IResultEntry> = gutendexResponse.results
                     .filter { e -> e.isAccessible() }
                     .map { e -> BookEntry(e.title, e.authors.map { a -> a.name }.toString(), url = e.link(), thumbnailUrl = e.thumbnail()) }
-                ServiceResponse(count, entries)
+                ServiceResponse(entries.size, entries)
             } ?: ServiceResponse(0, emptyList())
         }
     }

@@ -7,6 +7,7 @@ import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.model.entry.AnimeEntry
 import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.utils.ServiceRequestCache
+import io.gumichan01.gakusci.domain.utils.defaultThumbnailLink
 
 class JikanAnimeService(private val jikanClient: IClient<JikanAnimeResponse>) : IService {
 
@@ -16,7 +17,7 @@ class JikanAnimeService(private val jikanClient: IClient<JikanAnimeResponse>) : 
         return cache.coget(queryParam.uri) {
             jikanClient.retrieveResults(queryParam)?.let { response ->
                 val results: List<AnimeEntry> = response.entries.map { entry ->
-                    AnimeEntry(entry.title, entry.episodes, entry.url, entry.imageUrl ?: "")
+                    AnimeEntry(entry.title, entry.episodes, entry.url, entry.imageUrl ?: defaultThumbnailLink())
                 }
                 ServiceResponse(results.size, results)
             } ?: ServiceResponse(0, emptyList())
