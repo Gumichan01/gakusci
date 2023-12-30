@@ -11,7 +11,7 @@ import io.gumichan01.gakusci.client.theses.ThesesClient
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.model.entry.IResultEntry
-import io.gumichan01.gakusci.domain.search.cache.CacheHandler
+import io.gumichan01.gakusci.domain.search.cache.SearchAggregatorCacheBuilder
 import io.gumichan01.gakusci.domain.search.cache.SearchAggregatorCache
 import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.service.arxiv.ArxivService
@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory
 @FlowPreview
 @ExperimentalCoroutinesApi
 class SearchAggregator(private val searchLauncher: SearchLauncher,
-                       private val cache: SearchAggregatorCache = CacheHandler().generateAggregatorCache()) {
+                       private val cache: SearchAggregatorCache = SearchAggregatorCacheBuilder().generateAggregatorCache()) {
 
     private val logger: Logger = LoggerFactory.getLogger(SearchAggregator::class.java)
     private val searchResultConsumer = SearchResultConsumer()
