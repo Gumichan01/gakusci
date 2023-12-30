@@ -11,6 +11,8 @@ import io.gumichan01.gakusci.client.theses.ThesesClient
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.model.entry.IResultEntry
+import io.gumichan01.gakusci.domain.search.cache.CacheHandler
+import io.gumichan01.gakusci.domain.search.cache.SearchCache
 import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.service.arxiv.ArxivService
 import io.gumichan01.gakusci.domain.service.gutendex.GutendexService
@@ -29,17 +31,20 @@ import org.slf4j.LoggerFactory
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class SearchAggregator(private val searchLauncher: SearchLauncher) {
+class SearchAggregator(private val searchLauncher: SearchLauncher,
+                       private val cache: SearchCache = CacheHandler().generateAggregatorCache()) {
 
     private val logger: Logger = LoggerFactory.getLogger(SearchAggregator::class.java)
     private val searchResultConsumer = SearchResultConsumer()
 
     suspend fun retrieveResults(queryParam: QueryParam): SearchResponse {
         val start: Int = queryParam.start
-        val (total: Int, entries: List<IResultEntry>) = searchResultConsumer.consume(searchLauncher.launch(queryParam))
+        val (total: Int, entries: List<IResultEntry>) = cache.coget(queryParam.query) {
+            searchResultConsumer.consume(searchLauncher.launch(queryParam))
+        }
         return SearchResponse(total, start, entries).take(queryParam.rows)
-                .slice(start, queryParam.numPerPage)
-                .also { logger.trace("${queryParam.query} - Total: ${it.totalResults}, number of entries: ${it.entries.size}") }
+            .slice(start, queryParam.numPerPage)
+            .also { logger.trace("${queryParam.query} - Total: ${it.totalResults}, number of entries: ${it.entries.size}") }
     }
 
     // Depending on the type of the search domain (research papers, books), a dedicated aggregator must be built
@@ -61,7 +66,7 @@ class SearchAggregator(private val searchLauncher: SearchLauncher) {
         }
         val BOOKS: Set<IService> by lazy {
             setOf(OpenLibrarySearchService(OpenLibrarySearchClient()), OpenLibraryBookService(OpenLibraryBookClient()),
-                    JikanMangaService(JikanMangaClient()), GutendexService(GutendexClient()))
+                JikanMangaService(JikanMangaClient()), GutendexService(GutendexClient()))
         }
         val MANGAS: Set<IService> by lazy { setOf(JikanMangaService(JikanMangaClient())) }
         val ANIME: Set<IService> by lazy { setOf(JikanAnimeService(JikanAnimeClient())) }

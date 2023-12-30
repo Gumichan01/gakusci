@@ -1,27 +1,20 @@
 package io.gumichan01.gakusci.domain.search.cache
 
 import com.github.benmanes.caffeine.cache.Cache
-import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
+import java.util.concurrent.ConcurrentMap
 
-class SearchCache(cache: Cache<String, ServiceResponse?>) :
-    Cache<String, ServiceResponse?> by cache {
+class SearchCache(cache: Cache<String, ServiceResponse>) :
+    Cache<String, ServiceResponse> by cache {
 
-    private val mutex = Mutex()
-
-    suspend fun getOrUpdateCache(param: QueryParam, f: suspend () -> ServiceResponse?): ServiceResponse? {
-        mutex.withLock {
-            val response: ServiceResponse? = getIfPresent(param.query)
-            return if (response != null) {
-                if (response.entries.size < param.rows) {
-                    invalidate(param.query)
-                    f()?.also { put(param.query, it) }
-                } else {
-                    response
-                }
-            } else f()?.also { put(param.query, it) }
+    suspend fun coget(query: String, f: suspend () -> ServiceResponse): ServiceResponse {
+        val hashmap: ConcurrentMap<String, ServiceResponse> = asMap()
+        return if (hashmap.containsKey(query) && hashmap[query] != null) {
+            hashmap[query]!!
+        } else {
+            val value: ServiceResponse = f()
+            hashmap[query] = value
+            value
         }
     }
 }

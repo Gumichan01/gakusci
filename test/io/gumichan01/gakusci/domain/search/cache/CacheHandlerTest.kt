@@ -7,6 +7,6 @@ internal class CacheHandlerTest {
 
     @Test
     fun `create fresh cache`() {
-        assertThat(CacheHandler().createFreshCache()).isInstanceOf(SearchCache::class.java)
+        assertThat(CacheHandler().generateAggregatorCache()).isInstanceOf(SearchCache::class.java)
     }
 }
