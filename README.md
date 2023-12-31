@@ -14,13 +14,12 @@ The application can search for documents from different domains (some of them wi
 
 - Anime
 - Books
-- Music (WIP)
 - Manga
-- Open Data (?)
-- Images/Photos (WIP)
+- Music (soon)
+- Images/Photos (soon)
 - Research papers/articles
 
-Gakusci only interacts with services that expose a public API and do not require authentication.
+For now, Gakusci only interacts with services that expose a public API and do not require authentication.
 Their API can be REST(-like/-ful) or based on ATOM/RSS syndication.
 
 ## Build & run ##
@@ -31,12 +30,14 @@ Just do this:
 gradle run
 ```
 
-You can create a fat JAR like this:
+You simply build it with:
 
 ```
 gradle build
 ```
-or
+
+You can create a fat JAR like this:
+
 ```
 gradle jar
 ```
@@ -69,9 +70,30 @@ If you want to run it "in production", because you want to get your own instance
 docker run -it -p 80:80 --rm gakusci -config=/app/resources/application-prod.conf
 ```
 
-## Contributing ##
+## API ##
 
-- [ ] TODO
+A basic endpoint:
+
+```
+/api/v1/{search_type}/?q=<query>
+```
+Where **searth_type** is one of :
+
+- *papers*
+- *books*
+- *mangas*
+
+Get at most N elements
+
+```
+/api/v1/{search_type}/?q=<query>&rows=N
+```
+
+You can paginate the results like this:
+
+```
+/api/v1/{search_type}/?q=<query>&start=0&rows=N
+```
 
 ## Licence ##
 
