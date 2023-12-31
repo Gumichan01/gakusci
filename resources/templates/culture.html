@@ -16,7 +16,7 @@
             <input id="query" type="text" name="q" th:value="${query}"/>
         </div>
         <input id="search" type="submit"/><br>
-        <input id="type_all" type="radio" name="stype" value="research" th:checked="${research}"/>
+        <input id="type_papers" type="radio" name="stype" value="papers" th:checked="${papers}"/>
         Research papers/articles
         <input id="type_books" type="radio" name="stype" value="books" th:checked="${books}"/>
         Books
@@ -33,7 +33,7 @@
     </div>
 
     <p class="result" th:if="${not emptyEntries}"
-       th:text="${numFound + ' results. Only the first 2000 entries at most are reachable.'}"></p>
+       th:text="${numFound + ' results. Only the first 1000 entries at most are reachable.'}"></p>
 
     <div class="container">
         <div class="entry" th:each="entry : ${entries}">

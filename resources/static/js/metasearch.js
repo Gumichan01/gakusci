@@ -20,13 +20,13 @@ function autocomplete(inp, research, books, mangas, animes) {
       currentFocus = -1;
 
       // Select the list of services related to the type of search
-      var tresearch = document.getElementById("type_research")
+      var tpapers = document.getElementById("type_papers")
       var tbooks = document.getElementById("type_books")
       var tmanga = document.getElementById("type_manga")
       var tanime = document.getElementById("type_anime")
       var arr;
 
-      if (tresearch.checked) {
+      if (tpapers.checked) {
         arr = research
       } else if (tbooks.checked) {
         arr = books
