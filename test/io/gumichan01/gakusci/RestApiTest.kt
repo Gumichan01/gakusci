@@ -15,7 +15,7 @@ class RestApiTest {
     @Test
     fun `test REST Web-service API v1 search, normal case - return OK and non empty content`() {
         testApplication {
-            val response = client.get("/api/v1/researches/?q=lorem")
+            val response = client.get("/api/v1/books/?q=gunnm")
             assertThat(response.status).isEqualTo(HttpStatusCode.OK)
             assertThat(response.bodyAsText()).isNotBlank()
         }
@@ -24,7 +24,7 @@ class RestApiTest {
     @Test
     fun `test REST Web-service API v1 search, no query - return Bad request`() {
         testApplication {
-            val response = client.get("/api/v1/researches/")
+            val response = client.get("/api/v1/papers/")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
@@ -50,23 +50,7 @@ class RestApiTest {
     }
 
     @Test
-    fun `test REST Web-service API v1 search, query with start but no num_per_page - return Bad request`() {
-        testApplication {
-            val response = client.get("/api/v1/researches/?q=abcd&start=0")
-            assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
-        }
-    }
-
-    @Test
-    fun `test REST Web-service API v1 search, query with num_per_page but no start - return Bad request`() {
-        testApplication {
-            val response = client.get("/api/v1/researches/?q=abcd&num_per_page=2")
-            assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
-        }
-    }
-
-    @Test
-    fun `test REST Web-service API v1 search, query with start but no max_results - return Bad request`() {
+    fun `test REST Web-service API v1 search, query with start but no rows - return Bad request`() {
         testApplication {
             val response = client.get("/api/v1/researches/?q=abcd&start=0")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
@@ -75,17 +59,17 @@ class RestApiTest {
     }
 
     @Test
-    fun `test REST Web-service API v1 search, query with pagination (start, num_per_page, max_results) - return ok`() {
+    fun `test REST Web-service API v1 search, query with pagination (start, rows) - return ok`() {
         testApplication {
-            val response = client.get("/api/v1/researches/?q=abcd&start=0&num_per_page=4&max_results=16")
+            val response = client.get("/api/v1/books/?q=manga&start=1&rows=4")
             assertThat(response.status).isEqualTo(HttpStatusCode.OK)
         }
     }
 
     @Test
-    fun `test REST Web-service API v1 search, query with start greater than max_results - return Bad request`() {
+    fun `test REST Web-service API v1 search, query with start greater than rows - return Bad request`() {
         testApplication {
-            val response = client.get("/api/v1/researches/?q=abcda&max_results=10&start=100&num_per_page=2")
+            val response = client.get("/api/v1/researches/?q=abcda&rows=10&start=100")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
@@ -93,57 +77,49 @@ class RestApiTest {
     @Test
     fun `test REST Web-service API v1 search, query with negative start value - return Bad request`() {
         testApplication {
-            val response = client.get("/api/v1/researches/?q=abcda&start=-10&max_results=16&num_per_page=2")
+            val response = client.get("/api/v1/researches/?q=abcda&start=-10&rows=16")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
 
     @Test
-    fun `test REST Web-service API v1 search, pagination but with negative max_results - return Bad request`() {
+    fun `test REST Web-service API v1 search, pagination but with negative rows - return Bad request`() {
         testApplication {
-            val response = client.get("/api/v1/researches/?q=abcdb&max_results=-1&start=0&num_per_page=2")
+            val response = client.get("/api/v1/researches/?q=abcdb&rows=-1&start=0")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
 
     @Test
-    fun `test REST Web-service API v1 search, negative max_results without pagination - return Bad request`() {
+    fun `test REST Web-service API v1 search, negative rows without pagination - return Bad request`() {
         testApplication {
-            val response = client.get("/api/v1/researches/?q=abcdb&max_results=-1")
+            val response = client.get("/api/v1/researches/?q=abcdb&rows=-1")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
 
     @Test
-    fun `test REST Web-service API v1 search, negative num_per_page - return Bad request`() {
+    fun `test REST Web-service API v1 search, query with numPerPage greater than rows - return Bad request`() {
         testApplication {
-            val response = client.get("/api/v1/researches/?q=abcdb&max_results=10&start=0&num_per_page=-1")
+            val response = client.get("/api/v1/researches/?q=babcd&rows=10&start=1&")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
 
     @Test
-    fun `test REST Web-service API v1 search, query with numPerPage greater than max_results - return Bad request`() {
-        testApplication {
-            val response = client.get("/api/v1/researches/?q=babcd&max_results=10&start=1&num_per_page=100000")
-            assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
-        }
-    }
-
-    @Test
-    fun `test REST API v1, max_results greater than the maximum number of entries allowed by the app - Bad request`() {
+    fun `test REST API v1, rows greater than the maximum number of entries allowed by the app - Bad request`() {
         testApplication {
             val bigStartValue = 1 shl 20
-            val response = client.get("/api/v1/researches/?q=aabcd&start=0&max_results=$bigStartValue&num_per_page=2")
+            val response = client.get("/api/v1/researches/?q=aabcd&start=0&rows=$bigStartValue")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
 
     @Test
-    fun `test REST API v1, max_results greater than the maximum number of entries allowed by the app (no start param) - Bad request`() {
+    fun `test REST API v1, rows greater than the maximum number of entries allowed by the app (no start param) - Bad request`() {
         testApplication {
             val bigStartValue = 1 shl 20
-            val response = client.get("/api/v1/researches/?q=aabcd&max_results=$bigStartValue")
+            val response = client.get("/api/v1/researches/?q=aabcd&rows=$bigStartValue")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }

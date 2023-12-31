@@ -23,9 +23,9 @@ class ApplicationTest {
     }
 
     @Test
-    fun `webapp, normal case with research - returns OK and HTML body`() {
+    fun `webapp, normal case with research papers - returns OK and HTML body`() {
         testApplication {
-            val response = client.get("/search/?q=lorem&stype=research")
+            val response = client.get("/search/?q=lorem&stype=papers")
             with(response) {
                 assertThat(status).isEqualTo(HttpStatusCode.OK)
                 assertThat(bodyAsText()).isNotBlank
@@ -90,7 +90,7 @@ class ApplicationTest {
     @Test
     fun `webapp, query with negative start value - returns Bad request`() {
         testApplication {
-            val response = client.get("/search/?q=lorem&stype=research&start=-10")
+            val response = client.get("/search/?q=lorem&stype=book&start=-10")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
@@ -98,7 +98,7 @@ class ApplicationTest {
     @Test
     fun `webapp, empty query - returns Bad request`() {
         testApplication {
-            val response = client.get("/search/?q=&stype=research")
+            val response = client.get("/search/?q=&stype=books")
             with(response) {
                 assertThat(status).isEqualTo(HttpStatusCode.BadRequest)
             }
@@ -108,7 +108,7 @@ class ApplicationTest {
     @Test
     fun `webapp, blank query - returns Bad request`() {
         testApplication {
-            val response = client.get("/search/?q=     &stype=research")
+            val response = client.get("/search/?q=     &stype=books")
             with(response) {
                 assertThat(status).isEqualTo(HttpStatusCode.BadRequest)
             }
@@ -118,7 +118,7 @@ class ApplicationTest {
     @Test
     fun `webapp, query too short (less than 3 characters) - returns Bad request`() {
         testApplication {
-            val response = client.get("/search/?q=a&stype=research")
+            val response = client.get("/search/?q=a&stype=books")
             with(response) {
                 assertThat(status).isEqualTo(HttpStatusCode.BadRequest)
             }
@@ -141,7 +141,7 @@ class ApplicationTest {
     fun `test web application search, query with very big start value - returns Bad request`() {
         testApplication {
             val bigStartValue = 1 shl 20
-            val response = client.get("/search/?q=lorem&stype=research&start=$bigStartValue")
+            val response = client.get("/search/?q=lorem&stype=papers&start=$bigStartValue")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
@@ -150,7 +150,7 @@ class ApplicationTest {
     @Test
     fun `Query 'fruit' returning more than 2000 results (10 entries per page) - returns HTML body with 'start' value of the last page less than 1990`() {
         testApplication {
-            val response = client.get("/search/?q=fruit&stype=research")
+            val response = client.get("/search/?q=fruit&stype=papers")
             assertThat(response.status).isEqualTo(HttpStatusCode.OK)
             assertThat(response.bodyAsText().substringAfterLast("start=").substringBefore("\"").toInt())
                 .isEqualTo(MAX_ENTRIES - 10)
@@ -161,7 +161,7 @@ class ApplicationTest {
     @Test
     fun `Query 'lorem' that returns less than 2000 results (10 entries per page) - returns HTML body with 'start' value of the last page less than 1990`() {
         testApplication {
-            val response = client.get("/search/?q=ipsum&stype=research")
+            val response = client.get("/search/?q=ipsum&stype=papers")
             assertThat(response.status).isEqualTo(HttpStatusCode.OK)
             assertThat(response.bodyAsText().substringAfterLast("start=").substringBefore("\"").toInt())
                 .isLessThan(MAX_ENTRIES - 10)
