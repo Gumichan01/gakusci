@@ -6,12 +6,9 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
+
 fun SearchResponse.take(n: Int): SearchResponse {
-    return if (n > entries.size) {
-        this.copy(entries = entries.take(n), totalResults = entries.size)
-    } else {
-        this.copy(entries = entries.take(n), totalResults = n)
-    }
+    return this.copy(entries = entries.take(n))
 }
 
 fun SearchResponse.slice(start: Int, numPerPage: Int?): SearchResponse {
@@ -20,9 +17,19 @@ fun SearchResponse.slice(start: Int, numPerPage: Int?): SearchResponse {
 
 fun SearchResponse.slice(range: IntRange): SearchResponse {
     return if (range.last > entries.size) {
-        this.copy(entries = entries.slice(IntRange(range.first, entries.size - 1)), totalResults = entries.size - range.first)
+        this.copy(entries = entries.slice(IntRange(range.first, entries.size - 1)))
     } else {
-        this.copy(entries = entries.slice(range), totalResults = entries.size - range.first)
+        this.copy(entries = entries.slice(range))
+    }
+}
+
+fun SearchResponse.paginateForRest(n: Int, start: Int, numPerPage: Int?): SearchResponse {
+
+    return entries.take(n).run {
+        val range: IntRange = if (numPerPage == null || start + numPerPage - 1 > this.size)
+            IntRange(start, this.size - 1) else IntRange(start, (start + numPerPage) - 1)
+
+        this.slice(range).run { SearchResponse(this.size, start, this) }
     }
 }
 

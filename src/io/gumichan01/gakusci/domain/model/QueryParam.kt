@@ -8,5 +8,6 @@ data class QueryParam(
     val rows: Int = 10,
     val start: Int = 0,
     val numPerPage: Int? = null,
-    val uri: String = "/"
+    val uri: String = "/",
+    val isRest: Boolean = false
 )
