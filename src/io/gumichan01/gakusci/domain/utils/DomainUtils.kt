@@ -6,7 +6,13 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-fun SearchResponse.take(n: Int) = this.copy(entries = entries.take(n))
+fun SearchResponse.take(n: Int): SearchResponse {
+    return if (n > entries.size) {
+        this.copy(entries = entries.take(n), totalResults = entries.size)
+    } else {
+        this.copy(entries = entries.take(n), totalResults = n)
+    }
+}
 
 fun SearchResponse.slice(start: Int, numPerPage: Int?): SearchResponse {
     return numPerPage?.let { slice(IntRange(start, start + numPerPage - 1)) } ?: this
@@ -14,9 +20,9 @@ fun SearchResponse.slice(start: Int, numPerPage: Int?): SearchResponse {
 
 fun SearchResponse.slice(range: IntRange): SearchResponse {
     return if (range.last > entries.size) {
-        this.copy(entries = entries.slice(IntRange(range.first, entries.size - 1)))
+        this.copy(entries = entries.slice(IntRange(range.first, entries.size - 1)), totalResults = entries.size - range.first)
     } else {
-        this.copy(entries = entries.slice(range))
+        this.copy(entries = entries.slice(range), totalResults = entries.size - range.first)
     }
 }
 

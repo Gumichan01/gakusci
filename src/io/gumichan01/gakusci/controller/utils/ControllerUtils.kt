@@ -12,15 +12,16 @@ const val BANG = '!'
 fun retrieveWebParam(queryParameters: Parameters): IRequestParamResult {
     return queryParameters["q"]?.let { query ->
         val numPerPage = 10
-        val start : Int = queryParameters["start"]?.toInt() ?: 0
+        val start: Int = queryParameters["start"]?.toInt() ?: 0
         val searchType: SearchType? = getSearchTypeFrom(queryParameters)
         // The webapp must not retrieve more than 1000 entries, for the sake of performance
-        val rows : Int = MAX_ENTRIES
+        val rows: Int = MAX_ENTRIES
 
         when {
             query.isBlank() -> BadRequest("Query parameter 'q' is blank")
             query.isTooShort() ->
                 BadRequest("Query parameter 'q' is too short (it must have at least 3 characters)")
+
             query.startsWith(BANG) -> BangRequest(query)
             start < 0 -> BadRequest("Negative 'start' value: $start")
             start > rows -> BadRequest("'start' is greater than max_results")
@@ -33,51 +34,23 @@ fun retrieveWebParam(queryParameters: Parameters): IRequestParamResult {
 fun retrieveApiParam(queryParameters: Parameters, pathParameters: Parameters): IRequestParamResult {
     return queryParameters["q"]?.let { query ->
         getApiSearchTypeFrom(pathParameters)?.let { searchType ->
-            val start: Int? = queryParameters["start"]?.toInt()
-            val rows: Int? = queryParameters["max_results"]?.toInt()
-            val numPerPage: Int? = queryParameters["num_per_page"]?.toInt()
+            val start: Int = queryParameters["start"]?.toInt() ?: 0
+            val rows: Int = queryParameters["rows"]?.toInt() ?: MAX_ENTRIES
+            val numPerPage: Int? = if (start > 0) rows - start else null
 
             when {
-                query.isBlank() -> BadRequest("Query parameter 'q' is blank")
-                query.isTooShort() ->
-                    BadRequest("Query parameter 'q' is too short (it must have at least 3 characters)")
-                query.startsWith(BANG) -> BadRequest("Bang request is not allowed in the REST API")
-                rows != null && rows < 0 -> BadRequest("Negative 'max_results' value: $rows")
-                rows != null && rows > MAX_ENTRIES ->
-                    BadRequest("Cannot request 'max_results' greater than $MAX_ENTRIES")
-                start != null -> {
-                    RestApiQueryParameters(query, searchType, rows, start, numPerPage).run {
-                        retrieveAndCheckRestApiQueryParameters(this)
-                    }
-                }
-                numPerPage != null -> BadRequest("Cannot set 'num_per_page' with no 'start' value")
-                else -> RequestParam(query, searchType, rows ?: 10, 0, null)
+                query.isBlank() -> BadRequest("Query parameter 'q' is blank.")
+                query.isTooShort() -> BadRequest("Query parameter 'q' is too short. It must have at least 3 characters.")
+                query.startsWith(BANG) -> BadRequest("Bang request is not allowed in the REST API.")
+                rows < 0 -> BadRequest("Negative 'rows' value: $rows. 'rows' must be positive or zero.")
+                rows > MAX_ENTRIES -> BadRequest("'rows' exceed $MAX_ENTRIES entries")
+                start < 0 -> BadRequest("Negative 'start' value: $rows. 'start' must be positive or zero.")
+                start > rows -> BadRequest("'start' is greater than 'rows'")
+                else -> RequestParam(query, searchType, rows, start, numPerPage)
             }
         } ?: BadRequest("Incorrect syntax: absent or incorrect search type")
     } ?: BadRequest("No query parameter 'q' provided")
 }
-
-private fun retrieveAndCheckRestApiQueryParameters(queryParameters: RestApiQueryParameters): IRequestParamResult {
-    return queryParameters.run {
-        when {
-            start < 0 -> BadRequest("Negative 'start' value: $start")
-            numPerPage == null -> BadRequest("Cannot set 'start' with no 'num_per_page'")
-            numPerPage < 0 -> BadRequest("Negative 'num_per_page' value: $start")
-            rows == null -> BadRequest("Cannot set 'start' with no 'max_results'")
-            start > rows -> BadRequest("'start' is greater than 'max_results'")
-            numPerPage > rows -> BadRequest("'num_per_page' is greater than 'max_results'")
-            else -> RequestParam(query, searchType, rows, start, numPerPage)
-        }
-    }
-}
-
-private data class RestApiQueryParameters(
-    val query: String,
-    val searchType: SearchType,
-    val rows: Int?,
-    val start: Int,
-    val numPerPage: Int?
-)
 
 private fun getSearchTypeFrom(parameters: Parameters): SearchType? {
     return parameters["stype"]?.let {
