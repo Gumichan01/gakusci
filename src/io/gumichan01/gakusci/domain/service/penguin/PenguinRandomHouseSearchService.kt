@@ -29,11 +29,11 @@ class PenguinRandomHouseSearchService(
         return (searchClient.retrieveResults(queryParam)?.entries?.retrieveDistinctIsbns()
             ?: emptyList()).map { entry ->
             QueryParam(entry, SearchType.BOOKS)
-        }.run {
+        }.let { isbnsQueries ->
             when {
-                isEmpty() -> ServiceResponse(0, emptyList())
-                size == 1 -> searchService.search(first())
-                else -> retrieveResultsFromExternalService(this)
+                isbnsQueries.isEmpty() -> ServiceResponse(0, emptyList())
+                isbnsQueries.size == 1 -> searchService.search(isbnsQueries.first())
+                else -> retrieveResultsFromExternalService(isbnsQueries)
             }
         }
     }
