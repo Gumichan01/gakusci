@@ -7,22 +7,6 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 
-fun SearchResponse.take(n: Int): SearchResponse {
-    return this.copy(entries = entries.take(n))
-}
-
-fun SearchResponse.slice(start: Int, numPerPage: Int?): SearchResponse {
-    return numPerPage?.let { slice(IntRange(start, start + numPerPage - 1)) } ?: this
-}
-
-fun SearchResponse.slice(range: IntRange): SearchResponse {
-    return if (range.last > entries.size) {
-        this.copy(entries = entries.slice(IntRange(range.first, entries.size - 1)))
-    } else {
-        this.copy(entries = entries.slice(range))
-    }
-}
-
 fun SearchResponse.isEmpty(): Boolean {
     return totalResults == 0 && entries.isEmpty()
 }

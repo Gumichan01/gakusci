@@ -22,8 +22,6 @@ import io.gumichan01.gakusci.domain.service.jikan.JikanMangaService
 import io.gumichan01.gakusci.domain.service.openlib.OpenLibraryBookService
 import io.gumichan01.gakusci.domain.service.openlib.OpenLibrarySearchService
 import io.gumichan01.gakusci.domain.service.theses.ThesesService
-import io.gumichan01.gakusci.domain.utils.slice
-import io.gumichan01.gakusci.domain.utils.take
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import org.slf4j.Logger
@@ -39,11 +37,18 @@ class SearchAggregator(private val searchLauncher: SearchLauncher,
 
     suspend fun retrieveResults(queryParam: QueryParam): SearchResponse {
         val start: Int = queryParam.start
-        val (total: Int, entries: List<IResultEntry>) = cache.coget(queryParam.query) {
+        val query: String = queryParam.query
+        val (total: Int, entries: List<IResultEntry>) = cache.coget(query) {
             searchResultConsumer.consume(searchLauncher.launch(queryParam))
         }
-        return SearchResponse(total, start, entries).slice(start, queryParam.rows).also { response ->
-            logger.trace("${queryParam.query} - Total: ${response.totalResults}, number of entries: ${response.entries.size}") }
+        return entries.slice(IntRange(start, start + queryParam.rows - 1)).let { finalEntries ->
+            SearchResponse(total, start, finalEntries).also { response ->
+                logger.trace("$query - Total: ${response.totalResults}, number of entries: ${response.entries.size}")
+            }
+        }
+        /*return SearchResponse(total, start, entries).slice(start, queryParam.rows).also { response ->
+            logger.trace("${queryParam.query} - Total: ${response.totalResults}, number of entries: ${response.entries.size}")
+        }*/
     }
 
 
