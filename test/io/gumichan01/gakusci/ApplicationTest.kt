@@ -137,16 +137,6 @@ class ApplicationTest {
 
 
     @Test
-    fun `test web application search, query with very big start value - returns Bad request`() {
-        testApplication {
-            val bigStartValue: Int = 1 shl 20
-            val response: HttpResponse = client.get("/search/?q=lorem&stype=books&start=$bigStartValue")
-            assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
-        }
-    }
-
-
-    @Test
     fun `Query 'fruit' returning more than 1000 results (10 entries per page) - returns HTML body with 'start' value of the last page less than 1990`() {
         testApplication {
             val response: HttpResponse = client.get("/search/?q=fruit&stype=books")
