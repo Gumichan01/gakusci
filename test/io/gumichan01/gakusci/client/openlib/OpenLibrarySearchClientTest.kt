@@ -20,13 +20,4 @@ internal class OpenLibrarySearchClientTest {
         runBlocking { OpenLibrarySearchClient().retrieveResults(QueryParam("gunnm last order", SearchType.BOOKS)) }
         assertTrue { true }
     }
-
-    //@Test
-    fun `Call the Open Library client by searching for the 'lord of the rings' at index 42 - search for results`() {
-        val expectedStartValue = 40
-        val response: OpenLibrarySearchResponse? =
-            runBlocking { OpenLibrarySearchClient().retrieveResults(QueryParam("the lord of the rings", SearchType.BOOKS, start = 42)) }
-        assertThat(response).isNotNull
-        assertThat(response!!.start).isEqualTo(expectedStartValue)
-    }
 }

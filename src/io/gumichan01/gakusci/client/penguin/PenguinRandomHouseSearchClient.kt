@@ -1,6 +1,7 @@
 package io.gumichan01.gakusci.client.penguin
 
 import io.gumichan01.gakusci.client.IClient
+import io.gumichan01.gakusci.client.utils.NUM_ENTRIES_PER_SERVICE
 import io.gumichan01.gakusci.client.utils.trace
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.ktor.client.HttpClient
@@ -22,10 +23,10 @@ class PenguinRandomHouseSearchClient : IClient<PenguinRandomHouseSearchResponse>
     private val searchUrl = "https://reststop.randomhouse.com/resources/titles?start=0&max=%d&expandLevel=0&search=%s"
 
     override suspend fun retrieveResults(queryParam: QueryParam): PenguinRandomHouseSearchResponse? {
-        val url: String = searchUrl.format(queryParam.rows, URLEncoder.encode(queryParam.query, Charsets.UTF_8))
+        val url: String = searchUrl.format(NUM_ENTRIES_PER_SERVICE, URLEncoder.encode(queryParam.query, Charsets.UTF_8))
         return try {
             val xmlText: String = HttpClient(Apache).get(url).bodyAsText()
-            PenguinRandomHouseSearchResponse(extractIsbnsFromXml(xmlText).take(queryParam.rows))
+            PenguinRandomHouseSearchResponse(extractIsbnsFromXml(xmlText).take(NUM_ENTRIES_PER_SERVICE))
         } catch (e: Exception) {
             trace(logger, e)
             null

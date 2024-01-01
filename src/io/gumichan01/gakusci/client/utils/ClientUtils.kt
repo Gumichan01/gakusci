@@ -1,5 +1,3 @@
 package io.gumichan01.gakusci.client.utils
 
-fun calculatePageToSearchFor(index: Int, nbEntriesPerPage: Int): Int {
-    return if (index < nbEntriesPerPage) 1 else index / nbEntriesPerPage + 1
-}
+const val NUM_ENTRIES_PER_SERVICE = 1000

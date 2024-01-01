@@ -5,6 +5,7 @@ import io.github.bucket4j.Bucket
 import io.github.bucket4j.Refill
 import io.github.bucket4j.local.LocalBucket
 import io.gumichan01.gakusci.client.IClient
+import io.gumichan01.gakusci.client.utils.NUM_ENTRIES_PER_SERVICE
 import io.gumichan01.gakusci.domain.model.QueryParam
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -39,7 +40,7 @@ class JikanAnimeClient : IClient<JikanAnimeResponse> {
                                     .filter { e -> e.url != null }
                                     .map { entry ->
                                         JikanAnimeEntry(entry.title!!, entry.url!!, entry.episodes, entry.images.firstDefault())
-                                    }.take(queryParam.rows).toList()
+                                    }.take(NUM_ENTRIES_PER_SERVICE).toList()
                         }.get(requestTimeout.inWholeSeconds, TimeUnit.SECONDS)
             }
             JikanAnimeResponse(entries)

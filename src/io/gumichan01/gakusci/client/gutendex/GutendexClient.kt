@@ -1,7 +1,6 @@
 package io.gumichan01.gakusci.client.gutendex
 
 import io.gumichan01.gakusci.client.IClient
-import io.gumichan01.gakusci.client.utils.calculatePageToSearchFor
 import io.gumichan01.gakusci.client.utils.trace
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.ktor.client.*
