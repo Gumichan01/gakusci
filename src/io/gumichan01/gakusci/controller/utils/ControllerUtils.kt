@@ -33,7 +33,7 @@ fun retrieveWebParam(queryParameters: Parameters): IRequestParamResult {
 
 fun retrieveApiParam(queryParameters: Parameters, pathParameters: Parameters): IRequestParamResult {
     return queryParameters["q"]?.let { query ->
-        getApiSearchTypeFrom(pathParameters)?.let { searchType ->
+        getSearchTypeFrom(pathParameters)?.let { searchType ->
             val start: Int = queryParameters["start"]?.toInt() ?: 0
             val rows: Int = queryParameters["rows"]?.toInt() ?: MAX_ENTRIES
             val numPerPage: Int? = if (start > 0) rows - start else null
@@ -59,16 +59,6 @@ private fun getSearchTypeFrom(parameters: Parameters): SearchType? {
             SearchType.BOOKS.value -> SearchType.BOOKS
             SearchType.MANGAS.value -> SearchType.MANGAS
             SearchType.ANIME.value -> SearchType.ANIME
-            else -> null
-        }
-    }
-}
-
-private fun getApiSearchTypeFrom(parameters: Parameters): SearchType? {
-    return parameters["search_type"]?.let {
-        when (it) {
-            SearchType.RESEARCHES.value -> SearchType.RESEARCH
-            SearchType.BOOKS.value -> SearchType.BOOKS
             else -> null
         }
     }
