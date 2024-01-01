@@ -18,11 +18,11 @@ class SearchLauncher(private val services: Set<IService>) {
 
     fun launch(queryParam: QueryParam): Channel<ServiceResponse> {
         if (services.isEmpty()) {
-            return Channel<ServiceResponse>(0).run { close(); this }
+            return Channel<ServiceResponse>(0).also { it.close() }
         }
 
         val serviceCallTimeout = 15000L
-        val channel: Channel<ServiceResponse> = Channel(capacity = 64)
+        val channel: Channel<ServiceResponse> = Channel(capacity = 128)
         val simpleQuery = SimpleQuery(queryParam.query)
 
         // Each coroutine a service is launched in a producer of search results, as in the Producer/Consumer pattern
@@ -30,7 +30,7 @@ class SearchLauncher(private val services: Set<IService>) {
             CoroutineScope(Dispatchers.Default).launch {
                 try {
                     withTimeoutOrNull(serviceCallTimeout) {
-                        service.search(simpleQuery).let { channel.send(it) }
+                        service.search(simpleQuery).let { response -> channel.send(response) }
                     }
                 } finally {
                     if (runningCoroutinesCounter.decrementAndGet() == 0) {
