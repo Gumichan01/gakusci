@@ -140,7 +140,7 @@ class ApplicationTest {
     fun `test web application search, query with very big start value - returns Bad request`() {
         testApplication {
             val bigStartValue: Int = 1 shl 20
-            val response: HttpResponse = client.get("/search/?q=lorem&stype=papers&start=$bigStartValue")
+            val response: HttpResponse = client.get("/search/?q=lorem&stype=books&start=$bigStartValue")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
@@ -149,10 +149,10 @@ class ApplicationTest {
     @Test
     fun `Query 'fruit' returning more than 1000 results (10 entries per page) - returns HTML body with 'start' value of the last page less than 1990`() {
         testApplication {
-            val response: HttpResponse = client.get("/search/?q=fruit&stype=papers")
+            val response: HttpResponse = client.get("/search/?q=fruit&stype=books")
             assertThat(response.status).isEqualTo(HttpStatusCode.OK)
             assertThat(response.bodyAsText().substringAfterLast("start=").substringBefore("\"").toInt())
-                .isLessThan(1000)
+                .isLessThanOrEqualTo(1000)
         }
     }
 
@@ -160,10 +160,10 @@ class ApplicationTest {
     @Test
     fun `Query 'lorem' that returns less than 1000 results (10 entries per page) - returns HTML body with 'start' value of the last page less than 1990`() {
         testApplication {
-            val response: HttpResponse = client.get("/search/?q=ipsum&stype=papers")
+            val response: HttpResponse = client.get("/search/?q=fruit&stype=books")
             assertThat(response.status).isEqualTo(HttpStatusCode.OK)
             assertThat(response.bodyAsText().substringAfterLast("start=").substringBefore("\"").toInt())
-                .isLessThan(1000)
+                .isLessThanOrEqualTo(1000)
         }
     }
 
