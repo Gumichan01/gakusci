@@ -10,7 +10,6 @@ import io.gumichan01.gakusci.client.openlib.OpenLibrarySearchClient
 import io.gumichan01.gakusci.client.theses.ThesesClient
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
-import io.gumichan01.gakusci.domain.model.entry.IResultEntry
 import io.gumichan01.gakusci.domain.search.cache.SearchAggregatorCache
 import io.gumichan01.gakusci.domain.search.cache.SearchAggregatorCacheBuilder
 import io.gumichan01.gakusci.domain.service.IService
@@ -36,19 +35,19 @@ class SearchAggregator(private val searchLauncher: SearchLauncher,
     private val searchResultConsumer = SearchResultConsumer()
 
     suspend fun retrieveResults(queryParam: QueryParam): SearchResponse {
-        val start: Int = queryParam.start
         val query: String = queryParam.query
-        val (total: Int, entries: List<IResultEntry>) = cache.coget(query) {
+        return cache.coget(query) {
             searchResultConsumer.consume(searchLauncher.launch(queryParam))
-        }
-        return entries.slice(IntRange(start, start + queryParam.rows - 1)).let { finalEntries ->
-            SearchResponse(total, start, finalEntries).also { response ->
+        }.let { result ->
+            val total = result.totalResults
+            val entries = result.entries
+            val start: Int = queryParam.start
+            val endInclusive: Int = if (start + queryParam.rows > entries.size) entries.size - 1 else start + queryParam.rows - 1
+
+            SearchResponse(total, start, entries.slice(IntRange(start, endInclusive))).also { response ->
                 logger.trace("$query - Total: ${response.totalResults}, number of entries: ${response.entries.size}")
             }
         }
-        /*return SearchResponse(total, start, entries).slice(start, queryParam.rows).also { response ->
-            logger.trace("${queryParam.query} - Total: ${response.totalResults}, number of entries: ${response.entries.size}")
-        }*/
     }
 
 
