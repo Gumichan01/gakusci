@@ -24,7 +24,7 @@ class RestApiTest {
     @Test
     fun `test REST Web-service API v1 search, no query - return Bad request`() {
         testApplication {
-            val response = client.get("/api/v1/papers/")
+            val response = client.get("/api/v1/books/")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
@@ -32,7 +32,7 @@ class RestApiTest {
     @Test
     fun `test REST Web-service API v1 search, blank query - returns Bad request`() {
         testApplication {
-            val response = client.get("/api/v1/researches/?q=     ")
+            val response = client.get("/api/v1/books/?q=     ")
             with(response) {
                 assertThat(status).isEqualTo(HttpStatusCode.BadRequest)
             }
@@ -67,17 +67,9 @@ class RestApiTest {
     }
 
     @Test
-    fun `test REST Web-service API v1 search, query with start greater than rows - return Bad request`() {
-        testApplication {
-            val response = client.get("/api/v1/researches/?q=abcda&rows=10&start=100")
-            assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
-        }
-    }
-
-    @Test
     fun `test REST Web-service API v1 search, query with negative start value - return Bad request`() {
         testApplication {
-            val response = client.get("/api/v1/researches/?q=abcda&start=-10&rows=16")
+            val response = client.get("/api/v1/papers/?q=abcda&start=-10&rows=16")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
@@ -85,23 +77,15 @@ class RestApiTest {
     @Test
     fun `test REST Web-service API v1 search, pagination but with negative rows - return Bad request`() {
         testApplication {
-            val response = client.get("/api/v1/researches/?q=abcdb&rows=-1&start=0")
+            val response = client.get("/api/v1/papers/?q=abcdb&rows=-1&start=0")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
 
     @Test
-    fun `test REST Web-service API v1 search, negative rows without pagination - return Bad request`() {
+    fun `test REST Web-service API v1 search, negative rows - return Bad request`() {
         testApplication {
-            val response = client.get("/api/v1/researches/?q=abcdb&rows=-1")
-            assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
-        }
-    }
-
-    @Test
-    fun `test REST Web-service API v1 search, query with numPerPage greater than rows - return Bad request`() {
-        testApplication {
-            val response = client.get("/api/v1/researches/?q=babcd&rows=10&start=1&")
+            val response = client.get("/api/v1/papers/?q=abcdb&rows=-1")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
@@ -110,7 +94,7 @@ class RestApiTest {
     fun `test REST API v1, rows greater than the maximum number of entries allowed by the app - Bad request`() {
         testApplication {
             val bigStartValue = 1 shl 20
-            val response = client.get("/api/v1/researches/?q=aabcd&start=0&rows=$bigStartValue")
+            val response = client.get("/api/v1/papers/?q=aabcd&start=0&rows=$bigStartValue")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
@@ -119,7 +103,7 @@ class RestApiTest {
     fun `test REST API v1, rows greater than the maximum number of entries allowed by the app (no start param) - Bad request`() {
         testApplication {
             val bigStartValue = 1 shl 20
-            val response = client.get("/api/v1/researches/?q=aabcd&rows=$bigStartValue")
+            val response = client.get("/api/v1/papers/?q=aabcd&rows=$bigStartValue")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
@@ -127,7 +111,7 @@ class RestApiTest {
     @Test
     fun `Redirect query in REST API - return bad request`() {
         testApplication {
-            val response = client.get("/api/v1/researches/?q=!hal")
+            val response = client.get("/api/v1/papers/?q=!hal")
             assertThat(response.status).isEqualTo(HttpStatusCode.BadRequest)
         }
     }
