@@ -4,7 +4,8 @@ import io.gumichan01.gakusci.controller.utils.*
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.search.SearchQueryProcessor
-import io.ktor.http.HttpStatusCode
+import io.gumichan01.gakusci.domain.utils.isEmpty
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*

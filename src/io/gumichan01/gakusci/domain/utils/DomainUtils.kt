@@ -23,14 +23,8 @@ fun SearchResponse.slice(range: IntRange): SearchResponse {
     }
 }
 
-fun SearchResponse.paginateForRest(n: Int, start: Int, numPerPage: Int?): SearchResponse {
-
-    return entries.take(n).run {
-        val range: IntRange = if (numPerPage == null || start + numPerPage - 1 > this.size)
-            IntRange(start, this.size - 1) else IntRange(start, (start + numPerPage) - 1)
-
-        this.slice(range).run { SearchResponse(this.size, start, this) }
-    }
+fun SearchResponse.isEmpty(): Boolean {
+    return totalResults == 0 && entries.isEmpty()
 }
 
 fun DateInterval.toText(): String {

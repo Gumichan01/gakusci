@@ -5,16 +5,15 @@ import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.ktor.http.*
 
-const val MAX_ENTRIES = 1000
-const val MINIMUM_QUERY_LENGTH = 3
-const val BANG = '!'
+private const val MAX_ENTRIES = 1000
+private const val MINIMUM_QUERY_LENGTH = 3
+private const val BANG = '!'
 
 fun retrieveWebParam(queryParameters: Parameters): IRequestParamResult {
     return queryParameters["q"]?.let { query ->
         val numPerPage = 10
         val start: Int = queryParameters["start"]?.toInt() ?: 0
         val searchType: SearchType? = getSearchTypeFrom(queryParameters)
-        // The webapp must not retrieve more than 1000 entries, for the sake of performance
         val rows: Int = MAX_ENTRIES
 
         when {
@@ -66,10 +65,6 @@ private fun getSearchTypeFrom(parameters: Parameters): SearchType? {
 
 private fun String.isTooShort(): Boolean {
     return length < MINIMUM_QUERY_LENGTH
-}
-
-fun SearchResponse.isEmpty(): Boolean {
-    return totalResults == 0 && entries.isEmpty()
 }
 
 fun RequestParam.toQueryParam(uri: String, isRest: Boolean = false): QueryParam {

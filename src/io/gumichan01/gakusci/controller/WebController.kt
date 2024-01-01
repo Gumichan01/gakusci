@@ -14,7 +14,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import kotlin.math.min
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -26,10 +25,12 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
         when (val resultParam: IRequestParamResult = retrieveWebParam(call.request.queryParameters)) {
             is BadRequest -> call.respond(HttpStatusCode.BadRequest, resultParam.message)
             is BangRequest -> {
-                retrieveUrlRedirectOfService(resultParam.request)?.let { redirectUrl ->
-                    call.respondRedirect(redirectUrl, false)
-                } ?: call.respond(HttpStatusCode.BadRequest, "Invalid or incomplete Bang request : ${resultParam.request}")
+                when (val redirectUrl: String? = retrieveUrlRedirectOfService(resultParam.request)) {
+                    null -> call.respond(HttpStatusCode.BadRequest, "Invalid or incomplete Bang request : ${resultParam.request}")
+                    else -> call.respondRedirect(redirectUrl, false)
+                }
             }
+
             is RequestParam -> {
                 logger.trace(call.request.uri)
                 val queryParam: QueryParam = resultParam.toQueryParam(call.request.uri)
@@ -72,32 +73,33 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
 
     private fun generateThymeleafContent(queryParam: QueryParam, response: SearchResponse): ThymeleafContent {
 
-        val template: String = when (queryParam.searchType) {
-            SearchType.RESEARCH -> "research"
-            SearchType.BOOKS, SearchType.MANGAS, SearchType.ANIME -> "culture"
+        // resources/template/<template>.html
+        val templateName: String = when (queryParam.searchType) {
+            SearchType.RESEARCH -> "research" // research.html
+            SearchType.BOOKS, SearchType.MANGAS, SearchType.ANIME -> "culture" // culture.html
             else -> throw IllegalStateException("Cannot create HTML template for ${queryParam.searchType}")
         }
         val numPerPage: Int = queryParam.numPerPage!!
-        val numberOfPaginatedResults: Int = min(MAX_ENTRIES, response.totalResults)
+        val numberOfPaginatedResults: Int = response.totalResults
         val pageOffset: Int = numberOfPaginatedResults % numPerPage
 
         return ThymeleafContent(
-            template, mapOf(
-                "numFound" to response.totalResults,
-                "entries" to response.entries,
-                "query" to queryParam.query,
-                "stype" to queryParam.searchType.value,
-                "emptyEntries" to response.entries.isEmpty(),
-                "pstart" to queryParam.start - numPerPage,
-                "start" to queryParam.start,
-                "nstart" to queryParam.start + numPerPage,
-                "lastStart" to numberOfPaginatedResults - (if (pageOffset == 0) 10 else pageOffset),
-                "numPerPage" to numPerPage,
-                SearchType.RESEARCH.value to (queryParam.searchType == SearchType.RESEARCH),
-                SearchType.BOOKS.value to (queryParam.searchType == SearchType.BOOKS),
-                SearchType.MANGAS.value to (queryParam.searchType == SearchType.MANGAS),
-                SearchType.ANIME.value to (queryParam.searchType == SearchType.ANIME)
-            )
+            templateName, mapOf(
+            "numFound" to response.totalResults,
+            "entries" to response.entries,
+            "query" to queryParam.query,
+            "stype" to queryParam.searchType.value,
+            "emptyEntries" to response.entries.isEmpty(),
+            "pstart" to queryParam.start - numPerPage,
+            "start" to queryParam.start,
+            "nstart" to queryParam.start + numPerPage,
+            "lastStart" to numberOfPaginatedResults - (if (pageOffset == 0) 10 else pageOffset),
+            "numPerPage" to numPerPage,
+            SearchType.RESEARCH.value to (queryParam.searchType == SearchType.RESEARCH),
+            SearchType.BOOKS.value to (queryParam.searchType == SearchType.BOOKS),
+            SearchType.MANGAS.value to (queryParam.searchType == SearchType.MANGAS),
+            SearchType.ANIME.value to (queryParam.searchType == SearchType.ANIME)
+        )
         )
     }
 }
