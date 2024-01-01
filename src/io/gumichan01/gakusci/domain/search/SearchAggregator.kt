@@ -42,12 +42,8 @@ class SearchAggregator(private val searchLauncher: SearchLauncher,
         val (total: Int, entries: List<IResultEntry>) = cache.coget(queryParam.query) {
             searchResultConsumer.consume(searchLauncher.launch(queryParam))
         }
-        return SearchResponse(total, start, entries).take(queryParam.rows).slice(start, queryParam.numPerPage).run {
-            if (queryParam.isRest) {
-                SearchResponse(this.entries.size, start, this.entries)
-            } else this
-
-        }.also { logger.trace("${queryParam.query} - Total: ${it.totalResults}, number of entries: ${it.entries.size}") }
+        return SearchResponse(total, start, entries).slice(start, queryParam.rows).also { response ->
+            logger.trace("${queryParam.query} - Total: ${response.totalResults}, number of entries: ${response.entries.size}") }
     }
 
 

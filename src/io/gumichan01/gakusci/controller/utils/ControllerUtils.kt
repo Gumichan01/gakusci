@@ -5,16 +5,16 @@ import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.ktor.http.*
 
-private const val MAX_ENTRIES = 1000
+private const val MAX_ENTRIES = 10000
+private const val NUM_PER_WEBPAGE = 10
 private const val MINIMUM_QUERY_LENGTH = 3
 private const val BANG = '!'
 
 fun retrieveWebParam(queryParameters: Parameters): IRequestParamResult {
     return queryParameters["q"]?.let { query ->
-        val numPerPage = 10
         val start: Int = queryParameters["start"]?.toInt() ?: 0
         val searchType: SearchType? = getSearchTypeFrom(queryParameters)
-        val rows: Int = MAX_ENTRIES
+        val rows: Int = NUM_PER_WEBPAGE
 
         when {
             query.isBlank() -> BadRequest("Query parameter 'q' is blank")
@@ -23,9 +23,8 @@ fun retrieveWebParam(queryParameters: Parameters): IRequestParamResult {
 
             query.startsWith(BANG) -> BangRequest(query)
             start < 0 -> BadRequest("Negative 'start' value: $start")
-            start > rows -> BadRequest("'start' is greater than max_results")
             searchType == null -> BadRequest("No query parameter 'stype' provided")
-            else -> RequestParam(query, searchType, rows, start, numPerPage)
+            else -> RequestParam(query, searchType, rows, start, null)
         }
     } ?: BadRequest("No query parameter 'q' provided")
 }
@@ -35,7 +34,6 @@ fun retrieveApiParam(queryParameters: Parameters, pathParameters: Parameters): I
         getSearchTypeFrom(pathParameters)?.let { searchType ->
             val start: Int = queryParameters["start"]?.toInt() ?: 0
             val rows: Int = queryParameters["rows"]?.toInt() ?: MAX_ENTRIES
-            val numPerPage: Int? = if (start > 0) rows - start else null
 
             when {
                 query.isBlank() -> BadRequest("Query parameter 'q' is blank.")
@@ -44,8 +42,7 @@ fun retrieveApiParam(queryParameters: Parameters, pathParameters: Parameters): I
                 rows < 0 -> BadRequest("Negative 'rows' value: $rows. 'rows' must be positive or zero.")
                 rows > MAX_ENTRIES -> BadRequest("'rows' exceed $MAX_ENTRIES entries")
                 start < 0 -> BadRequest("Negative 'start' value: $rows. 'start' must be positive or zero.")
-                start > rows -> BadRequest("'start' is greater than 'rows'")
-                else -> RequestParam(query, searchType, rows, start, numPerPage)
+                else -> RequestParam(query, searchType, rows, start, null)
             }
         } ?: BadRequest("Incorrect syntax: absent or incorrect search type")
     } ?: BadRequest("No query parameter 'q' provided")

@@ -79,7 +79,7 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
             SearchType.BOOKS, SearchType.MANGAS, SearchType.ANIME -> "culture" // culture.html
             else -> throw IllegalStateException("Cannot create HTML template for ${queryParam.searchType}")
         }
-        val numPerPage: Int = queryParam.numPerPage!!
+        val numPerPage: Int = queryParam.rows
         val numberOfPaginatedResults: Int = response.totalResults
         val pageOffset: Int = numberOfPaginatedResults % numPerPage
 
