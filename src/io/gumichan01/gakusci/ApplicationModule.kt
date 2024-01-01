@@ -52,7 +52,7 @@ fun Application.gakusciModule() {
 }
 
 private fun Application.environmentKind(): EnvironmentKind {
-    return when (val envKind = environment.config.property("ktor.deployment.environment").getString()) {
+    return when (val envKind: String = environment.config.property("ktor.deployment.environment").getString()) {
         "dev", "development" -> EnvironmentKind.DEV
         "prod", "production" -> EnvironmentKind.PRODUCTION
         "test" -> EnvironmentKind.TEST
@@ -65,7 +65,7 @@ private enum class EnvironmentKind(val kind: String) {
 }
 
 private fun getBanner(env: EnvironmentKind): String {
-    val pathname = if (env == EnvironmentKind.PRODUCTION) {
+    val pathname: String = if (env == EnvironmentKind.PRODUCTION) {
         "/app/resources/banner/gakusci.txt"
     } else {
         "resources/banner/gakusci.txt"
@@ -75,7 +75,11 @@ private fun getBanner(env: EnvironmentKind): String {
 
 // Routing
 private fun Routing.staticPage(env: EnvironmentKind) {
-    val file = if (env == EnvironmentKind.PRODUCTION) { File("/app/resources/static") } else { File("resources/static") }
+    val file: File = if (env == EnvironmentKind.PRODUCTION) {
+        File("/app/resources/static")
+    } else {
+        File("resources/static")
+    }
     staticFiles("/", file) {
         default("index.html")
     }
