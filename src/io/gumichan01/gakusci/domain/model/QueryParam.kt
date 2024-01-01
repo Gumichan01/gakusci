@@ -6,8 +6,5 @@ data class QueryParam(
     val query: String,
     val searchType: SearchType,
     val rows: Int = 10,
-    val start: Int = 0,
-    val numPerPage: Int? = null,
-    val uri: String = "/",
-    val isRest: Boolean = false
+    val start: Int = 0
 )

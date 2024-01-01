@@ -1,7 +1,6 @@
 package io.gumichan01.gakusci.controller.utils
 
 import io.gumichan01.gakusci.domain.model.QueryParam
-import io.gumichan01.gakusci.domain.model.SearchResponse
 import io.gumichan01.gakusci.domain.utils.SearchType
 import io.ktor.http.*
 
@@ -24,7 +23,7 @@ fun retrieveWebParam(queryParameters: Parameters): IRequestParamResult {
             query.startsWith(BANG) -> BangRequest(query)
             start < 0 -> BadRequest("Negative 'start' value: $start")
             searchType == null -> BadRequest("No query parameter 'stype' provided")
-            else -> RequestParam(query, searchType, rows, start, null)
+            else -> RequestParam(query, searchType, rows, start)
         }
     } ?: BadRequest("No query parameter 'q' provided")
 }
@@ -42,7 +41,7 @@ fun retrieveApiParam(queryParameters: Parameters, pathParameters: Parameters): I
                 rows < 0 -> BadRequest("Negative 'rows' value: $rows. 'rows' must be positive or zero.")
                 rows > MAX_ENTRIES -> BadRequest("'rows' exceed $MAX_ENTRIES entries")
                 start < 0 -> BadRequest("Negative 'start' value: $rows. 'start' must be positive or zero.")
-                else -> RequestParam(query, searchType, rows, start, null)
+                else -> RequestParam(query, searchType, rows, start)
             }
         } ?: BadRequest("Incorrect syntax: absent or incorrect search type")
     } ?: BadRequest("No query parameter 'q' provided")
@@ -64,6 +63,6 @@ private fun String.isTooShort(): Boolean {
     return length < MINIMUM_QUERY_LENGTH
 }
 
-fun RequestParam.toQueryParam(uri: String, isRest: Boolean = false): QueryParam {
-    return QueryParam(query, searchType, rows, start, numPerPage, uri, isRest)
+fun RequestParam.toQueryParam(): QueryParam {
+    return QueryParam(query, searchType, rows, start)
 }

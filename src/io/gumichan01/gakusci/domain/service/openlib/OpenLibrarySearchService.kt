@@ -14,7 +14,7 @@ class OpenLibrarySearchService(private val openLibrarySearchClient: IClient<Open
     private val cache = ServiceRequestCache()
 
     override suspend fun search(queryParam: QueryParam): ServiceResponse {
-        return cache.coget(queryParam.uri) {
+        return cache.coget(queryParam.query) {
             openLibrarySearchClient.retrieveResults(queryParam)?.let { response ->
                 val entries: List<IResultEntry> = response.docs?.asSequence()?.map { doc ->
                     BookEntry(

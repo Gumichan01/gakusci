@@ -33,7 +33,7 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
 
             is RequestParam -> {
                 logger.trace(call.request.uri)
-                val queryParam: QueryParam = resultParam.toQueryParam(call.request.uri)
+                val queryParam: QueryParam = resultParam.toQueryParam()
                 call.respond(generateThymeleafContent(queryParam, searchQueryProcessor.proceed(queryParam)))
             }
         }

@@ -25,7 +25,7 @@ class RestController(private val searchQueryProcessor: SearchQueryProcessor) {
             is BadRequest -> call.respond(HttpStatusCode.BadRequest, resultParam.message)
             is RequestParam -> {
                 logger.trace(call.request.uri)
-                val query: QueryParam = resultParam.toQueryParam(call.request.uri, true)
+                val query: QueryParam = resultParam.toQueryParam()
                 val response: SearchResponse = searchQueryProcessor.proceed(query)
                 if (response.isEmpty()) {
                     call.respond(HttpStatusCode.NoContent)

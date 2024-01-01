@@ -24,7 +24,7 @@ internal class ServiceRequestCacheTest {
     private val delegatedCache: Cache<String, ServiceResponse> = Caffeine.newBuilder().maximumSize(4L).build()
     private val serviceMockk = mockk<IService> {
         coEvery {
-            search(QueryParam("loremi", SearchType.RESEARCH, uri = "/search?q=loremi"))
+            search(QueryParam("loremi", SearchType.RESEARCH))
         } returns ServiceResponse(0, emptyList())
     }
 
@@ -83,7 +83,7 @@ internal class ServiceRequestCacheTest {
             val service: IService = serviceMockk
             val cache = ServiceRequestCache(delegatedCache)
             val resp01: ServiceResponse = cache.coget("/search?q=loremi") {
-                service.search(QueryParam("loremi", SearchType.RESEARCH, uri = "/search?q=loremi"))
+                service.search(QueryParam("loremi", SearchType.RESEARCH))
             }
             val resp02: ServiceResponse = cache.coget("/search?q=loremi") {
                 ServiceResponse(421, emptyList())

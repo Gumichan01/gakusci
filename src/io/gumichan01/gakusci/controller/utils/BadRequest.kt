@@ -1,3 +1,3 @@
 package io.gumichan01.gakusci.controller.utils
 
-class BadRequest(val message: String) : IRequestParamResult
+data class BadRequest(val message: String) : IRequestParamResult
