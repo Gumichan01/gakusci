@@ -11,7 +11,7 @@ import io.gumichan01.gakusci.client.arxiv.internal.ArxivUtils
 import io.gumichan01.gakusci.client.arxiv.internal.model.ArxivFeed
 import io.gumichan01.gakusci.client.utils.NUM_ENTRIES_PER_SERVICE
 import io.gumichan01.gakusci.client.utils.trace
-import io.gumichan01.gakusci.domain.model.QueryParam
+import io.gumichan01.gakusci.domain.model.SimpleQuery
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
@@ -28,10 +28,10 @@ class ArxivClient(private val cache: ArxivCache = ArxivCache()) : IClient<ArxivR
             .build()
     }
 
-    override suspend fun retrieveResults(queryParam: QueryParam): ArxivResponse? {
+    override suspend fun retrieveResults(query: SimpleQuery): ArxivResponse? {
         return if (rateLimiter.tryConsume(1L)) {
             try {
-                val url: String = arxivUrl.format(queryParam.query, NUM_ENTRIES_PER_SERVICE)
+                val url: String = arxivUrl.format(query.query, NUM_ENTRIES_PER_SERVICE)
                 return cache.get(url) { endpoint ->
                     val arxivFeed: ArxivFeed = Syndication(endpoint).create(ArxivAtomReader::class.java).readAtom()
                     ArxivResponse(arxivFeed.totalResults, arxivFeed.results())

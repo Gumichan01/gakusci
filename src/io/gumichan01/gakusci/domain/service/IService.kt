@@ -1,8 +1,8 @@
 package io.gumichan01.gakusci.domain.service
 
-import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
+import io.gumichan01.gakusci.domain.model.SimpleQuery
 
 interface IService {
-    suspend fun search(queryParam: QueryParam): ServiceResponse
+    suspend fun search(query: SimpleQuery): ServiceResponse
 }

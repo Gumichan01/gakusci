@@ -2,6 +2,7 @@ package io.gumichan01.gakusci.domain.search
 
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
+import io.gumichan01.gakusci.domain.model.SimpleQuery
 import io.gumichan01.gakusci.domain.service.IService
 import kotlinx.atomicfu.AtomicInt
 import kotlinx.atomicfu.atomic
@@ -22,13 +23,14 @@ class SearchLauncher(private val services: Set<IService>) {
 
         val serviceCallTimeout = 15000L
         val channel: Channel<ServiceResponse> = Channel(capacity = 64)
+        val simpleQuery = SimpleQuery(queryParam.query)
 
         // Each coroutine a service is launched in a producer of search results, as in the Producer/Consumer pattern
         services.forEach { service ->
             CoroutineScope(Dispatchers.Default).launch {
                 try {
                     withTimeoutOrNull(serviceCallTimeout) {
-                        service.search(queryParam).let { channel.send(it) }
+                        service.search(simpleQuery).let { channel.send(it) }
                     }
                 } finally {
                     if (runningCoroutinesCounter.decrementAndGet() == 0) {

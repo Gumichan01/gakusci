@@ -4,7 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.utils.trace
-import io.gumichan01.gakusci.domain.model.QueryParam
+import io.gumichan01.gakusci.domain.model.SimpleQuery
 import io.ktor.client.*
 import io.ktor.client.engine.apache.*
 import io.ktor.client.plugins.cache.*
@@ -20,8 +20,8 @@ class ThesesClient : IClient<ThesesResponse> {
     private val thesesUrl = "https://www.theses.fr/?q=%s&format=json"
     private val client = HttpClient(Apache) { install(HttpCache) }
 
-    override suspend fun retrieveResults(queryParam: QueryParam): ThesesResponse? {
-        val url: String = thesesUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8))
+    override suspend fun retrieveResults(query: SimpleQuery): ThesesResponse? {
+        val url: String = thesesUrl.format(URLEncoder.encode(query.query, Charsets.UTF_8))
         return retrieveData(url)
     }
 

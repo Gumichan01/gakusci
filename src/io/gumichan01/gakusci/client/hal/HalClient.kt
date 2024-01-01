@@ -3,7 +3,7 @@ package io.gumichan01.gakusci.client.hal
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.utils.NUM_ENTRIES_PER_SERVICE
 import io.gumichan01.gakusci.client.utils.trace
-import io.gumichan01.gakusci.domain.model.QueryParam
+import io.gumichan01.gakusci.domain.model.SimpleQuery
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.apache.*
@@ -26,8 +26,8 @@ class HalClient : IClient<HalResponse> {
         }
     }
 
-    override suspend fun retrieveResults(queryParam: QueryParam): HalResponse? {
-        val url: String = halUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8), NUM_ENTRIES_PER_SERVICE)
+    override suspend fun retrieveResults(query: SimpleQuery): HalResponse? {
+        val url: String = halUrl.format(URLEncoder.encode(query.query, Charsets.UTF_8), NUM_ENTRIES_PER_SERVICE)
         return retrieveData(url)
     }
 

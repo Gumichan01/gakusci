@@ -3,7 +3,7 @@ package io.gumichan01.gakusci.client.penguin
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.utils.NUM_ENTRIES_PER_SERVICE
 import io.gumichan01.gakusci.client.utils.trace
-import io.gumichan01.gakusci.domain.model.QueryParam
+import io.gumichan01.gakusci.domain.model.SimpleQuery
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.request.get
@@ -22,8 +22,8 @@ class PenguinRandomHouseSearchClient : IClient<PenguinRandomHouseSearchResponse>
     private val logger: Logger = LoggerFactory.getLogger(PenguinRandomHouseSearchClient::class.java)
     private val searchUrl = "https://reststop.randomhouse.com/resources/titles?start=0&max=%d&expandLevel=0&search=%s"
 
-    override suspend fun retrieveResults(queryParam: QueryParam): PenguinRandomHouseSearchResponse? {
-        val url: String = searchUrl.format(NUM_ENTRIES_PER_SERVICE, URLEncoder.encode(queryParam.query, Charsets.UTF_8))
+    override suspend fun retrieveResults(query: SimpleQuery): PenguinRandomHouseSearchResponse? {
+        val url: String = searchUrl.format(NUM_ENTRIES_PER_SERVICE, URLEncoder.encode(query.query, Charsets.UTF_8))
         return try {
             val xmlText: String = HttpClient(Apache).get(url).bodyAsText()
             PenguinRandomHouseSearchResponse(extractIsbnsFromXml(xmlText).take(NUM_ENTRIES_PER_SERVICE))

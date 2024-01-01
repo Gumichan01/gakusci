@@ -5,8 +5,8 @@ import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseBookResponse
 import io.gumichan01.gakusci.client.utils.BookNumberType
 import io.gumichan01.gakusci.client.utils.generateBookNumberFromText
 import io.gumichan01.gakusci.client.utils.isValidISBN13
-import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
+import io.gumichan01.gakusci.domain.model.SimpleQuery
 import io.gumichan01.gakusci.domain.model.entry.BookEntry
 import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.utils.toLocalDate
@@ -17,10 +17,10 @@ class PenguinRandomHouseBookService(private val bookClient: IClient<PenguinRando
     private val bookLink = "https://penguinrandomhouse.com/search/site?q="
     private val thumbnailLink = "https://images1.penguinrandomhouse.com/cover/"
 
-    override suspend fun search(queryParam: QueryParam): ServiceResponse {
-        return generateBookNumberFromText(queryParam.query)?.let { bookNumber ->
+    override suspend fun search(query: SimpleQuery): ServiceResponse {
+        return generateBookNumberFromText(query.query)?.let { bookNumber ->
             if (bookNumber.type == BookNumberType.ISBN && isValidISBN13(bookNumber.value)) {
-                bookClient.retrieveResults(queryParam.copy(query = bookNumber.value))?.let {
+                bookClient.retrieveResults(query.copy(query = bookNumber.value))?.let {
                     val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
                     ServiceResponse(
                         1,

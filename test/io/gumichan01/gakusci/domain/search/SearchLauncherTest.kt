@@ -2,6 +2,7 @@ package io.gumichan01.gakusci.domain.search
 
 import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
+import io.gumichan01.gakusci.domain.model.SimpleQuery
 import io.gumichan01.gakusci.domain.model.entry.SimpleResultEntry
 import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.utils.SearchType
@@ -19,18 +20,18 @@ import kotlin.test.Test
 class SearchLauncherTest {
 
     private val fakeService: IService = mockk {
-        coEvery { search(QueryParam("lorem", SearchType.RESEARCH)) } returns ServiceResponse(
+        coEvery { search(SimpleQuery("lorem")) } returns ServiceResponse(
             1,
             listOf(SimpleResultEntry("", "")))
     }
     private val fakeService2: IService = mockk {
-        coEvery { search(QueryParam("lorem", SearchType.RESEARCH)) } returns ServiceResponse(
+        coEvery { search(SimpleQuery("lorem")) } returns ServiceResponse(
             1,
             listOf(SimpleResultEntry("", ""))
         )
     }
     private val fakeObjectService: IService = mockk {
-        coEvery { search(QueryParam("lorem", SearchType.RESEARCH)) } returns
+        coEvery { search(SimpleQuery("lorem")) } returns
             ServiceResponse(
                 1, listOf(
                 SimpleResultEntry(

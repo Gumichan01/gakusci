@@ -4,8 +4,8 @@ import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.openlib.OpenLibraryBookResponse
 import io.gumichan01.gakusci.client.utils.BookNumber
 import io.gumichan01.gakusci.client.utils.generateBookNumberFromText
-import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
+import io.gumichan01.gakusci.domain.model.SimpleQuery
 import io.gumichan01.gakusci.domain.model.entry.BookEntry
 import io.gumichan01.gakusci.domain.service.IService
 import io.gumichan01.gakusci.domain.utils.ServiceRequestCache
@@ -15,10 +15,10 @@ class OpenLibraryBookService(private val openLibBookClient: IClient<OpenLibraryB
 
     private val cache = ServiceRequestCache()
 
-    override suspend fun search(queryParam: QueryParam): ServiceResponse {
-        return cache.coget(queryParam.query) {
-            generateBookNumberFromText(queryParam.query)?.let { bookNumber ->
-                openLibBookClient.retrieveResults(queryParam.copy(query = bookNumber.format()))?.let { book ->
+    override suspend fun search(query: SimpleQuery): ServiceResponse {
+        return cache.coget(query.query) {
+            generateBookNumberFromText(query.query)?.let { bookNumber ->
+                openLibBookClient.retrieveResults(query.copy(query = bookNumber.format()))?.let { book ->
                     ServiceResponse(
                         1,
                         listOf(BookEntry(bibKey = book.bibKey, url = book.infoUrl, thumbnailUrl = book.thumbnailUrl

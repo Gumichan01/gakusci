@@ -2,11 +2,10 @@ package io.gumichan01.gakusci.domain.service.penguin
 
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.penguin.PenguinRandomHouseSearchResponse
-import io.gumichan01.gakusci.domain.model.QueryParam
 import io.gumichan01.gakusci.domain.model.ServiceResponse
+import io.gumichan01.gakusci.domain.model.SimpleQuery
 import io.gumichan01.gakusci.domain.model.entry.IResultEntry
 import io.gumichan01.gakusci.domain.service.IService
-import io.gumichan01.gakusci.domain.utils.SearchType
 import kotlinx.atomicfu.AtomicInt
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.*
@@ -25,10 +24,10 @@ class PenguinRandomHouseSearchService(
     private val nbMaxEntries = 10
     private val runningCoroutinesCounter: AtomicInt = atomic(nbMaxEntries)
 
-    override suspend fun search(queryParam: QueryParam): ServiceResponse {
-        return (searchClient.retrieveResults(queryParam)?.entries?.retrieveDistinctIsbns()
+    override suspend fun search(query: SimpleQuery): ServiceResponse {
+        return (searchClient.retrieveResults(query)?.entries?.retrieveDistinctIsbns()
             ?: emptyList()).map { entry ->
-            QueryParam(entry, SearchType.BOOKS)
+            SimpleQuery(entry)
         }.let { isbnsQueries ->
             when {
                 isbnsQueries.isEmpty() -> ServiceResponse(0, emptyList())
@@ -47,14 +46,14 @@ class PenguinRandomHouseSearchService(
             .take(nbMaxEntries).toList()
     }
 
-    private suspend fun retrieveResultsFromExternalService(isbnEntries: List<QueryParam>): ServiceResponse {
+    private suspend fun retrieveResultsFromExternalService(isbnEntries: List<SimpleQuery>): ServiceResponse {
         return launchRequests(isbnEntries)
             .consumeAsFlow().filterNotNull().map { response -> response.entries }
             .fold(mutableListOf<IResultEntry>()) { currentList, entries -> currentList.addAll(entries); currentList }
             .toList().let { entries -> ServiceResponse(entries.size, entries) }
     }
 
-    private suspend fun launchRequests(queries: List<QueryParam>): Channel<ServiceResponse> {
+    private suspend fun launchRequests(queries: List<SimpleQuery>): Channel<ServiceResponse> {
         val serviceCallTimeout = 10000L
         val channel: Channel<ServiceResponse> = Channel(nbMaxEntries)
         queries.forEach { query ->

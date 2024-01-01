@@ -2,7 +2,7 @@ package io.gumichan01.gakusci.client.gutendex
 
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.utils.trace
-import io.gumichan01.gakusci.domain.model.QueryParam
+import io.gumichan01.gakusci.domain.model.SimpleQuery
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.apache.*
@@ -25,8 +25,8 @@ class GutendexClient : IClient<GutendexResponse> {
         }
     }
 
-    override suspend fun retrieveResults(queryParam: QueryParam): GutendexResponse? {
-        val url: String = gutendexUrl.format(URLEncoder.encode(queryParam.query, Charsets.UTF_8))
+    override suspend fun retrieveResults(query: SimpleQuery): GutendexResponse? {
+        val url: String = gutendexUrl.format(URLEncoder.encode(query.query, Charsets.UTF_8))
 
         return try {
             client.get(url).body()

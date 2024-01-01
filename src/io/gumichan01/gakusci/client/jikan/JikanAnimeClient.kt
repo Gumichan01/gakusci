@@ -6,7 +6,7 @@ import io.github.bucket4j.Refill
 import io.github.bucket4j.local.LocalBucket
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.utils.NUM_ENTRIES_PER_SERVICE
-import io.gumichan01.gakusci.domain.model.QueryParam
+import io.gumichan01.gakusci.domain.model.SimpleQuery
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import pw.mihou.jaikan.Jaikan
@@ -28,11 +28,11 @@ class JikanAnimeClient : IClient<JikanAnimeResponse> {
     }
     // TODO Rebuild the implementation of the Jikan client
     // The Jaikan implementation of the Jikan API does not properly support pagination
-    override suspend fun retrieveResults(queryParam: QueryParam): JikanAnimeResponse? {
+    override suspend fun retrieveResults(query: SimpleQuery): JikanAnimeResponse? {
         val requestTimeout: Duration = 5.seconds
         return if (rateLimiter.tryConsume(1L)) {
             val entries: List<JikanAnimeEntry> = withContext(Dispatchers.IO) {
-                Jaikan.list(Endpoints.SEARCH, Anime::class.java, "anime", URLEncoder.encode(queryParam.query, Charsets.UTF_8))
+                Jaikan.list(Endpoints.SEARCH, Anime::class.java, "anime", URLEncoder.encode(query.query, Charsets.UTF_8))
                         .thenApply { animeList ->
                             animeList.asSequence()
                                     .filterNotNull()

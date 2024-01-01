@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.utils.trace
-import io.gumichan01.gakusci.domain.model.QueryParam
+import io.gumichan01.gakusci.domain.model.SimpleQuery
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.plugins.cache.*
@@ -19,9 +19,9 @@ class OpenLibraryBookClient : IClient<OpenLibraryBookResponse> {
     private val openLibrarySearchUrl = "http://openlibrary.org/api/books?bibkeys=%s&format=json"
     private val client = HttpClient(Apache) { install(HttpCache) }
 
-    override suspend fun retrieveResults(queryParam: QueryParam): OpenLibraryBookResponse? {
+    override suspend fun retrieveResults(query: SimpleQuery): OpenLibraryBookResponse? {
         return try {
-            client.get(openLibrarySearchUrl.format(queryParam.query)).bodyAsText().fromJson()
+            client.get(openLibrarySearchUrl.format(query.query)).bodyAsText().fromJson()
         } catch (e: Exception) {
             trace(logger, e)
             null

@@ -2,7 +2,7 @@ package io.gumichan01.gakusci.domain.utils
 
 import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
-import io.gumichan01.gakusci.domain.model.QueryParam
+import io.gumichan01.gakusci.domain.model.SimpleQuery
 import io.gumichan01.gakusci.domain.model.ServiceResponse
 import io.gumichan01.gakusci.domain.service.IService
 import io.mockk.coEvery
@@ -24,7 +24,7 @@ internal class ServiceRequestCacheTest {
     private val delegatedCache: Cache<String, ServiceResponse> = Caffeine.newBuilder().maximumSize(4L).build()
     private val serviceMockk = mockk<IService> {
         coEvery {
-            search(QueryParam("loremi", SearchType.RESEARCH))
+            search(SimpleQuery("loremi"))
         } returns ServiceResponse(0, emptyList())
     }
 
@@ -83,7 +83,7 @@ internal class ServiceRequestCacheTest {
             val service: IService = serviceMockk
             val cache = ServiceRequestCache(delegatedCache)
             val resp01: ServiceResponse = cache.coget("/search?q=loremi") {
-                service.search(QueryParam("loremi", SearchType.RESEARCH))
+                service.search(SimpleQuery("loremi"))
             }
             val resp02: ServiceResponse = cache.coget("/search?q=loremi") {
                 ServiceResponse(421, emptyList())
