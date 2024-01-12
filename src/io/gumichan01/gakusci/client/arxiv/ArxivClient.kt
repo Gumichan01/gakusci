@@ -1,9 +1,7 @@
 package io.gumichan01.gakusci.client.arxiv
 
 import com.ouattararomuald.syndication.Syndication
-import io.github.bucket4j.Bandwidth
 import io.github.bucket4j.Bucket
-import io.github.bucket4j.Refill
 import io.github.bucket4j.local.LocalBucket
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.arxiv.internal.ArxivAtomReader
@@ -15,7 +13,8 @@ import io.gumichan01.gakusci.domain.model.SimpleQuery
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URLEncoder
-import java.time.Duration
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 class ArxivClient(private val cache: ArxivCache = ArxivCache()) : IClient<ArxivResponse> {
 
@@ -25,7 +24,7 @@ class ArxivClient(private val cache: ArxivCache = ArxivCache()) : IClient<ArxivR
 
     private fun createLimiter(): LocalBucket {
         return Bucket.builder()
-            .addLimit(Bandwidth.classic(1, Refill.greedy(1L, Duration.ofSeconds(3))))
+            .addLimit { limit -> limit.capacity(1).refillGreedy(1L, 3.seconds.toJavaDuration()) }
             .build()
     }
 

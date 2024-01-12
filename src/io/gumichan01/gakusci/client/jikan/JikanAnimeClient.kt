@@ -1,8 +1,6 @@
 package io.gumichan01.gakusci.client.jikan
 
-import io.github.bucket4j.Bandwidth
 import io.github.bucket4j.Bucket
-import io.github.bucket4j.Refill
 import io.github.bucket4j.local.LocalBucket
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.utils.NUM_ENTRIES_PER_SERVICE
@@ -23,9 +21,10 @@ class JikanAnimeClient : IClient<JikanAnimeResponse> {
 
     private val rateLimiter: LocalBucket by lazy {
         Bucket.builder()
-                .addLimit(Bandwidth.classic(2, Refill.greedy(1L, 500.milliseconds.toJavaDuration())))
-                .build()
+            .addLimit { limit -> limit.capacity(2).refillGreedy(1L, 500.milliseconds.toJavaDuration()) }
+            .build()
     }
+
     // TODO Rebuild the implementation of the Jikan client
     // The Jaikan implementation of the Jikan API does not properly support pagination
     override suspend fun retrieveResults(query: SimpleQuery): JikanAnimeResponse? {
@@ -33,15 +32,15 @@ class JikanAnimeClient : IClient<JikanAnimeResponse> {
         return if (rateLimiter.tryConsume(1L)) {
             val entries: List<JikanAnimeEntry> = withContext(Dispatchers.IO) {
                 Jaikan.list(Endpoints.SEARCH, Anime::class.java, "anime", URLEncoder.encode(query.query, Charsets.UTF_8))
-                        .thenApply { animeList ->
-                            animeList.asSequence()
-                                    .filterNotNull()
-                                    .filter { e -> e.title != null }
-                                    .filter { e -> e.url != null }
-                                    .map { entry ->
-                                        JikanAnimeEntry(entry.title!!, entry.url!!, entry.episodes, entry.images.firstDefault())
-                                    }.take(NUM_ENTRIES_PER_SERVICE).toList()
-                        }.get(requestTimeout.inWholeSeconds, TimeUnit.SECONDS)
+                    .thenApply { animeList ->
+                        animeList.asSequence()
+                            .filterNotNull()
+                            .filter { e -> e.title != null }
+                            .filter { e -> e.url != null }
+                            .map { entry ->
+                                JikanAnimeEntry(entry.title!!, entry.url!!, entry.episodes, entry.images.firstDefault())
+                            }.take(NUM_ENTRIES_PER_SERVICE).toList()
+                    }.get(requestTimeout.inWholeSeconds, TimeUnit.SECONDS)
             }
             JikanAnimeResponse(entries)
         } else null

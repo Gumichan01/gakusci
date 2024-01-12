@@ -1,8 +1,6 @@
 package io.gumichan01.gakusci.client.jikan
 
-import io.github.bucket4j.Bandwidth
 import io.github.bucket4j.Bucket
-import io.github.bucket4j.Refill
 import io.github.bucket4j.local.LocalBucket
 import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.utils.NUM_ENTRIES_PER_SERVICE
@@ -24,8 +22,8 @@ class JikanMangaClient : IClient<JikanMangaResponse> {
 
     private val rateLimiter: LocalBucket by lazy {
         Bucket.builder()
-                .addLimit(Bandwidth.classic(2, Refill.greedy(1L, 500.milliseconds.toJavaDuration())))
-                .build()
+            .addLimit { limit -> limit.capacity(2).refillGreedy(1L, 500.milliseconds.toJavaDuration()) }
+            .build()
     }
 
     override suspend fun retrieveResults(query: SimpleQuery): JikanMangaResponse? {
@@ -33,21 +31,21 @@ class JikanMangaClient : IClient<JikanMangaResponse> {
         return if (rateLimiter.tryConsume(1L)) {
             val entries: List<JikanMangaEntry> = withContext(Dispatchers.IO) {
                 Jaikan.list(Endpoints.SEARCH, Manga::class.java, "manga", URLEncoder.encode(query.query, Charsets.UTF_8))
-                        .thenApply { mangaList ->
-                            mangaList.asSequence()
-                                    .filterNotNull()
-                                    .filter { e -> e.title != null }
-                                    .filter { e -> e.url != null }
-                                    .filter { e -> e.published.from != null }
-                                    .map { entry ->
-                                        JikanMangaEntry(
-                                                entry.title!!,
-                                                entry.url!!,
-                                                DateInterval(entry.published.from!!, entry.published.to),
-                                                entry.images.firstDefault()
-                                        )
-                                    }.take(NUM_ENTRIES_PER_SERVICE).toList()
-                        }.get(requestTimeout.inWholeSeconds, TimeUnit.SECONDS)
+                    .thenApply { mangaList ->
+                        mangaList.asSequence()
+                            .filterNotNull()
+                            .filter { e -> e.title != null }
+                            .filter { e -> e.url != null }
+                            .filter { e -> e.published.from != null }
+                            .map { entry ->
+                                JikanMangaEntry(
+                                    entry.title!!,
+                                    entry.url!!,
+                                    DateInterval(entry.published.from!!, entry.published.to),
+                                    entry.images.firstDefault()
+                                )
+                            }.take(NUM_ENTRIES_PER_SERVICE).toList()
+                    }.get(requestTimeout.inWholeSeconds, TimeUnit.SECONDS)
             }
             JikanMangaResponse(entries)
         } else null
