@@ -24,17 +24,18 @@ Their API can be REST(-like/-ful) or based on ATOM/RSS syndication.
 
 ## Build & run ##
 
-Just do this:
-
-```
-gradle run
-```
-
 You simply build it with:
 
 ```
 gradle build
 ```
+
+You run it with:
+
+```
+gradle run
+```
+
 
 You can create a fat JAR like this:
 
@@ -56,7 +57,7 @@ gradle test
 
 ### Docker ###
 
-You can build a docker images of the application with:
+You can build a docker image of the application with:
 
 ```
 gradle jibDockerBuild
@@ -69,6 +70,15 @@ If you want to run it "in production", because you want to get your own instance
 ```
 docker run -it -p 80:80 --rm gakusci -config=/app/resources/application-prod.conf
 ```
+
+You can also build an image tarball and load it with:
+
+```
+gradle jibBuildTar
+docker load --input build/jib-image.tar
+```
+
+More info [here](https://github.com/GoogleContainerTools/jib/blob/master/docs/faq.md#can-i-build-to-a-local-docker-daemon)
 
 ## API ##
 
