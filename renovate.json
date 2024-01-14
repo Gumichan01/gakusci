@@ -5,7 +5,7 @@
 
   "assignees": ["Gumichan01"],
   "prHourlyLimit": 8,
-  "ignoreDeps": ["Jaikan", "pw.mihou:Jaikan"]
+  "ignoreDeps": ["Jaikan", "pw.mihou:Jaikan"],
 
   "schedule": [
     "every weekend"
