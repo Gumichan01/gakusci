@@ -33,7 +33,7 @@
     </div>
 
     <p class="result" th:if="${not emptyEntries}"
-       th:text="${numFound + ' results. Only the first 1000 entries at most are reachable.'}"></p>
+       th:text="${numFound + ' results.'}"></p>
 
     <div class="container">
         <div class="entry" th:each="entry : ${entries}">
