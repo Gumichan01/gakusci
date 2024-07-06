@@ -17,7 +17,7 @@ import java.net.URLEncoder
 class ThesesClient : IClient<ThesesResponse> {
 
     private val logger: Logger = LoggerFactory.getLogger(ThesesClient::class.java)
-    private val thesesUrl = "https://www.theses.fr/?q=%s&format=json"
+    private val thesesUrl = "https://theses.fr/api/v1/theses/recherche/?q=%s"
     private val client = HttpClient(Apache) { install(HttpCache) }
 
     override suspend fun retrieveResults(query: SimpleQuery): ThesesResponse? {

@@ -14,8 +14,8 @@ class ThesesService(private val thesesClient: IClient<ThesesResponse>) : IServic
 
     override suspend fun search(query: SimpleQuery): ServiceResponse {
         return cache.coget(query.query) {
-            thesesClient.retrieveResults(query)?.body?.let { response ->
-                val entries: List<SimpleResultEntry> = response.docs.asSequence().filter { d -> d.isPresented() }.filter { d -> d.hasAccess() }
+            thesesClient.retrieveResults(query)?.let { response ->
+                val entries: List<SimpleResultEntry> = response.docs.asSequence().filter { d -> d.isPresented() }
                     .map { doc -> SimpleResultEntry(doc.label(), doc.link()) }.toList()
                 ServiceResponse(entries.size, entries)
             } ?: ServiceResponse(0, emptyList())

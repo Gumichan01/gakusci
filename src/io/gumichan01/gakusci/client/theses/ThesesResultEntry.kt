@@ -7,22 +7,19 @@ import java.util.*
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ThesesResultEntry(
-    @JsonProperty("num") val num: String,
-    @JsonProperty("titre") val title: String,
-    @JsonProperty("auteur") val author: String,
+    @JsonProperty("id") val id: String,
+    @JsonProperty("titrePrincipal") val title: String,
+    @JsonProperty("auteurs") val authors: List<ThesesAuthor>,
     @JsonProperty("status") val status: String,
-    @JsonProperty("accessible") val available: String,
-    @JsonProperty("dateSoutenance") val date: Date?
+    @JsonProperty("dateSoutenance") val dateTxt: String?
 ) {
 
     fun label(): String {
-        val pattern = "yyyy-MM-dd"
-        val formattedDate: String = SimpleDateFormat(pattern).format(date!!)
-        return "$author. $title. $formattedDate"
-    }
-
-    fun hasAccess(): Boolean {
-        return available.lowercase() == "oui"
+        val originalPattern = "dd/MM/yyyy"
+        val iso8601Pattern = "yyyy-MM-dd"
+        val date: Date = SimpleDateFormat(originalPattern).parse(dateTxt!!)
+        val formattedDate: String = SimpleDateFormat(iso8601Pattern).format(date)
+        return "$authors. $title. $formattedDate"
     }
 
     fun isPresented(): Boolean {
@@ -30,7 +27,7 @@ data class ThesesResultEntry(
     }
 
     fun link(): String {
-        return "https://www.theses.fr/$num"
+        return "https://www.theses.fr/$id"
     }
 
 }
