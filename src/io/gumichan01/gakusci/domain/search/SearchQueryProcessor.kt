@@ -19,6 +19,7 @@ class SearchQueryProcessor {
                 SearchType.BOOKS -> withBookServices()
                 SearchType.MANGAS -> withMangaServices()
                 SearchType.ANIME -> withAnimeServices()
+                SearchType.MUSIC -> withMusicServices()
             }
         }.build().retrieveResults(queryParam)
     }

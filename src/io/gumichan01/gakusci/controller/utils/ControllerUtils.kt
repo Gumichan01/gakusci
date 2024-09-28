@@ -54,6 +54,7 @@ private fun getSearchTypeFrom(parameters: Parameters): SearchType? {
             SearchType.BOOKS.value -> SearchType.BOOKS
             SearchType.MANGAS.value -> SearchType.MANGAS
             SearchType.ANIME.value -> SearchType.ANIME
+            SearchType.MUSIC.value -> SearchType.MUSIC
             else -> null
         }
     }

@@ -58,6 +58,7 @@ class SearchAggregator(private val searchLauncher: SearchLauncher,
         fun withBookServices(): Builder = apply { services.addAll(DomainSearchType.BOOKS) }
         fun withMangaServices(): Builder = apply { services.addAll(DomainSearchType.MANGAS) }
         fun withAnimeServices(): Builder = apply { services.addAll((DomainSearchType.ANIME)) }
+        fun withMusicServices(): Builder = apply { services }
 
         fun build(): SearchAggregator {
             return SearchAggregator(SearchLauncher(services))
