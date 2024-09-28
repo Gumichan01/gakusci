@@ -45,8 +45,8 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
         if (tokens.size < nbtokens) {
             return null
         }
-        val bangRequest: String = tokens[0] //request.substringBefore(" ")
-        val query: String = tokens[1] //request.substringAfter(" ")
+        val bangRequest: String = tokens[0]
+        val query: String = tokens[1]
         return when (bangRequest) {
             // Research
             "!arxiv" -> "https://arxiv.org/search/?query=%s&searchtype=all"
@@ -67,6 +67,11 @@ class WebController(private val searchQueryProcessor: SearchQueryProcessor) {
             "!anime" -> "https://myanimelist.net/anime.php?q=%s"
             "!anilist" -> "https://anilist.co/search/anime?sort=SEARCH_MATCH&search=%s"
             "!kitsuanime" -> "https://kitsu.io/anime?text=%s"
+            // Music
+            "!discogs" -> "https://www.discogs.com/search?q=%s"
+            "!freesound" -> "https://freesound.org/search/?q=%s"
+            "!musicbrainz" -> "https://musicbrainz.org/search?type=artist&query=%s"
+            "!opengameart" -> "https://opengameart.org/art-search?keys=%s"
             else -> null
         }?.format(query)
     }
