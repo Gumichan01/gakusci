@@ -1,58 +1,54 @@
 'use strict';
 
-var researchServices = ["!arxiv", "!hal", "!libgen", "!scihub", "!theses", "!thesis"]
-var bookServices = ["!goodreads", "!openlib", "!penguin"]
-var mangaServices = ["!manga", "!kitsumanga"]
-var animeServices = ["!anidb", "!anime", "!anilist", "!kitsuanime"]
-var musicServices = ["!discogs", "!freesound", "!musicbrainz", "!opengameart"]
-
-function autocomplete(queryInput, research, books, mangas, animes, music) {
+function autocomplete(queryInput) {
   /*
     The autocomplete function takes:
     - the text field element (the input)
     - several array of possible autocompleted values, depending of the domain (research, books, ...)
    */
-  var currentFocus = -1;
-
   queryInput.addEventListener("input", function(e) {
-    var text = this.value;
+    let text = this.value;
     if (!text) {
       return false;
     }
 
-    clearAutocompletionList();
-    // Select the list of services related to the type of search
-    var tpapers = document.getElementById("type_papers")
-    var tbooks = document.getElementById("type_books")
-    var tmanga = document.getElementById("type_manga")
-    var tanime = document.getElementById("type_anime")
-    var tmusic = document.getElementById("type_music")
-    var completionList;
+    let researchServices = ["!arxiv", "!hal", "!libgen", "!scihub", "!theses", "!thesis"];
+    let bookServices = ["!goodreads", "!openlib", "!penguin"];
+    let mangaServices = ["!manga", "!kitsumanga"];
+    let animeServices = ["!anidb", "!anime", "!anilist", "!kitsuanime"];
+    let musicServices = ["!discogs", "!freesound", "!musicbrainz", "!opengameart"];
 
-    if (tpapers.checked) {
-      completionList = research
-    } else if (tbooks.checked) {
-      completionList = books
-    } else if (tmanga.checked) {
-      completionList = mangas
-    } else if (tanime.checked) {
-      completionList = animes
-    } else if (tmusic.checked) {
-      completionList = music
+    let paperElement = document.getElementById("type_papers");
+    let bookElement = document.getElementById("type_books");
+    let mangaElement = document.getElementById("type_manga");
+    let animeElement = document.getElementById("type_anime");
+    let musicElement = document.getElementById("type_music");
+    let completionList /*: Array */;
+
+    if (paperElement.checked) {
+      completionList = researchServices;
+    } else if (bookElement.checked) {
+      completionList = bookServices;
+    } else if (mangaElement.checked) {
+      completionList = mangaServices;
+    } else if (animeElement.checked) {
+      completionList = animeServices;
+    } else if (musicElement.checked) {
+      completionList = musicServices;
     }
 
-    // Display the autocompletion list
-    var autocompletionListElem = document.createElement("DIV");
+    clearAutocompletionList();
+    let autocompletionListElem = document.createElement("DIV");
     autocompletionListElem.setAttribute("id", this.id + "autocomplete-list");
     autocompletionListElem.setAttribute("class", "autocomplete-items");
-
     this.parentNode.appendChild(autocompletionListElem);
-    for (var i = 0; i < completionList.length; i++) {
-      if (completionList[i].substring(0, text.length).toUpperCase() == text.toUpperCase()) {
-        var element = document.createElement("DIV");
-        element.innerHTML = "<strong>" + completionList[i].substring(0, text.length) + "</strong>";
-        element.innerHTML += completionList[i].substring(text.length);
-        element.innerHTML += "<input type='hidden' value='" + completionList[i] + "'>";
+
+    completionList.forEach(function(item) {
+      if (item.substring(0, text.length).toUpperCase() === text.toUpperCase()) {
+        let element = document.createElement("DIV");
+        element.innerHTML = "<strong>" + item.substring(0, text.length) + "</strong>";
+        element.innerHTML += item.substring(text.length);
+        element.innerHTML += "<input type='hidden' value='" + item + "'>";
 
         element.addEventListener("click", function(e) {
           queryInput.value = this.getElementsByTagName("input")[0].value;
@@ -61,56 +57,54 @@ function autocomplete(queryInput, research, books, mangas, animes, music) {
 
         autocompletionListElem.appendChild(element);
       }
-    }
+    });
   });
 
+  let currentFocus = -1;
   queryInput.addEventListener("keydown", function(e) {
-      var autocompletionElement = document.getElementById(this.id + "autocomplete-list");
+      let autocompletionElement = document.getElementById(this.id + "autocomplete-list");
       if (autocompletionElement) {
         const DOWN_KEYCODE = 40, UP_KEYCODE = 38, ESCAPE_KEYCODE = 27;
-        var autocompletionList = autocompletionElement.getElementsByTagName("div");
-        if (e.keyCode == DOWN_KEYCODE) {
-          if (currentFocus >= 0) {
+        let autocompletionList = autocompletionElement.getElementsByTagName("div");
+        if (e.keyCode === DOWN_KEYCODE ||  e.keyCode === UP_KEYCODE) {
+          if (currentFocus >= 0 && currentFocus < autocompletionList.length) {
             autocompletionList[currentFocus].classList.remove("autocomplete-active");
-          }
-          currentFocus++;
-          if (currentFocus >= autocompletionList.length) {
-            currentFocus = 0;
+          } else {
+            currentFocus = -1;
           }
 
-          autocompletionList[currentFocus].classList.add("autocomplete-active");
-          queryInput.value = autocompletionList[currentFocus].getElementsByTagName("input")[0].value + " "
-        } else if (e.keyCode == UP_KEYCODE) {
-          if (currentFocus >= 0) {
-            autocompletionList[currentFocus].classList.remove("autocomplete-active");
+          if (e.keyCode === DOWN_KEYCODE) {
+            currentFocus++;
+            if (currentFocus >= autocompletionList.length) {
+              currentFocus = 0;
+            }
+          } else if (e.keyCode === UP_KEYCODE) {
+            currentFocus--;
+            if (currentFocus < 0) {
+              currentFocus = (autocompletionList.length - 1);
+            }
           }
-          currentFocus--;
-          if (currentFocus < 0) {
-            currentFocus = (autocompletionList.length - 1);
-          }
-
           autocompletionList[currentFocus].classList.add("autocomplete-active");
-          queryInput.value = autocompletionList[currentFocus].getElementsByTagName("input")[0].value + " "
-        } else if (e.keyCode == ESCAPE_KEYCODE) {
+          queryInput.value = autocompletionList[currentFocus].getElementsByTagName("input")[0].value + " ";
+        } else if (e.keyCode === ESCAPE_KEYCODE) {
           clearAutocompletionList();
         }
       }
   });
 
   function clearAutocompletionList() {
-    var autocompletionElement = document.getElementsByClassName("autocomplete-items");
-    for (var i = 0; i < autocompletionElement.length; i++) {
-      autocompletionElement[i].parentNode.removeChild(autocompletionElement[i]);
-    }
+    let autocompleteItems = document.getElementsByClassName("autocomplete-items");
+    Array.from(autocompleteItems).forEach((item) => item.parentNode.removeChild(item));
+    currentFocus = -1;
   }
 
   document.addEventListener("click", function (e) {
-    var target = e.target;
-    if (target != queryInput) {
+    let target = e.target;
+    if (target !== queryInput) {
       clearAutocompletionList();
     }
   });
 
 }
 
-autocomplete(document.getElementById("query"), researchServices, bookServices, mangaServices, animeServices, musicServices);
+autocomplete(document.getElementById("query"));
