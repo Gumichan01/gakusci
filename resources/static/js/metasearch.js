@@ -100,7 +100,7 @@ function autocomplete(queryInput, research, books, mangas, animes, music) {
     except the one passed as an argument:*/
     var x = document.getElementsByClassName("autocomplete-items");
     for (var i = 0; i < x.length; i++) {
-      if (elmnt != x[i] && elmnt != inp) {
+      if (elmnt != x[i] && elmnt != queryInput) {
         x[i].parentNode.removeChild(x[i]);
       }
     }
