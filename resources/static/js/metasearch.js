@@ -17,7 +17,7 @@ function autocomplete(queryInput, research, books, mangas, animes, music) {
       var a, b, i, text = this.value;
       /*close any already open lists of autocompleted values*/
       closeAllLists();
-      if (!text) { return false;}
+      if (!text) { return false; }
       currentFocus = -1;
 
       // Select the list of services related to the type of search
@@ -37,7 +37,7 @@ function autocomplete(queryInput, research, books, mangas, animes, music) {
       } else if (tanime.checked) {
         completionList = animes
       } else if (tmusic.checked) {
-      completionList = music
+        completionList = music
       }
 
       // Display the autocompletion list
@@ -47,7 +47,7 @@ function autocomplete(queryInput, research, books, mangas, animes, music) {
 
       this.parentNode.appendChild(a);
       for (i = 0; i < completionList.length; i++) {
-        if (completionList[i].substr(0, text.length).toUpperCase() == text.toUpperCase()) {
+        if (completionList[i].substring(0, text.length).toUpperCase() == text.toUpperCase()) {
           b = document.createElement("DIV");
           b.innerHTML = "<strong>" + completionList[i].substr(0, text.length) + "</strong>";
           b.innerHTML += completionList[i].substr(text.length);
