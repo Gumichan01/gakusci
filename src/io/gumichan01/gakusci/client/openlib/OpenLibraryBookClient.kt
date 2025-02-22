@@ -13,6 +13,13 @@ import io.ktor.client.statement.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+/*
+* NOTE: (2025-02-22) This client uses the legacy book API
+*
+* Some book numbers (LCCNs, OCLC numbers and OLIDs) works with this for now.
+* For book that can be found by ISBN, a dedicated endpoint could be used instead of this.
+*
+*/
 class OpenLibraryBookClient : IClient<OpenLibraryBookResponse> {
 
     private val logger: Logger = LoggerFactory.getLogger(OpenLibraryBookClient::class.java)
