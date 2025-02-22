@@ -55,7 +55,7 @@ distZip {
 
 jib {
     from {
-        image = 'openjdk:alpine'
+        image = 'eclipse-temurin:21-alpine'
     }
     to {
         image = 'gakusci'
