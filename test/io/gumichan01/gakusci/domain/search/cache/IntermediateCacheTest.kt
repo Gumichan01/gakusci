@@ -3,7 +3,7 @@ package io.gumichan01.gakusci.domain.search.cache
 import com.github.benmanes.caffeine.cache.Caffeine
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions
-import org.checkerframework.checker.nullness.qual.NonNull
+import org.jspecify.annotations.NonNull
 import kotlin.test.Test
 
 class IntermediateCacheTest {
