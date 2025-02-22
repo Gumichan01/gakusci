@@ -63,6 +63,15 @@ You can build a docker image of the application with:
 gradle jibDockerBuild
 ```
 
+You can also build an image tarball and load it with:
+
+```
+gradle jibBuildTar
+docker load --input build/jib-image.tar
+```
+
+More info [here](https://github.com/GoogleContainerTools/jib/blob/master/docs/faq.md#can-i-build-to-a-local-docker-daemon).
+
 It uses [Jib](https://github.com/GoogleContainerTools/jib) in order to automate the creation of a docker image.
 
 If you want to run it "in production", because you want to get your own instance, run this command:
@@ -71,14 +80,19 @@ If you want to run it "in production", because you want to get your own instance
 docker run -it -p 80:80 --rm gakusci -config=/app/resources/application-prod.conf
 ```
 
-You can also build an image tarball and load it with:
+It is possible that you may have this problem:
 
 ```
-gradle jibBuildTar
-docker load --input build/jib-image.tar
+docker: Error response from daemon: cgroups: cgroup mountpoint does not exist: unknown.
 ```
 
-More info [here](https://github.com/GoogleContainerTools/jib/blob/master/docs/faq.md#can-i-build-to-a-local-docker-daemon)
+In this case you need to execute those commands:
+
+```
+sudo mkdir /sys/fs/cgroup/systemd
+sudo mount -t cgroup -o none,name=systemd cgroup /sys/fs/cgroup/systemd
+```
+
 
 ## API ##
 
