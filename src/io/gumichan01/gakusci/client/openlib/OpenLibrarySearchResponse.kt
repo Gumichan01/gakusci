@@ -19,5 +19,6 @@ data class OpenLibrarySearchResponse(
     @JsonProperty("q") val query: String,
     val numFoundExact: Boolean,
     val offset: Any?,
-    val docs: List<OpenLibrarySearchEntry>?
+    val docs: List<OpenLibrarySearchEntry>?,
+    @JsonProperty("documentation_url", required = false) val docUrl: String?
 )
