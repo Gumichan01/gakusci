@@ -94,7 +94,7 @@ dependencies {
     implementation "com.bucket4j:bucket4j-core:$bucket4j_version"
     implementation "com.github.ouattararomuald:syndication:$syndication_kotlin"
     implementation "com.github.ben-manes.caffeine:caffeine:$caffeine_version"
-    implementation "pw.mihou:Jaikan:$jaikan_version"
+    implementation "com.github.Gumichan01:jaikan-safe:$jaikan_version"
     testImplementation "io.ktor:ktor-server-test-host:$ktor_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testImplementation "io.mockk:mockk-jvm:$mockk_version"
