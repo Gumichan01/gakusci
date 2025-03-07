@@ -27,7 +27,14 @@ application {
 
 kotlin {
     jvmToolchain(21)
+    tasks.named("compileKotlin"){
+        compilerOptions{
+            extraWarnings = true
+            allWarningsAsErrors = true
+        }
+    }
 }
+
 
 // This task will generate the fat JAR and put it in the ./build/libs/ directory
 jar {
