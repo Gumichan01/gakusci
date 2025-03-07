@@ -99,7 +99,7 @@ dependencies {
     implementation "io.ktor:ktor-client-apache:$ktor_version"
     implementation "ch.qos.logback:logback-classic:$logback_version"
     implementation "com.bucket4j:bucket4j-core:$bucket4j_version"
-    implementation "com.github.ouattararomuald:syndication:$syndication_kotlin"
+    implementation "com.github.Gumichan01:syndication-safe:$syndication_kotlin"
     implementation "com.github.ben-manes.caffeine:caffeine:$caffeine_version"
     implementation "com.github.Gumichan01:jaikan-safe:$jaikan_version"
     testImplementation "io.ktor:ktor-server-test-host:$ktor_version"
