@@ -11,7 +11,7 @@ data class BookEntry(
     override fun label(): String {
         return StringBuilder().apply {
             if (title != null)
-                append("$title")
+                append(title)
             if (author != null)
                 append(", $author")
             if (date != null)
