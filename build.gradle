@@ -35,8 +35,6 @@ kotlin {
     }
 }
 
-kotlin.compilerOptions.freeCompilerArgs.add("-Xannotation-default-target=param-property")
-
 // This task will generate the fat JAR and put it in the ./build/libs/ directory
 jar {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
