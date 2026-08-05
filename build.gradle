@@ -95,7 +95,7 @@ dependencies {
     implementation "io.ktor:ktor-server-thymeleaf:$ktor_version"
     implementation "io.ktor:ktor-client-content-negotiation:$ktor_version"
     implementation "io.ktor:ktor-serialization-jackson:$ktor_version"
-    implementation "io.ktor:ktor-client-apache:$ktor_version"
+    implementation "io.ktor:ktor-client-apache5:$ktor_version"
     implementation "ch.qos.logback:logback-classic:$logback_version"
     implementation "com.bucket4j:bucket4j-core:$bucket4j_version"
     implementation "com.github.Gumichan01:syndication-safe:$syndication_kotlin"

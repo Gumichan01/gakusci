@@ -6,7 +6,7 @@ import io.gumichan01.gakusci.client.IClient
 import io.gumichan01.gakusci.client.utils.trace
 import io.gumichan01.gakusci.domain.model.SimpleQuery
 import io.ktor.client.*
-import io.ktor.client.engine.apache.*
+import io.ktor.client.engine.apache5.*
 import io.ktor.client.plugins.cache.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -18,7 +18,7 @@ class ThesesClient : IClient<ThesesResponse> {
 
     private val logger: Logger = LoggerFactory.getLogger(ThesesClient::class.java)
     private val thesesUrl = "https://theses.fr/api/v1/theses/recherche/?q=%s"
-    private val client = HttpClient(Apache) { install(HttpCache) }
+    private val client = HttpClient(Apache5) { install(HttpCache) }
 
     override suspend fun retrieveResults(query: SimpleQuery): ThesesResponse? {
         val url: String = thesesUrl.format(URLEncoder.encode(query.query, Charsets.UTF_8))

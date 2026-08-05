@@ -6,7 +6,7 @@ import io.gumichan01.gakusci.client.utils.trace
 import io.gumichan01.gakusci.domain.model.SimpleQuery
 import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.engine.apache.*
+import io.ktor.client.engine.apache5.*
 import io.ktor.client.plugins.cache.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
@@ -19,7 +19,7 @@ class HalClient : IClient<HalResponse> {
 
     private val logger: Logger = LoggerFactory.getLogger(HalClient::class.java)
     private val halUrl = "https://api.archives-ouvertes.fr/search/?q=%s&rows=%d&wt=json"
-    private val client = HttpClient(Apache) {
+    private val client = HttpClient(Apache5) {
         install(HttpCache)
         install(ContentNegotiation) {
             jackson()

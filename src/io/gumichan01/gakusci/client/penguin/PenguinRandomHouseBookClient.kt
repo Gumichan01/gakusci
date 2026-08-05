@@ -5,7 +5,7 @@ import io.gumichan01.gakusci.client.utils.trace
 import io.gumichan01.gakusci.domain.model.SimpleQuery
 import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.engine.apache.*
+import io.ktor.client.engine.apache5.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.serialization.jackson.*
@@ -19,7 +19,7 @@ class PenguinRandomHouseBookClient : IClient<PenguinRandomHouseBookResponse> {
 
     override suspend fun retrieveResults(query: SimpleQuery): PenguinRandomHouseBookResponse? {
         val url: String = penguinIsbnUrl.format(query.query)
-        val client = HttpClient(Apache) {
+        val client = HttpClient(Apache5) {
             install(ContentNegotiation) {
                 jackson()
             }
